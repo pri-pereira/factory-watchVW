@@ -426,8 +426,8 @@ function Painel() {
       <header className="sticky top-0 z-20 border-b border-border bg-primary text-primary-foreground">
         <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-5 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="grid size-12 shrink-0 place-items-center rounded-lg bg-primary-foreground/10">
-              <Factory className="size-6" strokeWidth={1.75} />
+            <div className="grid size-12 shrink-0 place-items-center rounded-lg bg-primary-foreground/10 overflow-hidden p-1">
+              <img src="/vw-logo.svg" alt="Volkswagen Logo" className="size-full object-contain" />
             </div>
             <div className="min-w-0">
               <h1 className="truncate font-display text-2xl font-bold uppercase tracking-wide sm:text-3xl">
