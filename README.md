@@ -1,5 +1,7 @@
 # Gestão Operacional - PWA Industrial
 
+👉 **[Acessar o Sistema (Local)](acesso.html)**
+
 Sistema de gestão de presença em tempo real para chão de fábrica.
 
 ## 🚀 Como Iniciar
