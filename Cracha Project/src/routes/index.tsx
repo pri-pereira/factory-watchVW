@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { SetupTurno } from "@/components/SetupTurno";
 import {
   AlertTriangle,
   CalendarOff,
@@ -422,15 +421,8 @@ function Painel() {
     doc.save(`relatorio_presenca_${selectedTurno.nome.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
-  const [turnoLiberado, setTurnoLiberado] = useState(false);
-
   return (
-    <>
-      {/* Tela de Setup de Turno — bloqueio antes de liberar o painel */}
-      {!turnoLiberado && <SetupTurno onLiberar={() => setTurnoLiberado(true)} />}
-
-      {/* Painel principal — visível após liberar o turno */}
-      <div className={`min-h-screen bg-background font-sans transition-opacity duration-500 ${turnoLiberado ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+    <div className="min-h-screen bg-background font-sans">
       <header className="sticky top-0 z-20 border-b border-border bg-primary text-primary-foreground">
         <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-5 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-3">
@@ -475,6 +467,18 @@ function Painel() {
                 Data e Hora Atual
               </p>
             </div>
+            {/* Botão de acesso ao VW Smart Flow */}
+            <a
+              id="btn-smartflow"
+              href="/smartflow-presenca.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-lg border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-sm font-bold uppercase tracking-wider text-amber-300 transition-all hover:bg-amber-400/20 hover:border-amber-400/70 hover:text-amber-200 hover:-translate-y-0.5"
+              title="Abrir VW Smart Flow — Gestão Industrial"
+            >
+              <span>⚙️</span>
+              <span>Smart Flow</span>
+            </a>
             <Link
               to="/auth/login"
               className="rounded-lg border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-2 text-sm font-bold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary-foreground/20"
@@ -656,6 +660,5 @@ function Painel() {
         )}
       </main>
     </div>
-    </>
   );
 }
