@@ -470,7 +470,7 @@ function Painel() {
             {/* Botão de acesso ao VW Smart Flow */}
             <a
               id="btn-smartflow"
-              href="/smartflow-presenca.html"
+              href="/smartflow.html"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 rounded-lg border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-sm font-bold uppercase tracking-wider text-amber-300 transition-all hover:bg-amber-400/20 hover:border-amber-400/70 hover:text-amber-200 hover:-translate-y-0.5"
