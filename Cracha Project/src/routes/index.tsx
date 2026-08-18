@@ -6,8 +6,8 @@ import { fazerLogin, cadastrarUsuario, type Cargo } from "@/lib/auth";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SmartAndon - Acesso" },
-      { name: "description", content: "Acesso a Plataforma SmartAndon." },
+      { title: "VW SmartFlow - Acesso" },
+      { name: "description", content: "Acesso a Plataforma VW SmartFlow." },
     ],
   }),
   component: HomePage,
@@ -63,7 +63,7 @@ function HomePage() {
           <Factory className="size-8" strokeWidth={1.75} />
         </div>
         <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">SmartAndon</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">VW SmartFlow</h1>
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mt-1">Gestao Operacional</p>
         </div>
       </div>
@@ -169,7 +169,7 @@ function HomePage() {
           )}
         </div>
       </div>
-      <p className="mt-8 text-xs text-muted-foreground">Plataforma SmartAndon &copy; {new Date().getFullYear()}</p>
+      <p className="mt-8 text-xs text-muted-foreground">Plataforma VW SmartFlow &copy; {new Date().getFullYear()}</p>
     </div>
   );
 }

@@ -13,7 +13,7 @@ import { registrarAlteracao, getAuditoria, type EntradaAuditoria } from "@/lib/a
 export const Route = createFileRoute("/painel")({
   head: () => ({
     meta: [
-      { title: "SmartAndon - Painel Operacional" },
+      { title: "VW SmartFlow - Painel Operacional" },
       { name: "description", content: "Acompanhe em tempo real a presenca dos operadores." },
     ],
   }),
@@ -301,7 +301,7 @@ function Painel() {
               <Factory className="size-5" />
             </div>
             <div className="min-w-0">
-              <h1 className="truncate text-lg font-bold text-foreground">SmartAndon</h1>
+              <h1 className="truncate text-lg font-bold text-foreground">VW SmartFlow</h1>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <select value={selectedTurno?.id}
                   onChange={(e) => { const t = TURNOS.find((tx) => tx.id === e.target.value); if (t) setSelectedTurno(t); }}
