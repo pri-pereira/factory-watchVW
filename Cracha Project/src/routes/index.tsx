@@ -82,7 +82,7 @@ function HomePage() {
                 <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">N de Registro</label>
                 <div className="relative">
                   <BadgeCheck className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-slate-500" />
-                  <input id="login-registro" type="text" required value={loginReg} onChange={(e) => setLoginReg(e.target.value)} placeholder="Ex: 12345" className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400/50 transition-all" />
+                  <input id="login-registro" type="text" required value={loginReg} onChange={(e) => setLoginReg(e.target.value)} placeholder="Ex: 0263552" autoComplete="username" className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder-slate-500/50 focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400/50 transition-all" />
                 </div>
               </div>
               <div className="space-y-1.5">
@@ -109,7 +109,7 @@ function HomePage() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">N de Registro</label>
-                  <input id="cad-registro" type="text" required value={cadReg} onChange={(e) => setCadReg(e.target.value)} placeholder="Ex: 12345" className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/30 transition-all" />
+                  <input id="cad-registro" type="text" required value={cadReg} onChange={(e) => setCadReg(e.target.value)} placeholder="Ex: 0263552" autoComplete="off" className="w-full rounded-xl border border-white/10 bg-white/5 py-3 px-4 text-white placeholder-slate-500/50 focus:outline-none focus:ring-2 focus:ring-amber-400/30 transition-all" />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Cargo</label>
