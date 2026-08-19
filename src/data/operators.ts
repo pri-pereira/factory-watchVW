@@ -19,6 +19,8 @@ export const CELULAS = [
   "VIDROS",
   "PARA-CHOQUE",
   "DRESS-UP",
+  "FAHRWERK",
+  "MQB",
 ];
 
 export const TURNOS = [
@@ -41,7 +43,7 @@ const generateMockOperators = () => {
       const equipeName = `Equipe ${eq}`;
       for (let p = 1; p <= 20; p++) {
         const id = `${celula}-${eq}-${p}`;
-        const status = statusOptions[Math.floor(Math.random() * statusOptions.length)] as OperatorStatus;
+        const status: OperatorStatus = "pendente";
         const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
         const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
         
@@ -51,8 +53,8 @@ const generateMockOperators = () => {
           funcao: "Operador de Produção",
           matricula: String(10000 + ops.length),
           status,
-          batida: status === "presente" ? `05:${30 + Math.floor(Math.random() * 25)}` : null,
-          observacao: status === "afastado" ? "Programado" : null,
+          batida: null,
+          observacao: null,
           equipe: equipeName,
         });
       }
