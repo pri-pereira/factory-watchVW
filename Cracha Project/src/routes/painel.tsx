@@ -51,14 +51,14 @@ function useShiftClock() {
 function pad(n: number) { return String(n).padStart(2, "0"); }
 function initials(nome: string) { return nome.split(" ").slice(0, 2).map((p) => p[0]).join(""); }
 
-function MetricCard({ label, value, icon: Icon, accent }: { label: string; value: number; icon: typeof Users; accent: string }) {
+function MetricCard({ label, value, icon: Icon, accent, textColor }: { label: string; value: number; icon: typeof Users; accent: string; textColor?: string }) {
   return (
     <div className="relative overflow-hidden rounded-xl border border-border bg-card p-4 shadow-sm transition-all duration-500 sm:p-5">
       <span className={`absolute inset-y-0 left-0 w-1.5 transition-colors duration-500 ${accent}`} aria-hidden />
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 pl-2">
         <div className="min-w-0">
           <p className="truncate text-[0.7rem] font-semibold uppercase tracking-widest text-muted-foreground">{label}</p>
-          <p className="font-display text-4xl font-bold leading-none tabular-nums text-foreground transition-all duration-500 sm:text-5xl">{value}</p>
+          <p className={`font-display text-4xl font-bold leading-none tabular-nums transition-all duration-500 sm:text-5xl ${textColor || 'text-foreground'}`}>{value}</p>
         </div>
         <Icon className="size-8 shrink-0 text-muted-foreground/50" strokeWidth={1.5} />
       </div>
@@ -80,6 +80,7 @@ function OperatorCard({ op, onStatusUpdate }: {
         description: "O operador sera movido para a enfermaria.",
         duration: Infinity,
         action: { label: "Confirmar", onClick: () => onStatusUpdate(op.id, "enfermaria") },
+        cancel: { label: "Cancelar", onClick: () => toast.dismiss() },
       });
     } else if (op.status === "enfermaria") {
       toast.info(`Deseja alterar o status de ${op.nome}?`, {
@@ -89,6 +90,7 @@ function OperatorCard({ op, onStatusUpdate }: {
           const now = new Date();
           onStatusUpdate(op.id, "presente", `${pad(now.getHours())}:${pad(now.getMinutes())}`);
         }},
+        cancel: { label: "Cancelar", onClick: () => toast.dismiss() },
       });
     }
   };
@@ -202,24 +204,61 @@ function Painel() {
   const [selectedEquipe, setSelectedEquipe] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<OperatorStatus | "todos">("todos");
   const [searchQuery, setSearchQuery] = useState("");
-  const [dynamicOperators, setDynamicOperators] = useState<(Operator & { alteradoPor?: string; alteradoAs?: string })[]>(operators);
+  const [dynamicOperators, setDynamicOperators] = useState<(Operator & { alteradoPor?: string; alteradoAs?: string })[]>(() => {
+    try {
+      const saved = localStorage.getItem("sf_operadores_estado");
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return operators;
+  });
   const [logs, setLogs] = useState<EntradaAuditoria[]>(() => getAuditoria());
   const [showAudit, setShowAudit] = useState(false);
 
+  // Sincroniza com localStorage sempre que dynamicOperators mudar
   useEffect(() => {
-    if (!selectedTurno) return;
-    const interval = setInterval(() => {
-      setDynamicOperators((current) =>
-        current.map((op) => {
-          if ((op.status === "pendente" || op.status === "ausente") && Math.random() > 0.8) {
-            return { ...op, status: "presente" as OperatorStatus, batida: `${pad(now.getHours())}:${pad(now.getMinutes())}` };
-          }
-          return op;
-        })
-      );
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [now, selectedTurno]);
+    localStorage.setItem("sf_operadores_estado", JSON.stringify(dynamicOperators));
+  }, [dynamicOperators]);
+
+  // Escuta mudancas de outras abas (ex: smartflow.html)
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "sf_operadores_estado" && e.newValue) {
+        try {
+          setDynamicOperators(JSON.parse(e.newValue));
+        } catch (err) {}
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
+
+  const simularCrachas = () => {
+    const pad2 = (n: number) => n.toString().padStart(2, "0");
+    setDynamicOperators((current) =>
+      current.map((op) => {
+        // Probabilidade de 94% de ser "presente" para manter as equipes próximas de 100%
+        const rand = Math.random();
+        let newStatus: OperatorStatus = "presente";
+        if (rand > 0.94) {
+          const others: OperatorStatus[] = ["ausente", "pendente", "enfermaria", "afastado"];
+          newStatus = others[Math.floor(Math.random() * others.length)];
+        }
+        
+        const hasBatida = newStatus === "presente" || newStatus === "enfermaria";
+        const randomMin = Math.floor(Math.random() * 60);
+        const batidaTime = `${pad2(now.getHours())}:${pad2(randomMin)}`;
+
+        return { 
+          ...op, 
+          status: newStatus, 
+          batida: hasBatida ? batidaTime : undefined,
+          alteradoPor: undefined,
+          alteradoAs: undefined
+        };
+      })
+    );
+    toast.success("Todos os status foram embaralhados aleatoriamente!");
+  };
 
   useEffect(() => { setSelectedEquipe(null); }, [selectedCelula]);
 
@@ -302,8 +341,8 @@ function Painel() {
       <header className="sticky top-0 z-20 border-b border-border bg-primary text-primary-foreground">
         <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="grid size-12 shrink-0 place-items-center rounded-lg bg-primary-foreground/10">
-              <Factory className="size-6" strokeWidth={1.75} />
+            <div className="grid size-12 shrink-0 place-items-center rounded-lg bg-primary-foreground/10 overflow-hidden">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
             </div>
             <div className="min-w-0">
               <h1 className="truncate font-display text-2xl font-bold uppercase tracking-wide sm:text-3xl">Gestao Operacional</h1>
@@ -339,15 +378,21 @@ function Painel() {
               className="relative flex items-center gap-1.5 rounded-lg border border-primary-foreground/20 bg-primary-foreground/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-primary-foreground hover:bg-primary-foreground/20 transition-colors">
               <ClipboardList className="size-4" /> Log
               {logs.length > 0 && (
-                <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[9px] font-black text-black">
+                <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-[9px] font-black text-white">
                   {logs.length > 9 ? "9+" : logs.length}
                 </span>
               )}
             </button>
 
+            {/* Teste: Simular Crachas */}
+            <button onClick={simularCrachas}
+              className="flex items-center gap-1.5 rounded-lg border border-blue-400/40 bg-blue-400/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-blue-300 hover:bg-blue-400/20 transition-all">
+              Teste: Simular
+            </button>
+
             {/* Smart Flow */}
             <a id="btn-smartflow" href="/smartflow.html" target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-amber-300 hover:bg-amber-400/20 transition-all">
+              className="flex items-center gap-1.5 rounded-lg border border-blue-500/40 bg-blue-500/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-blue-400 hover:bg-blue-500/20 transition-all">
               Smart Flow
             </a>
 
@@ -410,13 +455,12 @@ function Painel() {
           </div>
         </div>
 
-        {/* KPIs */}
         <section className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
-          <MetricCard label="Total da celula" value={counts.total} icon={Users} accent="bg-primary" />
-          <MetricCard label="Presentes" value={counts.presentes} icon={CheckCircle2} accent="bg-status-present" />
-          <MetricCard label="Ausentes" value={counts.ausentes} icon={AlertTriangle} accent="bg-status-absent" />
-          <MetricCard label="Enfermaria" value={counts.enfermaria} icon={Stethoscope} accent="bg-status-enfermaria" />
-          <MetricCard label="Programadas" value={counts.programadas} icon={CalendarOff} accent="bg-status-leave" />
+          <MetricCard label="Total da celula" value={counts.total} icon={Users} accent="bg-primary" textColor="text-primary" />
+          <MetricCard label="Presentes" value={counts.presentes} icon={CheckCircle2} accent="bg-status-present" textColor="text-status-present" />
+          <MetricCard label="Ausentes" value={counts.ausentes} icon={AlertTriangle} accent="bg-status-absent" textColor="text-status-absent" />
+          <MetricCard label="Enfermaria" value={counts.enfermaria} icon={Stethoscope} accent="bg-status-enfermaria" textColor="text-status-enfermaria" />
+          <MetricCard label="Programadas" value={counts.programadas} icon={CalendarOff} accent="bg-status-leave" textColor="text-status-leave" />
         </section>
 
         {/* Equipes */}

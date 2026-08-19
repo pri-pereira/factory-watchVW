@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acesso - Gestão Operacional VW</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background-color: #001438;
-            color: #ffffff;
+            font-family: 'Barlow', system-ui, sans-serif;
+            background-color: #ffffff;
+            color: #0F172A;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -18,18 +21,24 @@
             text-align: center;
         }
         .container {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: #ffffff;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             max-width: 500px;
         }
         h1 {
             margin-top: 0;
-            font-size: 24px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: #001E50;
         }
         p {
-            color: #a0aec0;
+            color: #64748b;
             font-size: 14px;
             line-height: 1.6;
         }
@@ -37,8 +46,8 @@
             display: inline-block;
             margin-top: 20px;
             padding: 12px 24px;
-            background-color: #ffffff;
-            color: #001438;
+            background-color: #f1f5f9;
+            color: #001E50;
             text-decoration: none;
             font-weight: bold;
             border-radius: 6px;
@@ -49,18 +58,17 @@
         }
         .logo {
             width: 80px;
+            height: 80px;
+            object-fit: contain;
             margin-bottom: 20px;
+            border-radius: 12px;
+            background-color: transparent;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Logo VW simplificada em SVG -->
-        <svg class="logo" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="256" cy="256" r="236" fill="none" stroke="#FFFFFF" stroke-width="20"/>
-            <polygon points="120,100 210,360 256,230 302,360 392,100 330,100 278,260 256,180 234,260 182,100" fill="#FFFFFF"/>
-            <polygon points="135,160 220,430 240,430 256,380 272,430 292,430 377,160 320,160 286,280 256,200 226,280 192,160" fill="#FFFFFF"/>
-        </svg>
+        <img src="/logo.png" alt="VW Logo" class="logo" />
         <h1>Painel de Gestão Operacional</h1>
         <p>O sistema foi construído utilizando tecnologias modernas (React e Vite). Como ele requer um servidor para rodar, clique no botão abaixo para acessar o ambiente local de desenvolvimento.</p>
         <p><em>Nota: Certifique-se de que o comando <code>npm run dev</code> está rodando no seu terminal.</em></p>

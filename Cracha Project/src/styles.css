@@ -83,7 +83,7 @@
   --card-foreground: oklch(0.21 0.02 258);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.21 0.02 258);
-  --primary: oklch(0.28 0.03 258);
+  --primary: #001E50;
   --primary-foreground: oklch(0.985 0.002 250);
   --secondary: oklch(0.94 0.005 250);
   --secondary-foreground: oklch(0.28 0.03 258);
@@ -97,16 +97,16 @@
   --input: oklch(0.9 0.008 255);
   --ring: oklch(0.6 0.03 256);
 
-  --status-present: oklch(0.53 0.16 150);
-  --status-present-soft: oklch(0.94 0.05 150);
-  --status-absent: oklch(0.52 0.22 27);
-  --status-absent-soft: oklch(0.94 0.05 27);
-  --status-pending: oklch(0.62 0.16 66);
-  --status-pending-soft: oklch(0.95 0.06 80);
-  --status-leave: oklch(0.52 0.11 250);
-  --status-leave-soft: oklch(0.94 0.03 250);
-  --status-enfermaria: oklch(0.65 0.15 210);
-  --status-enfermaria-soft: oklch(0.92 0.04 210);
+  --status-present: #15803D;
+  --status-present-soft: rgba(21, 128, 61, 0.15);
+  --status-absent: #DC2626;
+  --status-absent-soft: rgba(220, 38, 38, 0.15);
+  --status-pending: #D97706;
+  --status-pending-soft: rgba(217, 119, 6, 0.15);
+  --status-leave: #8B5CF6;
+  --status-leave-soft: rgba(139, 92, 246, 0.15);
+  --status-enfermaria: #0EA5E9;
+  --status-enfermaria-soft: rgba(14, 165, 233, 0.15);
 
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);

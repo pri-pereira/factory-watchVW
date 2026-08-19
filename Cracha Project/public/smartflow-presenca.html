@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -6305,51 +6305,27 @@ async function _atualizarManualmente(){
   }, 2000);
 }
 
-/* ---- Identificação de papel: "Quem é você?" (uma vez por aparelho) ---- */
-(function _garantirIdentidade(){
-  if(localStorage.getItem('sf_papel')) return;
-  const overlay=document.createElement('div');
-  overlay.style.cssText='position:fixed;inset:0;background:rgba(17,24,39,.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
-  overlay.innerHTML=`
-    <div style="background:#fff;border-radius:14px;padding:24px;max-width:340px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.3);font-family:'DM Sans',sans-serif">
-      <h3 style="margin-bottom:6px;font-size:16px;color:#111827">Quem é você?</h3>
-      <p style="font-size:12px;color:#6B7280;margin-bottom:16px">Isso identifica suas edições para os outros. Só precisa escolher uma vez neste celular.</p>
-      <div id="_papelBtns" style="display:flex;flex-direction:column;gap:8px"></div>
-      <div id="_papelNovo" style="display:none;flex-direction:column;gap:8px;padding-top:12px;margin-top:10px;border-top:1px solid #E2E6EE">
-        <input id="_papelNovoNome" type="text" placeholder="Seu nome" style="padding:9px;border:1px solid #CDD2DD;border-radius:8px;font-size:13px">
-        <select id="_papelNovoFuncao" style="padding:9px;border:1px solid #CDD2DD;border-radius:8px;font-size:13px">
-          <option value="Monitor">Monitor</option>
-          <option value="Supervisor(a)">Supervisor(a)</option>
-          <option value="Gerente">Gerente</option>
-          <option value="Líder">Líder</option>
-        </select>
-        <button id="_papelNovoOk" style="padding:9px;border-radius:8px;border:none;background:#E8A800;color:#000;font-weight:600;font-size:13px;cursor:pointer">Confirmar</button>
-      </div>
-    </div>`;
-  document.body.appendChild(overlay);
-  const wrap=overlay.querySelector('#_papelBtns');
-  PAPEIS_SMARTFLOW.forEach(op=>{
-    const b=document.createElement('button');
-    b.textContent=op;
-    b.style.cssText='padding:10px;border-radius:8px;border:1px solid #CDD2DD;background:#F8F9FB;font-size:13px;cursor:pointer';
-    b.onclick=()=>{ localStorage.setItem('sf_papel',op); overlay.remove(); _configurarPresenca(); };
-    wrap.appendChild(b);
-  });
-  const bNovo=document.createElement('button');
-  bNovo.textContent='+ Não estou na lista';
-  bNovo.style.cssText='padding:10px;border-radius:8px;border:1px dashed #CDD2DD;background:none;color:#6B7280;font-size:12px;cursor:pointer';
-  bNovo.onclick=()=>{ overlay.querySelector('#_papelNovo').style.display='flex'; bNovo.style.display='none'; };
-  wrap.appendChild(bNovo);
-  overlay.querySelector('#_papelNovoOk').onclick=()=>{
-    const nome=overlay.querySelector('#_papelNovoNome').value.trim();
-    if(!nome) return;
-    const funcao=overlay.querySelector('#_papelNovoFuncao').value;
-    const label=`${nome} (${funcao})`;
-    if(!PAPEIS_SMARTFLOW.includes(label)){ PAPEIS_SMARTFLOW=[...PAPEIS_SMARTFLOW, label]; _salvarPapeis(PAPEIS_SMARTFLOW); }
-    localStorage.setItem('sf_papel',label);
-    overlay.remove();
-    _configurarPresenca();
-  };
+/* ---- Identificação automática do usuário autenticado no login (sf_sessao) ---- */
+function _obterUsuarioLogado() {
+  try {
+    const raw = localStorage.getItem('sf_sessao');
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return null;
+}
+
+(function _carregarIdentidadeAutomatica() {
+  const usuario = _obterUsuarioLogado();
+  if (usuario && usuario.nome) {
+    const cargo = usuario.cargo || 'Operador';
+    const label = `${usuario.nome} (${cargo})`;
+    localStorage.setItem('sf_papel', label);
+    if (!PAPEIS_SMARTFLOW.includes(label)) {
+      PAPEIS_SMARTFLOW = [...PAPEIS_SMARTFLOW, label];
+      _salvarPapeis(PAPEIS_SMARTFLOW);
+    }
+  }
+  _configurarPresenca();
 })();
 </script>
 </div><!-- /sistema-principal -->

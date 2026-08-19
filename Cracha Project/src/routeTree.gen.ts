@@ -9,18 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PainelImport } from './routes/painel'
 import { Route as IndexRouteImport } from './routes/index'
-
-const PainelRoute = PainelImport.update({
-  id: '/painel',
-  path: '/painel',
-  getParentRoute: () => rootRouteImport,
-} as any)
+import { Route as PainelRouteImport } from './routes/painel'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PainelRoute = PainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -28,18 +27,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/painel': typeof PainelRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/painel': typeof PainelRoute
 }
-
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/painel': typeof PainelRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths: '/' | '/painel'
@@ -48,7 +44,6 @@ export interface FileRouteTypes {
   id: '__root__' | '/' | '/painel'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PainelRoute: typeof PainelRoute
@@ -67,7 +62,7 @@ declare module '@tanstack/react-router' {
       id: '/painel'
       path: '/painel'
       fullPath: '/painel'
-      preLoaderRoute: typeof PainelImport
+      preLoaderRoute: typeof PainelRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -77,7 +72,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PainelRoute: PainelRoute,
 }
-
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()

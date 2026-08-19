@@ -163,7 +163,7 @@ export function SetupTurno({ onLiberar }: SetupTurnoProps) {
       <div className="mb-8 w-full max-w-3xl text-center">
         <div className="mb-3 flex items-center justify-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl text-2xl"
-            style={{ background: "linear-gradient(135deg,#E8A800,#f59e0b)", boxShadow: "0 6px 20px rgba(232,168,0,0.35)" }}>
+            style={{ background: "linear-gradient(135deg,#1d4ed8,#3b82f6)", boxShadow: "0 6px 20px rgba(59,130,246,0.35)" }}>
             🏭
           </div>
           <div className="text-left">
@@ -171,9 +171,9 @@ export function SetupTurno({ onLiberar }: SetupTurnoProps) {
             <h1 className="text-2xl font-black tracking-wide text-white">Controle de Presença</h1>
           </div>
         </div>
-        <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/25 bg-amber-500/10 px-4 py-1.5">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
-          <span className="text-xs font-bold tracking-wider text-amber-400">Célula Vidros</span>
+        <span className="inline-flex items-center gap-2 rounded-full border border-blue-500/25 bg-blue-500/10 px-4 py-1.5">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" />
+          <span className="text-xs font-bold tracking-wider text-blue-400">Célula Vidros</span>
         </span>
       </div>
 
