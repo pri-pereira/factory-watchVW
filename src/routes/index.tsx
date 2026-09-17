@@ -68,8 +68,21 @@ function HomePage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 font-sans bg-white">
       <div className="mb-8 flex flex-col items-center gap-4">
-        <div className="flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-2xl overflow-hidden shadow-lg bg-white/5 border border-slate-200/50 transition-all duration-300">
-          <img src="/logo.png" alt="Logo VW" className="w-full h-full object-contain" />
+        <div className="flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-2xl overflow-hidden shadow-lg bg-white/5 border border-slate-200/50 transition-all duration-300" style={{ width: 64, height: 64 }}>
+          <img
+            src="/logo.png"
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (!target.src.endsWith("vw-logo.jpg")) {
+                target.src = "/vw-logo.jpg";
+              }
+            }}
+            alt="Logo VW"
+            width={64}
+            height={64}
+            className="w-full h-full object-contain"
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+          />
         </div>
         <div className="text-center">
           <h1 className="font-display text-4xl font-bold uppercase tracking-widest" style={{ color: "#001E50" }}>VW <span style={{ color: "#3b82f6" }}>Smart</span>Flow</h1>
