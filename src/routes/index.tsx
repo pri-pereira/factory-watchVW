@@ -13,6 +13,19 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
+function VwLogoSvg({ size = 42, color = "#FFFFFF" }: { size?: number; color?: string }) {
+  return (
+    <svg viewBox="0 0 100 100" width={size} height={size} fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="47" stroke={color} strokeWidth="4" />
+      <circle cx="50" cy="50" r="41.5" stroke={color} strokeWidth="2" opacity="0.6" />
+      {/* V superior */}
+      <path d="M34 28 L45.5 54 L50 43 L54.5 54 L66 28" stroke={color} strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
+      {/* W inferior */}
+      <path d="M26 44 L41.5 80 L50 61 L58.5 80 L74 44" stroke={color} strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 type Aba = "login" | "cadastro" | "recuperar";
 const CARGOS: Cargo[] = ["Líder", "Monitor", "Operador"];
 
@@ -93,21 +106,10 @@ function HomePage() {
             borderRadius: "16px",
             backgroundColor: "#001E50",
             border: "1px solid rgba(255,255,255,0.15)",
-            boxShadow: "0 10px 25px -5px rgba(0,30,80,0.5)",
-            padding: "8px",
+            boxShadow: "0 10px 25px -5px rgba(0,30,80,0.6)",
           }}
         >
-          <img
-            src="/logo.png"
-            onError={(e) => {
-              const target = e.currentTarget;
-              if (!target.src.endsWith("vw-logo.jpg")) target.src = "/vw-logo.jpg";
-            }}
-            alt="Logo VW"
-            width={48}
-            height={48}
-            style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
-          />
+          <VwLogoSvg size={42} color="#FFFFFF" />
         </div>
         <div className="text-center" style={{ textAlign: "center" }}>
           <h1
