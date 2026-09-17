@@ -30,28 +30,32 @@ export const TURNOS = [
 ];
 export const TURNO = TURNOS[0];
 
-// Gerador de dados mock para 7 células, cada uma com 3 equipes de 20 pessoas
+// Gerador de dados mock para 9 células, cada uma com 3 equipes de 20 pessoas.
+// IMPORTANTE: usa índice deterministico (sem Math.random()) para garantir que
+// os mesmos IDs sempre correspondam ao mesmo operador, mesmo após reloads.
+// Isso evita o bug de "operadores zumbi" no localStorage/Firebase.
 const firstNames = ["Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gabriel", "Helena", "Igor", "Juliana", "Kevin", "Larissa", "Mateus", "Nathalia", "Otávio", "Patrícia", "Ricardo", "Sandra", "Tiago", "Vanessa"];
 const lastNames = ["Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira", "Alves", "Pereira", "Lima", "Gomes", "Costa", "Ribeiro", "Martins", "Carvalho", "Almeida", "Lopes", "Soares", "Fernandes", "Vieira", "Barbosa"];
 
 const generateMockOperators = () => {
   const ops: Operator[] = [];
-  const statusOptions: OperatorStatus[] = ["presente", "presente", "presente", "ausente", "pendente", "afastado", "enfermaria"];
-  
-  CELULAS.forEach((celula) => {
+
+  CELULAS.forEach((celula, celulaIdx) => {
     for (let eq = 1; eq <= 3; eq++) {
       const equipeName = `Equipe ${eq}`;
       for (let p = 1; p <= 20; p++) {
         const id = `${celula}-${eq}-${p}`;
         const status: OperatorStatus = "pendente";
-        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-        
+        // Índice global determinístico — mesmo nome sempre para o mesmo operador
+        const globalIdx = celulaIdx * 60 + (eq - 1) * 20 + (p - 1);
+        const firstName = firstNames[globalIdx % firstNames.length];
+        const lastName = lastNames[(globalIdx * 7 + celulaIdx * 3) % lastNames.length];
+
         ops.push({
           id,
           nome: `${firstName} ${lastName}`,
           funcao: "Operador de Produção",
-          matricula: String(10000 + ops.length),
+          matricula: String(10000 + globalIdx),
           status,
           batida: null,
           observacao: null,

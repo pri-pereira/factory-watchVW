@@ -2,13 +2,14 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle, CalendarOff, CheckCircle2, Download,
-  Factory, FileSpreadsheet, FileText, Hourglass, User, Search,
-  Users, Stethoscope, LogOut, ClipboardList, Clock,
+  FileSpreadsheet, FileText, Hourglass, User, Search,
+  Users, Stethoscope, LogOut, ClipboardList, Clock, Wifi, WifiOff,
 } from "lucide-react";
-import { TURNOS, operators, CELULAS, type Operator, type OperatorStatus } from "@/data/operators";
+import { TURNOS, CELULAS, type OperatorStatus } from "@/data/operators";
 import { toast } from "sonner";
 import { getUsuarioLogado, fazerLogout } from "@/lib/auth";
 import { registrarAlteracao, getAuditoria, type EntradaAuditoria } from "@/lib/auditoria";
+import { useOperadoresSync, type OperadorComAuditoria } from "@/hooks/useOperadoresSync";
 
 export const Route = createFileRoute("/painel")({
   head: () => ({
@@ -67,7 +68,7 @@ function MetricCard({ label, value, icon: Icon, accent, textColor }: { label: st
 }
 
 function OperatorCard({ op, onStatusUpdate }: {
-  op: Operator & { alteradoPor?: string; alteradoAs?: string };
+  op: OperadorComAuditoria;
   onStatusUpdate: (id: string, status: OperatorStatus, timestamp?: string) => void;
 }) {
   const meta = statusMeta[op.status];
@@ -136,7 +137,7 @@ function OperatorCard({ op, onStatusUpdate }: {
   );
 }
 
-function TeamFilterCard({ name, ops, isActive, onClick }: { name: string; ops: Operator[]; isActive: boolean; onClick: () => void }) {
+function TeamFilterCard({ name, ops, isActive, onClick }: { name: string; ops: OperadorComAuditoria[]; isActive: boolean; onClick: () => void }) {
   const percentage = useMemo(() => {
     if (ops.length === 0) return 0;
     return Math.round((ops.filter((o) => o.status === "presente").length / ops.length) * 100);
@@ -204,59 +205,36 @@ function Painel() {
   const [selectedEquipe, setSelectedEquipe] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<OperatorStatus | "todos">("todos");
   const [searchQuery, setSearchQuery] = useState("");
-  const [dynamicOperators, setDynamicOperators] = useState<(Operator & { alteradoPor?: string; alteradoAs?: string })[]>(() => {
-    try {
-      const saved = localStorage.getItem("sf_operadores_estado");
-      if (saved) return JSON.parse(saved);
-    } catch (e) {}
-    return operators;
-  });
   const [logs, setLogs] = useState<EntradaAuditoria[]>(() => getAuditoria());
   const [showAudit, setShowAudit] = useState(false);
 
-  // Sincroniza com localStorage sempre que dynamicOperators mudar
-  useEffect(() => {
-    localStorage.setItem("sf_operadores_estado", JSON.stringify(dynamicOperators));
-  }, [dynamicOperators]);
-
-  // Escuta mudancas de outras abas (ex: smartflow.html)
-  useEffect(() => {
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === "sf_operadores_estado" && e.newValue) {
-        try {
-          setDynamicOperators(JSON.parse(e.newValue));
-        } catch (err) {}
-      }
-    };
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
+  // ── Hook de sincronização Firebase bidirecional ──────────────────────
+  const { operadores: dynamicOperators, isOnline, atualizarStatus, substituirTodos } = useOperadoresSync();
 
   const simularCrachas = () => {
     const pad2 = (n: number) => n.toString().padStart(2, "0");
-    setDynamicOperators((current) =>
-      current.map((op) => {
-        // Probabilidade de 94% de ser "presente" para manter as equipes próximas de 100%
-        const rand = Math.random();
-        let newStatus: OperatorStatus = "presente";
-        if (rand > 0.94) {
-          const others: OperatorStatus[] = ["ausente", "pendente", "enfermaria", "afastado"];
-          newStatus = others[Math.floor(Math.random() * others.length)];
-        }
-        
-        const hasBatida = newStatus === "presente" || newStatus === "enfermaria";
-        const randomMin = Math.floor(Math.random() * 60);
-        const batidaTime = `${pad2(now.getHours())}:${pad2(randomMin)}`;
+    const novos = dynamicOperators.map((op) => {
+      // Probabilidade de 94% de ser "presente" para manter as equipes próximas de 100%
+      const rand = Math.random();
+      let newStatus: OperatorStatus = "presente";
+      if (rand > 0.94) {
+        const others: OperatorStatus[] = ["ausente", "pendente", "enfermaria", "afastado"];
+        newStatus = others[Math.floor(Math.random() * others.length)] as OperatorStatus;
+      }
 
-        return { 
-          ...op, 
-          status: newStatus, 
-          batida: hasBatida ? batidaTime : undefined,
-          alteradoPor: undefined,
-          alteradoAs: undefined
-        };
-      })
-    );
+      const hasBatida = newStatus === "presente" || newStatus === "enfermaria";
+      const randomMin = Math.floor(Math.random() * 60);
+      const batidaTime = `${pad2(now.getHours())}:${pad2(randomMin)}`;
+
+      // Omitir alteradoPor/alteradoAs ao invés de setar undefined (exactOptionalPropertyTypes)
+      const { alteradoPor: _ap, alteradoAs: _aa, ...rest } = op;
+      return {
+        ...rest,
+        status: newStatus,
+        batida: hasBatida ? batidaTime : null,
+      } satisfies OperadorComAuditoria;
+    });
+    substituirTodos(novos);
     toast.success("Todos os status foram embaralhados aleatoriamente!");
   };
 
@@ -267,12 +245,8 @@ function Painel() {
     if (!op) return;
     const entrada = registrarAlteracao(usuario.nome, usuario.cargo, id, op.nome, op.status, newStatus);
     setLogs((prev) => [entrada, ...prev]);
-    setDynamicOperators((prev) =>
-      prev.map((o) => {
-        if (o.id !== id) return o;
-        return { ...o, status: newStatus, batida: timestamp ?? o.batida, alteradoPor: usuario.nome, alteradoAs: entrada.timestamp };
-      })
-    );
+    // Atualiza via hook — sincroniza automaticamente com Firebase
+    atualizarStatus(id, newStatus, usuario.nome, entrada.timestamp, timestamp);
   };
 
   const handleLogout = () => { fazerLogout(); navigate({ to: "/" }); };
@@ -292,7 +266,7 @@ function Painel() {
   const minutesLeft = Math.max(0, Math.ceil((start.getTime() - now.getTime()) / 60000));
 
   const equipesInCelula = useMemo(() => {
-    const groups: Record<string, (Operator & { alteradoPor?: string; alteradoAs?: string })[]> = {};
+    const groups: Record<string, OperadorComAuditoria[]> = {};
     filteredByCelula.forEach((op) => {
       const eq = op.equipe || "Sem Equipe";
       if (!groups[eq]) groups[eq] = [];
@@ -389,6 +363,17 @@ function Painel() {
               className="flex items-center gap-1.5 rounded-lg border border-blue-400/40 bg-blue-400/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-blue-300 hover:bg-blue-400/20 transition-all">
               Teste: Simular
             </button>
+
+            {/* Indicador de conexão Firebase */}
+            <div className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
+              isOnline
+                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
+                : "border-red-500/40 bg-red-500/10 text-red-400"
+            }`}>
+              {isOnline
+                ? <><Wifi className="size-4" /> Sync Online</>
+                : <><WifiOff className="size-4" /> Offline</>}
+            </div>
 
             {/* Smart Flow */}
             <a id="btn-smartflow" href="/smartflow.html" target="_blank" rel="noopener noreferrer"

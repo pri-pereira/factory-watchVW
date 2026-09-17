@@ -811,8 +811,35 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
   <button class="tab-btn" onclick="showTab('tab-obs',this)"><span class="tab-icon">📝</span>Observações</button>
   <button class="tab-btn" onclick="showTab('tab-emprestados',this)"><span class="tab-icon">🔄</span>Emprestados</button>
   <button class="tab-btn" onclick="showTab('tab-setores-cfg',this)"><span class="tab-icon">⚙️</span>Setores</button>
+  <button class="tab-btn" id="tab-presencas-btn" onclick="showTab('tab-presencas',this); renderPresencasOperadores()"><span class="tab-icon">🏭</span>Presenças</button>
   <button class="tab-btn" id="tab-ia-btn" onclick="showTab('tab-ia',this); iaTabAberto()"><span class="tab-icon">🤖</span>Análise IA</button>
 </nav>
+
+<!-- =================== PRESENÇAS OPERADORES (sync com Gestão Operacional) =================== -->
+<div id="tab-presencas" class="page">
+  <div style="padding:16px 20px;max-width:900px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div>
+        <h2 style="font-size:17px;font-weight:700;color:var(--text);letter-spacing:.03em">🏭 Presença de Operadores</h2>
+        <p style="font-size:12px;color:var(--text3);margin-top:2px">Sincronizado em tempo real com o Painel de Gestão Operacional</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <button onclick="_simularPresencasSmartflow()" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;background:#EEF2FF;color:#4F46E5;border:1px solid #C7D2FE;transition:all .15s;display:flex;align-items:center;gap:4px">⚡ Simular Teste</button>
+        <div id="presencas-status" style="font-size:11px;padding:4px 10px;border-radius:20px;background:#F0FDF4;color:#15803D;border:1px solid #BBF7D0;font-weight:600">⏳ Aguardando dados...</div>
+      </div>
+    </div>
+    <!-- Cards de contagem total -->
+    <div id="presencas-totais" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px"></div>
+    <!-- Filtro de célula -->
+    <div id="presencas-filtro" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
+    <!-- Grid de operadores -->
+    <div id="presencas-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px"></div>
+    <p id="presencas-empty" style="display:none;text-align:center;padding:40px;color:var(--text3);font-size:13px">
+      Nenhum dado de presença recebido ainda.<br>
+      <span style="font-size:12px">Abra o Painel de Gestão Operacional e simule ou altere um status.</span>
+    </p>
+  </div>
+</div>
 
 <!-- ===================== SETORES ===================== -->
 <div id="tab-setores" class="page active">
@@ -1437,6 +1464,27 @@ window.addEventListener('storage', (e) => {
     if(getDate() === today()) {
       _syncPainelToCounters();
       renderSetores();
+    }
+    // Atualiza também a aba de Presenças de Operadores
+    if(e.newValue){
+      try{
+        const arr = JSON.parse(e.newValue);
+        if(Array.isArray(arr) && arr.length > 0){
+          _ultimosOperadores = arr;
+          const statusEl = document.getElementById('presencas-status');
+          if(statusEl){
+            const ts = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+            statusEl.textContent = `⚡ Atualizado às ${ts} (tempo real)`;
+            statusEl.style.background='#EFF6FF'; statusEl.style.color='#2563EB'; statusEl.style.borderColor='#93C5FD';
+          }
+          if(document.getElementById('tab-presencas')?.classList.contains('active')){
+            renderPresencasOperadores();
+          } else {
+            const btn = document.getElementById('tab-presencas-btn');
+            if(btn){ btn.style.outline='2px solid #3B82F6'; setTimeout(()=>{ if(btn) btn.style.outline=''; },2500); }
+          }
+        }
+      }catch(err){}
     }
   }
 });
@@ -4810,6 +4858,10 @@ function _aplicarDadosRemotos(dados){
     if(typeof renderAgenda==='function') renderAgenda();
     if(document.getElementById('tab-dashboard')?.classList.contains('active')) renderDashboard();
     if(dados['vw_papeis_smartflow']){ PAPEIS_SMARTFLOW = _carregarPapeis(); _renderPainelPresenca(_ultimaPresenca); }
+    // Redesenha presença de operadores se a aba estiver ativa
+    if(dados['vw_sf_operadores_estado'] && document.getElementById('tab-presencas')?.classList.contains('active')){
+      renderPresencasOperadores();
+    }
   }catch(e){ console.error('Erro ao aplicar dados remotos:', e); }
   _applyingRemote = false;
 }
@@ -4871,6 +4923,261 @@ _db.ref('smartflow/presenca').on('value', snap=>{
   _renderPainelPresenca(_ultimaPresenca);
 });
 setInterval(()=>_renderPainelPresenca(_ultimaPresenca), 30000); // atualiza "há X min" mesmo sem mudança nova
+
+/* ================================================================
+   PRESENÇA DE OPERADORES — sync com Painel de Gestão (smartflow/dados/vw_sf_operadores_estado)
+================================================================ */
+let _ultimosOperadores = [];
+let _celulaFiltroPresencas = null;
+
+// Sincroniza dados com o storage local e com os contadores da página principal
+function _aplicarOperadoresRemotos(arr, origem) {
+  if(!Array.isArray(arr) || arr.length === 0) return;
+  _ultimosOperadores = arr;
+  try { localStorage.setItem('sf_operadores_estado', JSON.stringify(arr)); } catch(e){}
+
+  const statusEl = document.getElementById('presencas-status');
+  if(statusEl){
+    const ts = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    const emoji = origem === 'bc' ? '⚡' : '✅';
+    statusEl.textContent = `${emoji} Atualizado às ${ts} (${origem === 'bc' ? 'tempo real' : 'remoto'})`;
+    statusEl.style.background = origem === 'bc' ? '#EFF6FF' : '#F0FDF4';
+    statusEl.style.color = origem === 'bc' ? '#2563EB' : '#15803D';
+    statusEl.style.borderColor = origem === 'bc' ? '#93C5FD' : '#BBF7D0';
+  }
+
+  // Atualiza os contadores de faltas, enfermaria e presentes dos setores do SmartFlow
+  if(typeof _syncPainelToCounters === 'function' && getDate() === today()){
+    _syncPainelToCounters();
+    if(typeof renderSetores === 'function') renderSetores();
+  }
+
+  // Atualiza a visualização se a aba de presenças estiver visível
+  if(document.getElementById('tab-presencas')?.classList.contains('active')){
+    renderPresencasOperadores();
+  } else {
+    const btn = document.getElementById('tab-presencas-btn');
+    if(btn){
+      btn.style.outline = '2px solid #3B82F6';
+      setTimeout(()=>{ if(btn) btn.style.outline=''; }, 2500);
+    }
+  }
+}
+
+// BroadcastChannel: sync instantâneo entre abas na mesma máquina
+if('BroadcastChannel' in window){
+  const _bcPresencas = new BroadcastChannel('vw_smartflow_operadores');
+  _bcPresencas.onmessage = function(event){
+    if(event.data?.tipo === 'operadores_atualizados'){
+      _aplicarOperadoresRemotos(event.data.payload, 'bc');
+    }
+  };
+}
+
+// Firebase: sync entre dispositivos diferentes
+_db.ref('smartflow/dados/vw_sf_operadores_estado').on('value', snap => {
+  const raw = snap.val();
+  if(!raw) return;
+  try {
+    const arr = JSON.parse(raw);
+    _aplicarOperadoresRemotos(arr, 'firebase');
+  } catch(e){ console.error('[presencas] Erro ao parsear operadores:', e); }
+});
+
+// Alteração de status pelo SmartFlow (bidirecional -> envia para o Gestão Operacional)
+function _alterarStatusOperadorSmartflow(id, novoStatus){
+  const agora = new Date();
+  const horaStr = `${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}`;
+  
+  _ultimosOperadores = _ultimosOperadores.map(op => {
+    if(op.id !== id) return op;
+    return {
+      ...op,
+      status: novoStatus,
+      alteradoPor: 'SmartFlow',
+      alteradoAs: horaStr,
+      batida: (novoStatus === 'presente' || novoStatus === 'enfermaria') ? (op.batida || horaStr) : null
+    };
+  });
+
+  try { localStorage.setItem('sf_operadores_estado', JSON.stringify(_ultimosOperadores)); } catch(e){}
+
+  if('BroadcastChannel' in window){
+    try {
+      const bc = new BroadcastChannel('vw_smartflow_operadores');
+      bc.postMessage({ tipo: 'operadores_atualizados', payload: _ultimosOperadores });
+      bc.close();
+    } catch(e){}
+  }
+
+  try {
+    _db.ref('smartflow/dados/vw_sf_operadores_estado').set(JSON.stringify(_ultimosOperadores));
+  } catch(e){}
+
+  if(typeof _syncPainelToCounters === 'function' && getDate() === today()){
+    _syncPainelToCounters();
+    if(typeof renderSetores === 'function') renderSetores();
+  }
+
+  renderPresencasOperadores();
+}
+
+// Simulação de teste gerada a partir do SmartFlow
+function _simularPresencasSmartflow(){
+  if(!_ultimosOperadores || _ultimosOperadores.length === 0){
+    try {
+      _ultimosOperadores = JSON.parse(localStorage.getItem('sf_operadores_estado') || '[]');
+    } catch(e){}
+  }
+  if(!_ultimosOperadores || _ultimosOperadores.length === 0){
+    alert('Nenhum operador carregado. Abra o Painel de Gestão Operacional para inicializar a lista.');
+    return;
+  }
+  const agora = new Date();
+  const horaStr = `${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}`;
+  const statusPossiveis = ['presente', 'ausente', 'pendente', 'afastado', 'enfermaria'];
+
+  _ultimosOperadores = _ultimosOperadores.map(op => {
+    const rand = Math.random();
+    let st = 'presente';
+    if(rand > 0.94){
+      const outros = ['ausente', 'pendente', 'enfermaria', 'afastado'];
+      st = outros[Math.floor(Math.random() * outros.length)];
+    }
+    const hasBatida = st === 'presente' || st === 'enfermaria';
+    const randMin = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+    return {
+      ...op,
+      status: st,
+      batida: hasBatida ? `${String(agora.getHours()).padStart(2,'0')}:${randMin}` : null,
+      alteradoPor: 'Simulador SF',
+      alteradoAs: horaStr
+    };
+  });
+
+  try { localStorage.setItem('sf_operadores_estado', JSON.stringify(_ultimosOperadores)); } catch(e){}
+
+  if('BroadcastChannel' in window){
+    try {
+      const bc = new BroadcastChannel('vw_smartflow_operadores');
+      bc.postMessage({ tipo: 'operadores_atualizados', payload: _ultimosOperadores });
+      bc.close();
+    } catch(e){}
+  }
+
+  try {
+    _db.ref('smartflow/dados/vw_sf_operadores_estado').set(JSON.stringify(_ultimosOperadores));
+  } catch(e){}
+
+  if(typeof _syncPainelToCounters === 'function' && getDate() === today()){
+    _syncPainelToCounters();
+    if(typeof renderSetores === 'function') renderSetores();
+  }
+
+  renderPresencasOperadores();
+}
+
+const STATUS_CORES = {
+  presente:   { bg: '#F0FDF4', text: '#15803D', border: '#86EFAC', dot: '#22C55E', label: 'Presente' },
+  ausente:    { bg: '#FEF2F2', text: '#DC2626', border: '#FCA5A5', dot: '#EF4444', label: 'Ausente' },
+  pendente:   { bg: '#FFFBEB', text: '#D97706', border: '#FCD34D', dot: '#F59E0B', label: 'Pendente' },
+  afastado:   { bg: '#EFF6FF', text: '#2563EB', border: '#93C5FD', dot: '#3B82F6', label: 'Férias/Licença' },
+  enfermaria: { bg: '#F0F9FF', text: '#0284C7', border: '#7DD3FC', dot: '#0EA5E9', label: 'Enfermaria' },
+};
+
+function renderPresencasOperadores(){
+  const grid = document.getElementById('presencas-grid');
+  const totaisEl = document.getElementById('presencas-totais');
+  const filtroEl = document.getElementById('presencas-filtro');
+  const emptyEl = document.getElementById('presencas-empty');
+  if(!grid || !totaisEl || !filtroEl || !emptyEl) return;
+
+  if(!_ultimosOperadores || _ultimosOperadores.length === 0){
+    try {
+      const cache = localStorage.getItem('sf_operadores_estado');
+      if(cache) _ultimosOperadores = JSON.parse(cache);
+    } catch(e){}
+  }
+
+  const ops = _ultimosOperadores;
+  if(!ops || ops.length === 0){
+    grid.innerHTML=''; totaisEl.innerHTML=''; filtroEl.innerHTML='';
+    emptyEl.style.display='block'; return;
+  }
+  emptyEl.style.display='none';
+
+  // Coletar células únicas
+  const celulas = [...new Set(ops.map(o => o.id.split('-')[0]))].sort();
+  if(!_celulaFiltroPresencas || !celulas.includes(_celulaFiltroPresencas)) _celulaFiltroPresencas = celulas[0];
+
+  const filtrados = ops.filter(o => o.id.startsWith(_celulaFiltroPresencas));
+
+  // Contadores globais (célula selecionada)
+  const contar = s => filtrados.filter(o => o.status === s).length;
+  const totais = [
+    { label:'Total',       val: filtrados.length,         cor:'#6366F1', bg:'#EEF2FF', border:'#C7D2FE' },
+    { label:'Presentes',   val: contar('presente'),       cor:'#15803D', bg:'#F0FDF4', border:'#86EFAC' },
+    { label:'Ausentes',    val: contar('ausente'),        cor:'#DC2626', bg:'#FEF2F2', border:'#FCA5A5' },
+    { label:'Pendentes',   val: contar('pendente'),       cor:'#D97706', bg:'#FFFBEB', border:'#FCD34D' },
+    { label:'Enfermaria',  val: contar('enfermaria'),     cor:'#0284C7', bg:'#F0F9FF', border:'#7DD3FC' },
+    { label:'Programadas', val: contar('afastado'),       cor:'#7C3AED', bg:'#F5F3FF', border:'#DDD6FE' },
+  ];
+
+  totaisEl.innerHTML = totais.map(t => `
+    <div style="padding:12px 14px;border-radius:10px;background:${t.bg};border:1px solid ${t.border};text-align:center">
+      <div style="font-size:22px;font-weight:800;color:${t.cor};font-family:var(--font-display,monospace)">${t.val}</div>
+      <div style="font-size:10px;font-weight:600;color:${t.cor};text-transform:uppercase;letter-spacing:.08em;opacity:.8">${t.label}</div>
+    </div>`).join('');
+
+  // Filtro de células
+  filtroEl.innerHTML = celulas.map(c => `
+    <button onclick="_presencasFiltrar('${c}')" style="
+      padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;
+      border:1px solid ${c===_celulaFiltroPresencas?'#3B82F6':'#E2E8F0'};
+      background:${c===_celulaFiltroPresencas?'#3B82F6':'#fff'};
+      color:${c===_celulaFiltroPresencas?'#fff':'#64748B'};
+      transition:all .15s"
+    >${c}</button>`).join('');
+
+  // Ordenar: ausentes primeiro, depois pendentes, enfermaria, presentes, afastados
+  const ordem = ['ausente','pendente','enfermaria','presente','afastado'];
+  const sorted = [...filtrados].sort((a,b) => ordem.indexOf(a.status)-ordem.indexOf(b.status) || a.nome.localeCompare(b.nome));
+
+  grid.innerHTML = sorted.map(op => {
+    const c = STATUS_CORES[op.status] || STATUS_CORES.pendente;
+    const ini = op.nome.split(' ').slice(0,2).map(p=>p[0]||'').join('');
+    return `
+    <div style="border-radius:10px;border:1px solid ${c.border};background:${c.bg};padding:12px;display:flex;align-items:center;gap:10px">
+      <div style="width:36px;height:36px;border-radius:8px;background:rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#374151;flex-shrink:0;position:relative">
+        ${ini}
+        <span style="position:absolute;bottom:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:${c.dot};border:2px solid ${c.bg}"></span>
+      </div>
+      <div style="min-width:0;flex:1">
+        <div style="font-size:13px;font-weight:600;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${op.nome}</div>
+        <div style="margin-top:2px;display:flex;align-items:center;gap:6px">
+          <select onchange="_alterarStatusOperadorSmartflow('${op.id}', this.value)" style="
+            font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+            padding:2px 6px;border-radius:6px;border:1px solid ${c.border};background:#FFFFFF;color:${c.text};cursor:pointer;outline:none"
+          >
+            <option value="presente" ${op.status==='presente'?'selected':''}>Presente</option>
+            <option value="ausente" ${op.status==='ausente'?'selected':''}>Ausente</option>
+            <option value="pendente" ${op.status==='pendente'?'selected':''}>Pendente</option>
+            <option value="enfermaria" ${op.status==='enfermaria'?'selected':''}>Enfermaria</option>
+            <option value="afastado" ${op.status==='afastado'?'selected':''}>Férias/Licença</option>
+          </select>
+        </div>
+        <div style="font-size:10px;color:#94A3B8;font-family:var(--mono,monospace);margin-top:2px">${op.batida ? '⏱ '+op.batida : op.alteradoPor ? '✏️ '+op.alteradoPor : 'Aguardando...'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function _presencasFiltrar(celula){
+  _celulaFiltroPresencas = celula;
+  renderPresencasOperadores();
+}
+
+/* ----------------------------------------------------------------- */
 
 function _tempoDecorrido(ts){
   if(!ts) return 'nunca entrou';
