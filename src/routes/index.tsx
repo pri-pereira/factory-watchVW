@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { Factory, Lock, BadgeCheck, UserPlus, LogIn, Eye, EyeOff, ChevronRight, ShieldCheck, Loader2, KeyRound } from "lucide-react";
 import { fazerLogin, cadastrarUsuario, redefinirSenhaDireta, type Cargo } from "@/lib/auth";
 
