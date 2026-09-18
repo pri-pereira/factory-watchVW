@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Factory, Lock, BadgeCheck, UserPlus, LogIn, Eye, EyeOff, ChevronRight, ShieldCheck } from "lucide-react";
+import { Factory, Lock, BadgeCheck, UserPlus, LogIn, Eye, EyeOff, ChevronRight, ShieldCheck, Loader2 } from "lucide-react";
 import { fazerLogin, cadastrarUsuario, recuperarSenha, type Cargo } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
@@ -36,6 +36,8 @@ function HomePage() {
   const [loginSenha, setLoginSenha] = useState("");
   const [loginErro, setLoginErro] = useState("");
   const [showLoginPwd, setShowLoginPwd] = useState(false);
+  const [isLoadingLogin, setIsLoadingLogin] = useState(false);
+
   const [cadNome, setCadNome] = useState("");
   const [cadReg, setCadReg] = useState("");
   const [cadEmail, setCadEmail] = useState("");
@@ -45,37 +47,97 @@ function HomePage() {
   const [cadErro, setCadErro] = useState("");
   const [cadSucesso, setCadSucesso] = useState("");
   const [showCadPwd, setShowCadPwd] = useState(false);
+  const [isLoadingCad, setIsLoadingCad] = useState(false);
 
   const [recEmail, setRecEmail] = useState("");
   const [recMsg, setRecMsg] = useState("");
   const [recErro, setRecErro] = useState("");
+  const [isLoadingRec, setIsLoadingRec] = useState(false);
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoginErro("");
-    const user = fazerLogin(loginReg.trim(), loginSenha);
-    if (!user) { setLoginErro("Registro ou senha invalidos. Verifique e tente novamente."); return; }
-    navigate({ to: "/painel" });
+
+    const regOuEmail = loginReg.trim();
+    if (!regOuEmail.includes("@") && !/^\d{7}$/.test(regOuEmail)) {
+      setLoginErro("O número de registro (matrícula) deve conter exatamente 7 dígitos numéricos (ou informe seu e-mail).");
+      return;
+    }
+
+    setIsLoadingLogin(true);
+    try {
+      const user = await fazerLogin(regOuEmail, loginSenha);
+      if (!user) {
+        setLoginErro("Registro ou senha inválidos. Verifique suas credenciais e tente novamente.");
+        return;
+      }
+      navigate({ to: "/painel" });
+    } catch {
+      setLoginErro("Erro inesperado ao realizar login. Tente novamente.");
+    } finally {
+      setIsLoadingLogin(false);
+    }
   }
 
-  function handleCadastro(e: React.FormEvent) {
+  async function handleCadastro(e: React.FormEvent) {
     e.preventDefault();
-    setCadErro(""); setCadSucesso("");
-    if (cadSenha !== cadConfirm) { setCadErro("As senhas nao coincidem."); return; }
-    if (cadSenha.length < 4) { setCadErro("A senha deve ter pelo menos 4 caracteres."); return; }
-    const resultado = cadastrarUsuario(cadNome.trim(), cadReg.trim(), cadEmail.trim(), cadCargo, cadSenha);
-    if (!resultado.ok) { setCadErro(resultado.erro ?? "Erro ao cadastrar."); return; }
-    setCadSucesso("Cadastro realizado! Faca login para continuar.");
-    setCadNome(""); setCadReg(""); setCadEmail(""); setCadSenha(""); setCadConfirm("");
-    setTimeout(() => setAba("login"), 1800);
+    setCadErro("");
+    setCadSucesso("");
+
+    const regLimpo = cadReg.trim();
+    if (!/^\d{7}$/.test(regLimpo)) {
+      setCadErro("O número de registro (matrícula) deve conter exatamente 7 dígitos numéricos (ex: 0263552).");
+      return;
+    }
+
+    if (cadSenha !== cadConfirm) {
+      setCadErro("As senhas não coincidem.");
+      return;
+    }
+    if (cadSenha.length < 6) {
+      setCadErro("A senha deve ter pelo menos 6 caracteres para autenticação no sistema.");
+      return;
+    }
+
+    setIsLoadingCad(true);
+    try {
+      const resultado = await cadastrarUsuario(cadNome.trim(), regLimpo, cadEmail.trim(), cadCargo, cadSenha);
+      if (!resultado.ok) {
+        setCadErro(resultado.erro ?? "Erro ao cadastrar.");
+        return;
+      }
+      setCadSucesso("Cadastro realizado com sucesso! Redirecionando para o login...");
+      setCadNome("");
+      setCadReg("");
+      setCadEmail("");
+      setCadSenha("");
+      setCadConfirm("");
+      setTimeout(() => setAba("login"), 1800);
+    } catch {
+      setCadErro("Erro ao comunicar com o servidor. Tente novamente.");
+    } finally {
+      setIsLoadingCad(false);
+    }
   }
 
-  function handleRecuperar(e: React.FormEvent) {
+  async function handleRecuperar(e: React.FormEvent) {
     e.preventDefault();
-    setRecErro(""); setRecMsg("");
-    const result = recuperarSenha(recEmail.trim());
-    if (!result.ok) setRecErro(result.mensagem);
-    else setRecMsg(result.mensagem);
+    setRecErro("");
+    setRecMsg("");
+    setIsLoadingRec(true);
+    try {
+      const result = await recuperarSenha(recEmail.trim());
+      if (!result.ok) {
+        setRecErro(result.mensagem);
+      } else {
+        setRecMsg(result.mensagem);
+        setRecEmail("");
+      }
+    } catch {
+      setRecErro("Erro inesperado ao solicitar redefinição de senha. Tente novamente.");
+    } finally {
+      setIsLoadingRec(false);
+    }
   }
 
   return (
@@ -209,7 +271,7 @@ function HomePage() {
             <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>
-                  Nº de Registro ou E-mail
+                  Nº de Registro (7 dígitos) ou E-mail
                 </label>
                 <div style={{ position: "relative", width: "100%" }}>
                   <BadgeCheck style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", width: "18px", height: "18px", color: "#64748B" }} />
@@ -219,8 +281,8 @@ function HomePage() {
                     required
                     value={loginReg}
                     onChange={(e) => setLoginReg(e.target.value)}
-                    placeholder="Ex: 0263552 ou email@vw.com"
-                    autoComplete="off"
+                    placeholder="0263552 ou usuario@vw.com"
+                    autoComplete="username"
                     style={{
                       width: "100%",
                       borderRadius: "12px",
@@ -289,6 +351,7 @@ function HomePage() {
               <button
                 id="btn-entrar"
                 type="submit"
+                disabled={isLoadingLogin}
                 style={{
                   display: "flex",
                   width: "100%",
@@ -303,13 +366,22 @@ function HomePage() {
                   letterSpacing: "0.12em",
                   color: "#FFFFFF",
                   border: "none",
-                  cursor: "pointer",
+                  cursor: isLoadingLogin ? "not-allowed" : "pointer",
+                  opacity: isLoadingLogin ? 0.75 : 1,
                   background: "linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)",
                   boxShadow: "0 10px 20px -3px rgba(37,99,235,0.4)",
-                  transition: "transform 0.15s ease",
+                  transition: "all 0.2s ease",
                 }}
               >
-                Entrar no Painel <ChevronRight style={{ width: "18px", height: "18px" }} />
+                {isLoadingLogin ? (
+                  <>
+                    <Loader2 style={{ width: "18px", height: "18px", animation: "spin 1s linear infinite" }} /> Autenticando...
+                  </>
+                ) : (
+                  <>
+                    Entrar no Painel <ChevronRight style={{ width: "18px", height: "18px" }} />
+                  </>
+                )}
               </button>
             </form>
           )}
@@ -329,8 +401,21 @@ function HomePage() {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>Nº Registro</label>
-                  <input id="cad-registro" type="text" required value={cadReg} onChange={(e) => setCadReg(e.target.value)} placeholder="Ex: 0263552" autoComplete="off" style={{ width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", backgroundColor: "rgba(255,255,255,0.04)", padding: "12px 14px", color: "#FFFFFF", fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+                  <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>
+                    Nº Registro (7 dígitos)
+                  </label>
+                  <input
+                    id="cad-registro"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={7}
+                    required
+                    value={cadReg}
+                    onChange={(e) => setCadReg(e.target.value.replace(/\D/g, "").slice(0, 7))}
+                    placeholder="Ex: 0263552"
+                    autoComplete="off"
+                    style={{ width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", backgroundColor: "rgba(255,255,255,0.04)", padding: "12px 14px", color: "#FFFFFF", fontSize: "13px", outline: "none", boxSizing: "border-box" }}
+                  />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>Cargo</label>
@@ -354,8 +439,40 @@ function HomePage() {
               {cadErro && <div style={{ borderRadius: "12px", border: "1px solid rgba(239,68,68,0.3)", backgroundColor: "rgba(239,68,68,0.1)", padding: "10px 14px", fontSize: "12px", color: "#F87171" }}>{cadErro}</div>}
               {cadSucesso && <div style={{ borderRadius: "12px", border: "1px solid rgba(34,197,94,0.3)", backgroundColor: "rgba(34,197,94,0.1)", padding: "10px 14px", fontSize: "12px", color: "#4ADE80", display: "flex", alignItems: "center", gap: "8px" }}><ShieldCheck style={{ width: "16px", height: "16px" }} /> {cadSucesso}</div>}
 
-              <button id="btn-cadastrar" type="submit" style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "center", gap: "8px", borderRadius: "12px", padding: "14px", fontSize: "13px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "#FFFFFF", border: "none", cursor: "pointer", background: "linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)", boxShadow: "0 10px 20px -3px rgba(37,99,235,0.4)" }}>
-                <ShieldCheck style={{ width: "18px", height: "18px" }} /> Criar Cadastro
+              <button
+                id="btn-cadastrar"
+                type="submit"
+                disabled={isLoadingCad}
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  borderRadius: "12px",
+                  padding: "14px",
+                  fontSize: "13px",
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "#FFFFFF",
+                  border: "none",
+                  cursor: isLoadingCad ? "not-allowed" : "pointer",
+                  opacity: isLoadingCad ? 0.75 : 1,
+                  background: "linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)",
+                  boxShadow: "0 10px 20px -3px rgba(37,99,235,0.4)",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                {isLoadingCad ? (
+                  <>
+                    <Loader2 style={{ width: "18px", height: "18px", animation: "spin 1s linear infinite" }} /> Cadastrando...
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheck style={{ width: "18px", height: "18px" }} /> Criar Cadastro
+                  </>
+                )}
               </button>
             </form>
           )}
@@ -364,16 +481,45 @@ function HomePage() {
             <form onSubmit={handleRecuperar} style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
               <div style={{ textAlign: "center" }}>
                 <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#FFFFFF", margin: 0 }}>Recuperar Senha</h2>
-                <p style={{ fontSize: "12px", color: "#94A3B8", marginTop: "4px" }}>Digite seu e-mail cadastrado para receber as instruções.</p>
+                <p style={{ fontSize: "12px", color: "#94A3B8", marginTop: "4px" }}>Digite seu e-mail cadastrado para receber as instruções oficiais de redefinição.</p>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>E-mail</label>
-                <input id="rec-email" type="email" required value={recEmail} onChange={(e) => setRecEmail(e.target.value)} placeholder="Ex: email@vw.com" style={{ width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", backgroundColor: "rgba(255,255,255,0.04)", padding: "12px 14px", color: "#FFFFFF", fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+                <input id="rec-email" type="email" required value={recEmail} onChange={(e) => setRecEmail(e.target.value)} placeholder="Ex: seu-email@vw.com" style={{ width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", backgroundColor: "rgba(255,255,255,0.04)", padding: "12px 14px", color: "#FFFFFF", fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
               </div>
               {recErro && <div style={{ borderRadius: "12px", border: "1px solid rgba(239,68,68,0.3)", backgroundColor: "rgba(239,68,68,0.1)", padding: "10px 14px", fontSize: "12px", color: "#F87171" }}>{recErro}</div>}
               {recMsg && <div style={{ borderRadius: "12px", border: "1px solid rgba(34,197,94,0.3)", backgroundColor: "rgba(34,197,94,0.1)", padding: "10px 14px", fontSize: "12px", color: "#4ADE80", display: "flex", alignItems: "center", gap: "8px" }}><ShieldCheck style={{ width: "16px", height: "16px" }} /> {recMsg}</div>}
-              <button type="submit" style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "center", gap: "8px", borderRadius: "12px", padding: "14px", fontSize: "13px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "#FFFFFF", border: "none", cursor: "pointer", background: "linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)", boxShadow: "0 10px 20px -3px rgba(37,99,235,0.4)" }}>
-                Enviar Instruções
+              <button
+                type="submit"
+                disabled={isLoadingRec}
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  borderRadius: "12px",
+                  padding: "14px",
+                  fontSize: "13px",
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                  color: "#FFFFFF",
+                  border: "none",
+                  cursor: isLoadingRec ? "not-allowed" : "pointer",
+                  opacity: isLoadingRec ? 0.75 : 1,
+                  background: "linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%)",
+                  boxShadow: "0 10px 20px -3px rgba(37,99,235,0.4)",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                {isLoadingRec ? (
+                  <>
+                    <Loader2 style={{ width: "18px", height: "18px", animation: "spin 1s linear infinite" }} /> Enviando E-mail...
+                  </>
+                ) : (
+                  "Enviar Link de Redefinição"
+                )}
               </button>
               <button type="button" onClick={() => setAba("login")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>
                 Voltar para o Login

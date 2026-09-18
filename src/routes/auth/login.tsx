@@ -65,12 +65,12 @@ function LoginPage() {
                   >
                     Senha
                   </label>
-                  <a
-                    href="#"
+                  <Link
+                    to="/"
                     className="text-xs font-bold text-primary hover:underline uppercase tracking-widest"
                   >
                     Esqueceu?
-                  </a>
+                  </Link>
                 </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-muted-foreground/50" />
