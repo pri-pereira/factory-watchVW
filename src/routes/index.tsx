@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { Factory, Lock, BadgeCheck, UserPlus, LogIn, Eye, EyeOff, ChevronRight, ShieldCheck, Loader2 } from "lucide-react";
-import { fazerLogin, cadastrarUsuario, recuperarSenha, type Cargo } from "@/lib/auth";
+import { Factory, Lock, BadgeCheck, UserPlus, LogIn, Eye, EyeOff, ChevronRight, ShieldCheck, Loader2, KeyRound } from "lucide-react";
+import { fazerLogin, cadastrarUsuario, redefinirSenhaDireta, type Cargo } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,20 +26,23 @@ function VwLogoSvg({ size = 42, color = "#FFFFFF" }: { size?: number; color?: st
 }
 
 type Aba = "login" | "cadastro" | "recuperar";
+
 const CARGOS: Cargo[] = ["Líder", "Monitor", "Operador"];
 
 function HomePage() {
   const navigate = useNavigate();
   const [aba, setAba] = useState<Aba>("login");
+
+  // Login
   const [loginReg, setLoginReg] = useState("");
   const [loginSenha, setLoginSenha] = useState("");
   const [loginErro, setLoginErro] = useState("");
   const [showLoginPwd, setShowLoginPwd] = useState(false);
   const [isLoadingLogin, setIsLoadingLogin] = useState(false);
 
+  // Cadastro
   const [cadNome, setCadNome] = useState("");
   const [cadReg, setCadReg] = useState("");
-  const [cadEmail, setCadEmail] = useState("");
   const [cadCargo, setCadCargo] = useState<Cargo>("Operador");
   const [cadSenha, setCadSenha] = useState("");
   const [cadConfirm, setCadConfirm] = useState("");
@@ -49,7 +51,10 @@ function HomePage() {
   const [showCadPwd, setShowCadPwd] = useState(false);
   const [isLoadingCad, setIsLoadingCad] = useState(false);
 
-  const [recEmail, setRecEmail] = useState("");
+  // Redefinição de Senha
+  const [recReg, setRecReg] = useState("");
+  const [recNovaSenha, setRecNovaSenha] = useState("");
+  const [recConfirmNovaSenha, setRecConfirmNovaSenha] = useState("");
   const [recMsg, setRecMsg] = useState("");
   const [recErro, setRecErro] = useState("");
   const [isLoadingRec, setIsLoadingRec] = useState(false);
@@ -58,15 +63,15 @@ function HomePage() {
     e.preventDefault();
     setLoginErro("");
 
-    const regOuEmail = loginReg.trim();
-    if (!regOuEmail.includes("@") && !/^\d{7}$/.test(regOuEmail)) {
-      setLoginErro("O número de registro (matrícula) deve conter exatamente 7 dígitos numéricos (ou informe seu e-mail).");
+    const regLimpo = loginReg.trim();
+    if (!/^\d{7}$/.test(regLimpo)) {
+      setLoginErro("O número de registro (matrícula) deve conter exatamente 7 dígitos numéricos (ex: 0263552).");
       return;
     }
 
     setIsLoadingLogin(true);
     try {
-      const user = await fazerLogin(regOuEmail, loginSenha);
+      const user = await fazerLogin(regLimpo, loginSenha);
       if (!user) {
         setLoginErro("Registro ou senha inválidos. Verifique suas credenciais e tente novamente.");
         return;
@@ -94,27 +99,27 @@ function HomePage() {
       setCadErro("As senhas não coincidem.");
       return;
     }
-    if (cadSenha.length < 6) {
-      setCadErro("A senha deve ter pelo menos 6 caracteres para autenticação no sistema.");
+    if (cadSenha.length < 4) {
+      setCadErro("A senha deve ter pelo menos 4 caracteres.");
       return;
     }
 
     setIsLoadingCad(true);
     try {
-      const resultado = await cadastrarUsuario(cadNome.trim(), regLimpo, cadEmail.trim(), cadCargo, cadSenha);
+      const resultado = await cadastrarUsuario(cadNome.trim(), regLimpo, cadCargo, cadSenha);
       if (!resultado.ok) {
         setCadErro(resultado.erro ?? "Erro ao cadastrar.");
         return;
       }
       setCadSucesso("Cadastro realizado com sucesso! Redirecionando para o login...");
+      setLoginReg(regLimpo);
       setCadNome("");
       setCadReg("");
-      setCadEmail("");
       setCadSenha("");
       setCadConfirm("");
-      setTimeout(() => setAba("login"), 1800);
+      setTimeout(() => setAba("login"), 1400);
     } catch {
-      setCadErro("Erro ao comunicar com o servidor. Tente novamente.");
+      setCadErro("Erro ao cadastrar no sistema. Tente novamente.");
     } finally {
       setIsLoadingCad(false);
     }
@@ -124,17 +129,38 @@ function HomePage() {
     e.preventDefault();
     setRecErro("");
     setRecMsg("");
+
+    const regLimpo = recReg.trim();
+    if (!/^\d{7}$/.test(regLimpo)) {
+      setRecErro("Informe um número de registro (matrícula) válido com 7 dígitos numéricos.");
+      return;
+    }
+
+    if (recNovaSenha !== recConfirmNovaSenha) {
+      setRecErro("A confirmação da nova senha não coincide.");
+      return;
+    }
+
+    if (recNovaSenha.length < 4) {
+      setRecErro("A nova senha deve ter pelo menos 4 caracteres.");
+      return;
+    }
+
     setIsLoadingRec(true);
     try {
-      const result = await recuperarSenha(recEmail.trim());
+      const result = await redefinirSenhaDireta(regLimpo, recNovaSenha);
       if (!result.ok) {
         setRecErro(result.mensagem);
       } else {
         setRecMsg(result.mensagem);
-        setRecEmail("");
+        setLoginReg(regLimpo);
+        setRecReg("");
+        setRecNovaSenha("");
+        setRecConfirmNovaSenha("");
+        setTimeout(() => setAba("login"), 1600);
       }
     } catch {
-      setRecErro("Erro inesperado ao solicitar redefinição de senha. Tente novamente.");
+      setRecErro("Erro inesperado ao redefinir a senha. Tente novamente.");
     } finally {
       setIsLoadingRec(false);
     }
@@ -160,71 +186,65 @@ function HomePage() {
         <div
           className="flex items-center justify-center rounded-2xl overflow-hidden shadow-xl"
           style={{
-            width: "64px",
-            height: "64px",
+            width: "80px",
+            height: "80px",
+            background: "radial-gradient(circle at 35% 35%, #1E3A8A 0%, #0F172A 70%, #020617 100%)",
+            border: "1.5px solid rgba(59, 130, 246, 0.45)",
+            boxShadow: "0 0 28px rgba(37, 99, 235, 0.35), inset 0 1px 2px rgba(255,255,255,0.15)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            borderRadius: "16px",
-            backgroundColor: "#001E50",
-            border: "1px solid rgba(255,255,255,0.15)",
-            boxShadow: "0 10px 25px -5px rgba(0,30,80,0.6)",
           }}
         >
-          <VwLogoSvg size={42} color="#FFFFFF" />
+          <VwLogoSvg size={54} color="#FFFFFF" />
         </div>
-        <div className="text-center" style={{ textAlign: "center" }}>
+        <div style={{ textAlign: "center" }}>
           <h1
-            className="font-display text-4xl font-bold uppercase tracking-widest"
             style={{
-              fontFamily: "'Barlow Condensed', sans-serif",
-              fontSize: "36px",
-              fontWeight: 800,
-              letterSpacing: "0.1em",
+              fontSize: "24px",
+              fontWeight: 900,
               textTransform: "uppercase",
-              margin: 0,
+              letterSpacing: "0.15em",
               color: "#FFFFFF",
+              margin: 0,
             }}
           >
-            VW <span style={{ color: "#3B82F6" }}>Smart</span>Flow
+            VW SmartFlow
           </h1>
           <p
-            className="text-xs font-semibold uppercase tracking-[0.2em]"
             style={{
               fontSize: "11px",
               fontWeight: 700,
-              letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: "#94A3B8",
-              marginTop: "4px",
-              margin: "4px 0 0 0",
+              letterSpacing: "0.2em",
+              color: "#60A5FA",
+              margin: "4px 0 0",
             }}
           >
-            Gestão Operacional
+            Fahrwerk — Gestão Operacional
           </p>
         </div>
       </div>
 
-      {/* Card de Login */}
+      {/* Card Principal */}
       <div
-        className="w-full max-w-md rounded-2xl overflow-hidden shadow-2xl"
         style={{
           width: "100%",
-          maxWidth: "420px",
+          maxWidth: "460px",
           borderRadius: "20px",
+          border: "1px solid rgba(255,255,255,0.1)",
+          backgroundColor: "#0D1829",
+          boxShadow: "0 25px 50px -12px rgba(0,0,0,0.7)",
           overflow: "hidden",
-          backgroundColor: "#0F172A",
-          border: "1px solid rgba(255,255,255,0.12)",
-          boxShadow: "0 25px 50px -12px rgba(0,0,0,0.6)",
         }}
       >
         {/* Abas */}
         <div
-          className="grid grid-cols-2"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            borderBottom: "1px solid rgba(255,255,255,0.08)",
+            backgroundColor: "rgba(0,0,0,0.2)",
           }}
         >
           {(["login", "cadastro"] as Aba[]).map((t) => {
@@ -232,13 +252,12 @@ function HomePage() {
             return (
               <button
                 key={t}
+                type="button"
                 onClick={() => {
                   setAba(t);
                   setLoginErro("");
                   setCadErro("");
                   setCadSucesso("");
-                  setRecErro("");
-                  setRecMsg("");
                 }}
                 style={{
                   display: "flex",
@@ -267,21 +286,24 @@ function HomePage() {
         </div>
 
         <div style={{ padding: "28px" }}>
+          {/* Aba Login */}
           {aba === "login" && (
             <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>
-                  Nº de Registro (7 dígitos) ou E-mail
+                  Nº de Registro (7 dígitos)
                 </label>
                 <div style={{ position: "relative", width: "100%" }}>
                   <BadgeCheck style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", width: "18px", height: "18px", color: "#64748B" }} />
                   <input
                     id="login-registro"
                     type="text"
+                    inputMode="numeric"
+                    maxLength={7}
                     required
                     value={loginReg}
-                    onChange={(e) => setLoginReg(e.target.value)}
-                    placeholder="0263552 ou usuario@vw.com"
+                    onChange={(e) => setLoginReg(e.target.value.replace(/\D/g, "").slice(0, 7))}
+                    placeholder="Ex: 0263552"
                     autoComplete="username"
                     style={{
                       width: "100%",
@@ -305,7 +327,10 @@ function HomePage() {
                   </label>
                   <button
                     type="button"
-                    onClick={() => setAba("recuperar")}
+                    onClick={() => {
+                      setAba("recuperar");
+                      setRecReg(loginReg);
+                    }}
                     style={{ background: "none", border: "none", cursor: "pointer", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#60A5FA" }}
                   >
                     Esqueci a senha
@@ -386,17 +411,12 @@ function HomePage() {
             </form>
           )}
 
+          {/* Aba Cadastro */}
           {aba === "cadastro" && (
             <form onSubmit={handleCadastro} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>Nome Completo</label>
-                  <input id="cad-nome" type="text" required value={cadNome} onChange={(e) => setCadNome(e.target.value)} placeholder="Ex: Marcelo Silva" style={{ width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", backgroundColor: "rgba(255,255,255,0.04)", padding: "12px 14px", color: "#FFFFFF", fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>E-mail</label>
-                  <input id="cad-email" type="email" required value={cadEmail} onChange={(e) => setCadEmail(e.target.value)} placeholder="email@vw.com" style={{ width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", backgroundColor: "rgba(255,255,255,0.04)", padding: "12px 14px", color: "#FFFFFF", fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
-                </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>Nome Completo</label>
+                <input id="cad-nome" type="text" required value={cadNome} onChange={(e) => setCadNome(e.target.value)} placeholder="Ex: Marcelo Silva" style={{ width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", backgroundColor: "rgba(255,255,255,0.04)", padding: "12px 14px", color: "#FFFFFF", fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
@@ -477,18 +497,59 @@ function HomePage() {
             </form>
           )}
 
+          {/* Aba Redefinição de Senha */}
           {aba === "recuperar" && (
-            <form onSubmit={handleRecuperar} style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+            <form onSubmit={handleRecuperar} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               <div style={{ textAlign: "center" }}>
-                <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#FFFFFF", margin: 0 }}>Recuperar Senha</h2>
-                <p style={{ fontSize: "12px", color: "#94A3B8", marginTop: "4px" }}>Digite seu e-mail cadastrado para receber as instruções oficiais de redefinição.</p>
+                <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#FFFFFF", margin: 0 }}>Redefinir Senha</h2>
+                <p style={{ fontSize: "12px", color: "#94A3B8", marginTop: "4px" }}>Informe sua matrícula e defina uma nova senha de acesso.</p>
               </div>
+
               <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>E-mail</label>
-                <input id="rec-email" type="email" required value={recEmail} onChange={(e) => setRecEmail(e.target.value)} placeholder="Ex: seu-email@vw.com" style={{ width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", backgroundColor: "rgba(255,255,255,0.04)", padding: "12px 14px", color: "#FFFFFF", fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+                <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>Nº Registro (7 dígitos)</label>
+                <input
+                  id="rec-registro"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={7}
+                  required
+                  value={recReg}
+                  onChange={(e) => setRecReg(e.target.value.replace(/\D/g, "").slice(0, 7))}
+                  placeholder="Ex: 0263552"
+                  style={{ width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", backgroundColor: "rgba(255,255,255,0.04)", padding: "12px 14px", color: "#FFFFFF", fontSize: "13px", outline: "none", boxSizing: "border-box" }}
+                />
               </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                  <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>Nova Senha</label>
+                  <input
+                    id="rec-senha"
+                    type="password"
+                    required
+                    value={recNovaSenha}
+                    onChange={(e) => setRecNovaSenha(e.target.value)}
+                    placeholder="••••••••"
+                    style={{ width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", backgroundColor: "rgba(255,255,255,0.04)", padding: "12px 14px", color: "#FFFFFF", fontSize: "13px", outline: "none", boxSizing: "border-box" }}
+                  />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                  <label style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>Confirmar Senha</label>
+                  <input
+                    id="rec-confirma"
+                    type="password"
+                    required
+                    value={recConfirmNovaSenha}
+                    onChange={(e) => setRecConfirmNovaSenha(e.target.value)}
+                    placeholder="••••••••"
+                    style={{ width: "100%", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.12)", backgroundColor: "rgba(255,255,255,0.04)", padding: "12px 14px", color: "#FFFFFF", fontSize: "13px", outline: "none", boxSizing: "border-box" }}
+                  />
+                </div>
+              </div>
+
               {recErro && <div style={{ borderRadius: "12px", border: "1px solid rgba(239,68,68,0.3)", backgroundColor: "rgba(239,68,68,0.1)", padding: "10px 14px", fontSize: "12px", color: "#F87171" }}>{recErro}</div>}
               {recMsg && <div style={{ borderRadius: "12px", border: "1px solid rgba(34,197,94,0.3)", backgroundColor: "rgba(34,197,94,0.1)", padding: "10px 14px", fontSize: "12px", color: "#4ADE80", display: "flex", alignItems: "center", gap: "8px" }}><ShieldCheck style={{ width: "16px", height: "16px" }} /> {recMsg}</div>}
+
               <button
                 type="submit"
                 disabled={isLoadingRec}
@@ -515,10 +576,12 @@ function HomePage() {
               >
                 {isLoadingRec ? (
                   <>
-                    <Loader2 style={{ width: "18px", height: "18px", animation: "spin 1s linear infinite" }} /> Enviando E-mail...
+                    <Loader2 style={{ width: "18px", height: "18px", animation: "spin 1s linear infinite" }} /> Atualizando...
                   </>
                 ) : (
-                  "Enviar Link de Redefinição"
+                  <>
+                    <KeyRound style={{ width: "16px", height: "16px" }} /> Salvar Nova Senha
+                  </>
                 )}
               </button>
               <button type="button" onClick={() => setAba("login")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94A3B8" }}>
