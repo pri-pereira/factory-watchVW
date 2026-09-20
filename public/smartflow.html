@@ -859,7 +859,6 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
   <button class="tab-btn" onclick="showTab('tab-emprestados',this)">Emprestados</button>
   <button class="tab-btn" onclick="showTab('tab-setores-cfg',this)">Setores</button>
   <button class="tab-btn" id="tab-presencas-btn" onclick="showTab('tab-presencas',this); renderPresencasOperadores()">Presenças</button>
-  <button class="tab-btn" id="tab-ia-btn" onclick="showTab('tab-ia',this); iaTabAberto()">Análise IA</button>
 </nav>
 
 <!-- =================== PRESENÇAS OPERADORES (sync com Gestão Operacional) =================== -->
@@ -1000,7 +999,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
     <div class="dash-nav-sidebar">
       <div class="dash-nav-header">
         <span class="dash-nav-title">Métricas / Cards</span>
-        <span id="dashCountBadge" class="dash-count-badge">12</span>
+        <span id="dashCountBadge" class="dash-count-badge">11</span>
       </div>
       <div id="dashVerticalMenu" class="dash-menu-list"></div>
     </div>
@@ -1048,14 +1047,6 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
             <div class="card-head"><span class="card-title">Enfermaria — Foi / Retornou</span></div>
             <div class="card-body" id="enfermariaCard"></div>
           </div>
-        </div>
-      </div>
-
-      <!-- Seção: Análise Inteligente -->
-      <div class="dash-section" data-dash-sec="ia">
-        <div class="card">
-          <div class="card-head"><span class="card-title">Análise Inteligente (automática)</span></div>
-          <div class="card-body" id="analiseAutomaticaCard"></div>
         </div>
       </div>
 
@@ -1277,64 +1268,6 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
     </div>
   </div>
 </div>
-
-<!-- ===================== ANÁLISE IA ===================== -->
-<div id="tab-ia" class="page">
-  <!-- Hero bar -->
-  <div style="background:linear-gradient(135deg,#1e1b4b 0%,#312e81 60%,#4c1d95 100%);border-radius:var(--r);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border:1px solid rgba(99,102,241,.3)">
-    <div>
-      <div style="font-size:17px;font-weight:700;color:#e0e7ff;letter-spacing:.2px">Assistente Inteligente — Fahrwerk</div>
-      <div style="font-size:12px;color:#a5b4fc;margin-top:3px">Copie os dados abaixo e cole no assistente do Claude.ai</div>
-    </div>
-    <button onclick="copiarDadosIA()" class="btn" style="background:#6366f1;border-color:#6366f1;color:#fff;font-size:13px;font-weight:600;padding:10px 22px;gap:8px">
-      <span id="iaCopyIcon"></span> <span id="iaCopyTxt">Copiar dados do dia</span>
-    </button>
-  </div>
-
-  <!-- Quick context pills -->
-  <div id="iaContextPills" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px"></div>
-
-  <!-- Instrução -->
-  <div class="card">
-    <div class="card-head"><span class="card-title">Como usar</span></div>
-    <div class="card-body" style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--text2);line-height:1.7">
-      <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px;flex-shrink:0">1️⃣</span><span>Clique em <b>"Copiar dados do dia"</b> acima — os dados do setor são copiados automaticamente.</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px;flex-shrink:0">2️⃣</span><span>Abra o <b>Claude.ai</b> no navegador e inicie uma conversa (ou use a conversa atual).</span></div>
-      <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px;flex-shrink:0">3️⃣</span><span>Cole os dados (<b>Ctrl+V</b> ou segurar e colar no celular) e envie com um comando como: <i>"Analise esses dados e me dê sugestões de remanejamento."</i></span></div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--text3)">
-        Nota: você também pode usar os atalhos abaixo — cada um já inclui os dados e uma pergunta pronta, é só clicar e colar no Claude.ai.
-      </div>
-    </div>
-  </div>
-
-  <!-- Preview dos dados -->
-  <div class="card">
-    <div class="card-head">
-      <span class="card-title">Dados que serão copiados</span>
-      <button onclick="copiarDadosIA()" class="btn btn-sm" style="background:#6366f1;border-color:#6366f1;color:#fff">Copiar</button>
-    </div>
-    <div class="card-body">
-      <pre id="iaPreviewDados" style="font-family:var(--mono);font-size:11px;color:var(--text2);white-space:pre-wrap;line-height:1.6;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;max-height:280px;overflow-y:auto"></pre>
-    </div>
-  </div>
-
-  <!-- Atalhos prontos -->
-  <div class="card">
-    <div class="card-head"><span class="card-title">Atalhos — Copia dados e pergunta pronta</span></div>
-    <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
-      <div style="font-size:12px;color:var(--text3);margin-bottom:4px">Clique num atalho → os dados + a pergunta são copiados → cole no Claude.ai e envie.</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn" onclick="copiarComPergunta('Quais setores estão em situação crítica agora? Me dê a ordem de prioridade para remanejamento e diga quem pode cobrir quem.')">Setores críticos</button>
-        <button class="btn" onclick="copiarComPergunta('Com base nos próximos dias da agenda, em quais dias há maior risco de falta? Me alerte para os mais críticos.')">Risco nos próximos dias</button>
-        <button class="btn" onclick="copiarComPergunta('Sugira um plano prático de redistribuição: quem tem sobra e pode emprestar para quem tem falta, com quantidade de operadores.')">Plano de redistribuição</button>
-        <button class="btn" onclick="copiarComPergunta('Escreva um resumo executivo profissional do dia para eu enviar ao meu supervisor via WhatsApp ou e-mail.')">Resumo para supervisor</button>
-        <button class="btn" onclick="copiarComPergunta('Analise o padrão de ausências por tipo (férias, BH, afastamento, falta). O que mais está impactando? Alguma tendência preocupante?')">Padrão de ausências</button>
-      </div>
-      <div id="iaCopyMsg" style="font-size:12px;color:var(--ok);display:none;font-weight:600;padding:4px 0">Copiado! Agora cole no Claude.ai.</div>
-    </div>
-  </div>
-</div>
-
 <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importarDados(this)">
 
 </div><!-- /app-shell -->
@@ -2780,41 +2713,9 @@ function renderResumoExecutivo(ds, tOp, tAus, tAusReais, tres, cob){
   }
 }
 
-function renderAnaliseESaude(ds, tOp, tAus, tres, cob){
+function renderSaudeLinha(ds, tOp, tAus, tres, cob){
   const setoresOrdenados=SETORES.map(s=>({s,res:resultado(s,ds),aus:totalAus(s,ds)+enfVoltouQtd(s,ds)+atrasadoQtd(s,ds)+saiuVoltouQtd(s,ds)+liberadoQtd(s,ds)+atestadoQtd(s,ds)+customTotalQtd(s,ds)})).sort((a,b)=>a.res-b.res);
   const criticos=setoresOrdenados.filter(x=>x.res<0);
-  const piorSetor=setoresOrdenados.reduce((max,x)=>x.aus>(max?.aus||-1)?x:max,null);
-
-  // ---- Análise automática por regras ----
-  let txt='';
-  if(tAus===0){
-    txt=`Nenhuma ausência registrada até o momento neste turno. `;
-  } else {
-    txt=`Foram registradas ${tAus} ausência${tAus!==1?'s':''} no turno`;
-    if(piorSetor && piorSetor.aus>0) txt+=`, concentradas principalmente no setor ${piorSetor.s} (${piorSetor.aus})`;
-    txt+='. ';
-  }
-  if(cob>0){
-    txt+=`Foram realizadas ${cob} cobertura${cob!==1?'s':''} pelos monitores, ${criticos.length===0?'absorvendo totalmente':'reduzindo parcialmente'} o impacto operacional. `;
-  } else if(tAus>0){
-    txt+=`Nenhuma cobertura de monitor foi registrada até agora para compensar essas ausências. `;
-  }
-  if(tres>=0){
-    txt+=`O saldo geral do turno está positivo (+${tres}), indicando que os remanejamentos atenderam à necessidade da linha. `;
-  } else {
-    txt+=`O saldo geral do turno está negativo (${tres}), indicando déficit de mão de obra não totalmente coberto. `;
-  }
-  if(criticos.length>0){
-    txt+=`Recomenda-se atenção aos setores ${criticos.map(x=>x.s).join(', ')}, que apresentam déficit de mão de obra no momento.`;
-  } else {
-    txt+=`Nenhum setor está em situação crítica no momento.`;
-  }
-  const analiseEl=document.getElementById('analiseAutomaticaCard');
-  if(analiseEl){
-    analiseEl.innerHTML=`<p style="font-size:13px;line-height:1.6;color:var(--text2)">${txt}</p>
-      <p style="font-size:10px;color:var(--text3);margin-top:10px">Texto gerado automaticamente por regras, a partir dos dados do dia — não usa IA externa.</p>`;
-  }
-
   // ---- Índice de Saúde da Linha ----
   const presencaScore=tOp>0?Math.min(100,Math.round(((tOp-tAus)/tOp)*100)):100;
   const saldoScore=tres>=0?100:Math.max(0,100+tres*10);
@@ -2956,7 +2857,7 @@ function renderDashboard(){
   const tres=SETORES.reduce((a,s)=>a+resultado(s,ds),0);
   const cob=totalMonCob(), fora=totalMonFora();
   renderResumoExecutivo(ds, tOp, tAus, tAusReais, tres, cob);
-  renderAnaliseESaude(ds, tOp, tAus, tres, cob);
+  renderSaudeLinha(ds, tOp, tAus, tres, cob);
   renderEnfermariaCard(ds);
   renderTendencia30(ds);
   renderComparativo(ds);
@@ -3001,7 +2902,6 @@ const DASH_SECTIONS = [
   { id: 'mapa',         title: 'Mapa de Situação',       sub: 'Distribuição dos setores' },
   { id: 'destaques',    title: 'Melhores & Atenção',     sub: 'Destaques operacionais' },
   { id: 'saude_enf',    title: 'Saúde & Enfermaria',     sub: 'Índice de saúde e retorno' },
-  { id: 'ia',           title: 'Análise Inteligente',    sub: 'Diagnóstico automático' },
   { id: 'tendencia',    title: 'Tendência 30 Dias',      sub: 'Evolução histórica' },
   { id: 'comparativo',  title: 'Comparativo',            sub: 'Tabela comparativa' },
   { id: 'ausencias',    title: 'Ausências & Composição', sub: 'Por setor e tipo' },
@@ -3633,10 +3533,10 @@ async function gerarResumoImagemWA(){
   }
   cy+=maxLinhas*22+24;
 
-  // ---- Análise automática (resumida) ----
+  // ---- Síntese operacional (resumida) ----
   ctx.fillStyle='#F7F8FA'; _rr(ctx,28,cy,W-56,110,8); ctx.fill();
   ctx.strokeStyle='#E8EBF2'; _rr(ctx,28,cy,W-56,110,8); ctx.stroke();
-  ctx.fillStyle='#111827'; ctx.font='700 13px Arial'; ctx.fillText('Análise Automática',44,cy+22);
+  ctx.fillStyle='#111827'; ctx.font='700 13px Arial'; ctx.fillText('Síntese Operacional',44,cy+22);
   ctx.font='500 12px Arial'; ctx.fillStyle='#4A5068';
   let analiseTxt=`Foram registradas ${tAus} ausências no turno. `;
   if(cob>0) analiseTxt+=`Foram realizadas ${cob} coberturas pelos monitores. `;
@@ -4941,191 +4841,6 @@ function _tickTurno(){
 // Inicia o tick
 _tickTurno();
 setInterval(_tickTurno, 1000);
-
-/* ============================================================
-   ANÁLISE IA — gerador de dados para colar no Claude.ai
-============================================================ */
-
-function _coletarContextoIA() {
-  const ds = getDate();
-  const [y, m, d] = ds.split('-');
-  const dataFmt = `${d}/${m}/${y}`;
-  const setoresData = SETORES.map(s => {
-    const op = quadros[s]?.operadores || 0;
-    const ops = quadros[s]?.operacoes || 0;
-    const f = ausF(s, ds), b = ausB(s, ds), a = ausA(s, ds);
-    const falt = ausFalt(s, ds), enf = ausEnf(s, ds), out = ausOut(s, ds);
-    const lib = liberadoQtd(s, ds);
-    const atst = atestadoQtd(s, ds);
-    const atrd = atrasadoQtd(s, ds), saiu = saiuVoltouQtd(s, ds), custom = customTotalQtd(s, ds);
-    const lic = ausLic(s, ds);
-    const totalA = f + b + a + falt + enf + out + lib + atst + atrd + saiu + custom + lic;
-    const cob = monCob(s), fora = monFora(s);
-    const res = resultado(s, ds);
-    const emp = empSaldoSetor(s, ds);
-    return { setor: s, operadores: op, operacoes: ops,
-      ausencias: { ferias: f, bancoHoras: b, afastamento: a, falta: falt, enfermaria: enf, outros: out, liberacaoProgramada: lib, atestado: atst, atrasado: atrd, saiuVoltara: saiu, licencas: lic, cartoesPersonalizados: custom, total: totalA },
-      monitores: { cobrindo: cob, fora: fora },
-      emprestados: { enviou: emp.enviou, recebeu: emp.recebeu, saldo: emp.saldo },
-      resultado: res };
-  });
-  const previsao = [];
-  for (let i = 1; i <= 7; i++) {
-    const day = addDays(ds, i);
-    let tAus = 0;
-    SETORES.forEach(s => { tAus += totalAus(s, day); });
-    const sabSt = isSab(day) ? sabStatus(day) : null;
-    previsao.push({ data: day, diaSemana: dowName(day), totalAusencias: tAus, sabado: sabSt });
-  }
-  let tOp = 0, tOps = 0, tAusTot = 0, tRes = 0;
-  setoresData.forEach(s => { tOp += s.operadores; tOps += s.operacoes; tAusTot += s.ausencias.total; tRes += s.resultado; });
-  const obs = document.getElementById('obsGeral')?.value || '';
-  return { data: dataFmt, diaSemana: dowName(ds),
-    resumoGeral: { totalOperadores: tOp, totalOperacoes: tOps, totalAusencias: tAusTot, resultadoFinal: tRes, monitoresCobrindo: totalMonCob(), monitoresFora: totalMonFora() },
-    setores: setoresData, previsaoProximosDias: previsao, observacoes: obs };
-}
-
-function _gerarTextoIA(ctx, perguntaExtra) {
-  const linhas = [];
-  linhas.push(`=== VW TAUBATÉ — GESTÃO DE AUSÊNCIAS ===`);
-  linhas.push(`Data: ${ctx.diaSemana}, ${ctx.data}`);
-  linhas.push(``);
-  linhas.push(`CONTEXTO:`);
-  linhas.push(`Você é assistente do Monitor do setor Fahrwerk (Chassis/Suspensão) — Taubaté.`);
-  linhas.push(`O Monitor supervisiona ~24 pessoas. Resultado = Operadores - Ausências - Operações + Mon.Cobrindo + Saldo Emprestados.`);
-  linhas.push(`Resultado negativo = falta mão de obra. Positivo = sobra (pode emprestar).`);
-  linhas.push(``);
-  linhas.push(`RESUMO GERAL:`);
-  linhas.push(`- Operadores totais: ${ctx.resumoGeral.totalOperadores}`);
-  linhas.push(`- Operações necessárias: ${ctx.resumoGeral.totalOperacoes}`);
-  linhas.push(`- Total ausências: ${ctx.resumoGeral.totalAusencias}`);
-  linhas.push(`- Resultado final: ${ctx.resumoGeral.resultadoFinal >= 0 ? '+' : ''}${ctx.resumoGeral.resultadoFinal}`);
-  linhas.push(`- Monitores cobrindo linha: ${ctx.resumoGeral.monitoresCobrindo}`);
-  linhas.push(`- Monitores fora da linha: ${ctx.resumoGeral.monitoresFora}`);
-  linhas.push(``);
-  linhas.push(`DADOS POR SETOR:`);
-  ctx.setores.forEach(s => {
-    const aus = s.ausencias;
-    const partes = [`${s.operadores} oper.`, `${s.operacoes} ops`];
-    if (aus.ferias) partes.push(`férias:${aus.ferias}`);
-    if (aus.bancoHoras) partes.push(`BH:${aus.bancoHoras}`);
-    if (aus.afastamento) partes.push(`afas:${aus.afastamento}`);
-    if (aus.falta) partes.push(`falta:${aus.falta}`);
-    if (aus.enfermaria) partes.push(`enf:${aus.enfermaria}`);
-    if (aus.liberacaoProgramada) partes.push(`liberação:${aus.liberacaoProgramada}`);
-    if (aus.atestado) partes.push(`atestado:${aus.atestado}`);
-    if (aus.atrasado) partes.push(`atrasado:${aus.atrasado}`);
-    if (aus.saiuVoltara) partes.push(`saiu/voltará:${aus.saiuVoltara}`);
-    if (aus.licencas) partes.push(`licenças:${aus.licencas}`);
-    if (aus.cartoesPersonalizados) partes.push(`outros cartões:${aus.cartoesPersonalizados}`);
-    if (s.monitores.cobrindo) partes.push(`mon.cob:${s.monitores.cobrindo}`);
-    if (s.emprestados.enviou) partes.push(`enviou:${s.emprestados.enviou}`);
-    if (s.emprestados.recebeu) partes.push(`recebeu:${s.emprestados.recebeu}`);
-    const res = s.resultado;
-    linhas.push(`${s.setor}: ${partes.join(' | ')} → Resultado: ${res >= 0 ? '+' : ''}${res}`);
-  });
-  linhas.push(``);
-  linhas.push(`PREVISÃO PRÓXIMOS 7 DIAS (ausências agendadas):`);
-  ctx.previsaoProximosDias.forEach(d => {
-    let linha = `${d.diaSemana} ${d.data}: ${d.totalAusencias} ausências`;
-    if (d.sabado === 'prod') linha += ' (Prod)';
-    if (d.sabado === 'nao') linha += ' (Sem produção)';
-    linhas.push(linha);
-  });
-  if (ctx.observacoes) {
-    linhas.push(``);
-    linhas.push(`OBSERVAÇÕES: ${ctx.observacoes}`);
-  }
-  linhas.push(``);
-  linhas.push(`---`);
-  if (perguntaExtra) {
-    linhas.push(perguntaExtra);
-  } else {
-    linhas.push(`Analise os dados acima e me dê:`);
-    linhas.push(`1. Diagnóstico rápido do estado geral`);
-    linhas.push(`2. Alertas críticos (setores com problema)`);
-    linhas.push(`3. Sugestão prática de remanejamento`);
-    linhas.push(`4. Atenção para os próximos dias`);
-    linhas.push(`5. Uma ação imediata que devo tomar agora`);
-  }
-  return linhas.join('\n');
-}
-
-function _renderContextPills(ctx) {
-  const el = document.getElementById('iaContextPills');
-  if (!el) return;
-  const res = ctx.resumoGeral.resultadoFinal;
-  const cor = res >= 0 ? '#059669' : '#DC2626';
-  const criticos = ctx.setores.filter(s => s.resultado < 0).length;
-  el.innerHTML = `
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:var(--text2)"><b>${ctx.diaSemana}, ${ctx.data}</b></div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:var(--text2)">${ctx.resumoGeral.totalOperadores} operadores</div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:var(--text2)">${ctx.resumoGeral.totalAusencias} ausências</div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;font-weight:700;color:${cor}">Resultado ${res >= 0 ? '+' : ''}${res}</div>
-    ${criticos > 0 ? `<div style="background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:#DC2626;font-weight:600">${criticos} setor(es) crítico(s)</div>` : ''}
-  `;
-}
-
-function _renderPreview() {
-  const ctx = _coletarContextoIA();
-  _renderContextPills(ctx);
-  const pre = document.getElementById('iaPreviewDados');
-  if (pre) pre.textContent = _gerarTextoIA(ctx, null);
-}
-
-function copiarDadosIA() {
-  const ctx = _coletarContextoIA();
-  const texto = _gerarTextoIA(ctx, null);
-  navigator.clipboard.writeText(texto).then(() => {
-    const icon = document.getElementById('iaCopyIcon');
-    const txt = document.getElementById('iaCopyTxt');
-    if (icon) icon.textContent = 'OK';
-    if (txt) txt.textContent = 'Copiado!';
-    setTimeout(() => {
-      if (icon) icon.textContent = '';
-      if (txt) txt.textContent = 'Copiar dados do dia';
-    }, 2500);
-  }).catch(() => {
-    // fallback for Android/iOS
-    const ta = document.createElement('textarea');
-    ta.value = texto;
-    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
-    document.body.appendChild(ta);
-    ta.focus(); ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    const icon = document.getElementById('iaCopyIcon');
-    const txt = document.getElementById('iaCopyTxt');
-    if (icon) icon.textContent = 'OK';
-    if (txt) txt.textContent = 'Copiado!';
-    setTimeout(() => {
-      if (icon) icon.textContent = '';
-      if (txt) txt.textContent = 'Copiar dados do dia';
-    }, 2500);
-  });
-}
-
-function copiarComPergunta(pergunta) {
-  const ctx = _coletarContextoIA();
-  const texto = _gerarTextoIA(ctx, pergunta);
-  const msg = document.getElementById('iaCopyMsg');
-  navigator.clipboard.writeText(texto).then(() => {
-    if (msg) { msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 3000); }
-  }).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = texto;
-    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
-    document.body.appendChild(ta);
-    ta.focus(); ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    if (msg) { msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 3000); }
-  });
-}
-
-function iaTabAberto() {
-  _renderPreview();
-}
 
 /* ============================================================
    SINCRONIZAÇÃO EM TEMPO REAL — FIREBASE
