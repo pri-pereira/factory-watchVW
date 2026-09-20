@@ -1781,8 +1781,8 @@ function renderCards(ds){
             <div class="aus-item"><span class="aus-num" style="color:#94A3B8">${out}</span><span class="aus-lbl2">outros</span></div>
             <div class="aus-item"><span class="aus-num" style="color:#C084FC">${ausLic(setor,ds)}</span><span class="aus-lbl2">licenças</span></div>
             <div style="width:1px;height:32px;background:#E2E6EE;flex-shrink:0;align-self:center"></div>
-            <div class="aus-item"><span class="aus-num" style="color:#22C55E">${emp.recebeu>0?'+'+emp.recebeu:'0'}</span><span class="aus-lbl2" style="color:#22C55E">recebeu</span></div>
-            <div class="aus-item"><span class="aus-num" style="color:#EF4444">${emp.enviou>0?'-'+emp.enviou:'0'}</span><span class="aus-lbl2" style="color:#EF4444">emprestou</span></div>
+            <div class="aus-item"><span class="aus-num" style="color:#22C55E">${emp.recebeu>0?'+'+emp.recebeu:'0'}</span><span class="aus-lbl2" style="color:#22C55E">apoio rec.</span></div>
+            <div class="aus-item"><span class="aus-num" style="color:#EF4444">${emp.enviou>0?'-'+emp.enviou:'0'}</span><span class="aus-lbl2" style="color:#EF4444">apoio ced.</span></div>
           </div>
         </div>
         <div class="saldo-row">
@@ -1791,16 +1791,16 @@ function renderCards(ds){
         </div>
         ${emp.enviou>0||emp.recebeu>0?`
         <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(244,114,182,.07);border:1px solid rgba(244,114,182,.2);border-radius:var(--r-sm);font-size:12px;flex-wrap:wrap">
-          <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#F472B6">🔄 Emprestados</span>
-          ${emp.enviou>0?`<span style="color:#EF4444;font-weight:600">−${emp.enviou} enviou</span>`:''}
-          ${emp.recebeu>0?`<span style="color:#22C55E;font-weight:600">+${emp.recebeu} recebeu</span>`:''}
+          <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#F472B6">🔄 Apoio Operacional (Empréstimo)</span>
+          ${emp.enviou>0?`<span style="color:#EF4444;font-weight:600">−${emp.enviou} cedido</span>`:''}
+          ${emp.recebeu>0?`<span style="color:#22C55E;font-weight:600">+${emp.recebeu} recebido</span>`:''}
           <span style="color:var(--text3)">|</span>
           <span style="font-weight:600;color:${emp.saldo>=0?'#22C55E':'#EF4444'}">${emp.saldo>=0?'+':''}${emp.saldo} no resultado</span>
         </div>`:''}
         <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:var(--r-sm)">
           <span style="font-size:18px">🏥</span>
           <div style="display:flex;flex-direction:column;gap:1px;flex:1">
-            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#EF4444">Foi para enfermaria</span>
+            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#EF4444">Enfermaria</span>
             <span style="font-size:10px;color:var(--text3)">+ foi agora · − retornou</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
@@ -1809,22 +1809,10 @@ function renderCards(ds){
             <button onclick="incrementarFoiEnfermaria('${setor}','${ds}')" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(239,68,68,.4);background:var(--bg3);color:#EF4444;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);border-radius:var(--r-sm)">
-          <span style="font-size:18px">⏰</span>
-          <div style="display:flex;flex-direction:column;gap:1px;flex:1">
-            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#D97706">Chegará atrasado</span>
-            <span style="font-size:10px;color:var(--text3)">quantos estão a caminho</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <button onclick="setAtrasado('${setor}','${ds}',Math.max(0,(atrasadoQtd('${setor}','${ds}')||0)-1))" style="height:28px;padding:0 10px;border-radius:14px;border:1px solid rgba(245,158,11,.4);background:var(--bg3);color:#D97706;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap">↩ Chegou no setor</button>
-            <span id="atrd-${key}" style="font-size:20px;font-weight:700;font-family:var(--mono);color:#D97706;min-width:28px;text-align:center">${atrasadoQtd(setor,ds)}</span>
-            <button onclick="setAtrasado('${setor}','${ds}',(atrasadoQtd('${setor}','${ds}')||0)+1)" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(245,158,11,.4);background:var(--bg3);color:#D97706;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
-          </div>
-        </div>
         <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:var(--r-sm)">
           <span style="font-size:18px">🚶</span>
           <div style="display:flex;flex-direction:column;gap:1px;flex:1">
-            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7C3AED">Saiu / voltará</span>
+            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7C3AED">Saída temporária</span>
             <span style="font-size:10px;color:var(--text3)">saída temporária, ainda não voltou</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
@@ -1848,7 +1836,7 @@ function renderCards(ds){
         <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(219,39,119,.06);border:1px solid rgba(219,39,119,.22);border-radius:var(--r-sm)">
           <span style="font-size:18px">📄</span>
           <div style="display:flex;flex-direction:column;gap:1px;flex:1">
-            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#DB2777">Atestado hoje</span>
+            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#DB2777">Atestado</span>
             <span style="font-size:10px;color:var(--text3)">chegou com atestado médico, não estava agendado</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
@@ -5304,27 +5292,9 @@ function _tempoDecorrido(ts){
 }
 
 function _renderPainelPresenca(dados){
-  let el = document.getElementById('presencaPill');
-  if(!el){
-    el = document.createElement('div');
-    el.id = 'presencaPill';
-    el.style.cssText = 'position:fixed;bottom:44px;right:10px;background:#111827;color:#fff;font-size:11px;padding:8px 12px;border-radius:12px;z-index:9999;opacity:.92;box-shadow:0 2px 8px rgba(0,0,0,.2);display:flex;flex-direction:column;gap:5px;min-width:160px;font-family:\'DM Sans\',sans-serif';
-    document.body.appendChild(el);
-  }
-  el.innerHTML = PAPEIS_SMARTFLOW.map(papel=>{
-    const info = dados[papel];
-    const online = !!(info && info.online);
-    const cor = online ? '#22C55E' : '#6B7280';
-    const status = online ? 'online' : _tempoDecorrido(info && info.ultimaVez);
-    return `<div style="display:flex;align-items:center;gap:6px">
-      <span style="width:8px;height:8px;border-radius:50%;background:${cor};flex-shrink:0"></span>
-      <span style="flex:1">${papel.replace(' (Monitor)','').replace(' (Líder)','').replace(' (Supervisor(a))','').replace(' (Gerente)','')}</span>
-      <span style="color:#9CA3AF;font-size:10px">${status}</span>
-    </div>`;
-  }).join('') + `<div style="border-top:1px solid rgba(255,255,255,.15);margin-top:2px;padding-top:5px;display:flex;justify-content:space-between;gap:8px">
-      <button onclick="_atualizarManualmente()" style="background:none;border:none;color:#9CA3AF;font-size:10px;cursor:pointer;padding:0">🔄 atualizar agora</button>
-      <button onclick="_gerenciarPessoas()" style="background:none;border:none;color:#9CA3AF;font-size:10px;cursor:pointer;padding:0">⚙ gerenciar pessoas</button>
-    </div>`;
+  // Pop-up desativado conforme solicitacao para nao atrapalhar a leitura
+  const el = document.getElementById('presencaPill');
+  if(el) el.remove();
 }
 
 function _gerenciarPessoas(){
@@ -5386,16 +5356,9 @@ function _gerenciarPessoas(){
 }
 
 function _mostrarStatusConexao(texto){
-  let el = document.getElementById('syncStatusPill');
-  if(!el){
-    el = document.createElement('div');
-    el.id = 'syncStatusPill';
-    el.style.cssText = 'position:fixed;bottom:10px;right:10px;background:#111827;color:#fff;font-size:11px;padding:5px 10px;border-radius:20px;z-index:9999;opacity:.85;box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer';
-    el.title='Clique para forçar uma atualização agora';
-    el.onclick=()=>_atualizarManualmente();
-    document.body.appendChild(el);
-  }
-  el.textContent = texto;
+  // Status pill desativado para manter canto inferior limpo
+  const el = document.getElementById('syncStatusPill');
+  if(el) el.remove();
 }
 
 let _statusAntesAtualizar=null;
