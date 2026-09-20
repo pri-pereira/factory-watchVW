@@ -26,7 +26,7 @@
   --border-glass: rgba(255, 255, 255, 0.85);
   --text: #001E50;
   --text2: #243B53;
-  --text3: #627D98;
+  --text3: #334155;
   --primary: #001E50;
   --primary-deep: #001233;
   --primary-light: #002B7F;
@@ -287,7 +287,10 @@ input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.85); curs
   box-shadow: 0 12px 28px -4px rgba(2, 132, 199, 0.4);
 }
 .kpi:nth-child(2)::after { background: #38BDF8; opacity: 1; }
-.kpi:nth-child(2) .kpi-label { color: rgba(255, 255, 255, 0.85); }
+.kpi:nth-child(2) .kpi-label {
+  font-family: var(--font-display);
+  font-size: 12px; color: #001E50; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;
+}
 .kpi:nth-child(2) .kpi-val { color: #FFFFFF !important; }
 .kpi:nth-child(3)::after { background: linear-gradient(90deg, #DC2626, #F87171); }
 .kpi:nth-child(4)::after { background: linear-gradient(90deg, #059669, #34D399); }
@@ -295,7 +298,7 @@ input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.85); curs
 .kpi:nth-child(6)::after { background: linear-gradient(90deg, #0050B3, #38BDF8); }
 .kpi-label {
   font-family: var(--font-display);
-  font-size: 11px; color: #627D98; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
+  font-size: 12px; color: #001E50; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;
 }
 .kpi-val {
   font-family: var(--font-display);
@@ -347,8 +350,8 @@ input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.85); curs
   display: flex; align-items: center; justify-content: space-between;
 }
 .cells-nav-title {
-  font-family: var(--font-display); font-size: 12px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1.2px; color: #94A3B8;
+  font-family: var(--font-display); font-size: 12px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1.2px; color: #E2E8F0;
 }
 .cells-count-badge {
   font-size: 11px; font-weight: 800; background: rgba(2, 132, 199, 0.25); color: #38BDF8;
@@ -361,7 +364,7 @@ input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.85); curs
   display: flex; align-items: center; justify-content: space-between; padding: 11px 16px;
   border-radius: 14px; border: none; background: transparent; cursor: pointer;
   transition: all .2s cubic-bezier(0.16, 1, 0.3, 1); width: 100%; font-family: inherit; text-align: left;
-  color: #A0B3CC;
+  color: #FFFFFF;
 }
 .cell-nav-item:hover { background: rgba(255, 255, 255, 0.07); color: #FFFFFF; }
 .cell-nav-item.active {
@@ -391,8 +394,8 @@ input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.85); curs
   display: flex; align-items: center; justify-content: space-between;
 }
 .dash-nav-title {
-  font-family: var(--font-display); font-size: 12px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1.2px; color: #94A3B8;
+  font-family: var(--font-display); font-size: 12px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1.2px; color: #E2E8F0;
 }
 .dash-count-badge {
   font-size: 11px; font-weight: 800; background: rgba(2, 132, 199, 0.25); color: #38BDF8;
@@ -405,7 +408,7 @@ input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.85); curs
   display: flex; align-items: center; justify-content: space-between; padding: 11px 16px;
   border-radius: 14px; border: none; background: transparent; cursor: pointer;
   transition: all .2s cubic-bezier(0.16, 1, 0.3, 1); width: 100%; font-family: inherit; text-align: left;
-  color: #A0B3CC;
+  color: #FFFFFF;
 }
 .dash-nav-item:hover { background: rgba(255, 255, 255, 0.07); color: #FFFFFF; }
 .dash-nav-item.active {
@@ -453,29 +456,29 @@ input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.85); curs
 .sc-card-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
 .sc-row-label {
   font-family: var(--font-display);
-  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
-  color: var(--text3); margin-bottom: 6px;
+  font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.9px;
+  color: #001E50; margin-bottom: 6px;
 }
 .ni-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; }
 .ni-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-.ni-lbl { font-size: 10px; color: var(--text3); text-align: center; font-weight: 600; text-transform: uppercase; }
+.ni-lbl { font-size: 11px; color: #0F172A; text-align: center; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; }
 input[type=number].ni {
-  width: 56px; padding: 6px 4px; text-align: center; font-size: 15px; font-weight: 700;
+  width: 56px; padding: 6px 4px; text-align: center; font-size: 16px; font-weight: 800;
   font-family: var(--mono); border-radius: var(--r-sm);
-  border: 1px solid #D1D5DB; background: #F9FAFB; color: var(--text);
+  border: 1.5px solid #94A3B8; background: #FFFFFF; color: #001E50;
   transition: border-color .15s;
 }
 input[type=number].ni:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-dim); }
 .aus-display { display: flex; gap: 8px; flex-wrap: wrap; }
 .aus-item { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 52px; }
 .aus-num { font-size: 20px; font-weight: 700; font-family: var(--mono); line-height: 1; }
-.aus-lbl2 { font-size: 10px; color: var(--text3); font-weight: 600; text-transform: uppercase; }
+.aus-lbl2 { font-size: 11px; color: #0F172A; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; }
 .saldo-row {
   display: flex; align-items: center; justify-content: space-between;
-  background: #F8FAFC; border-radius: var(--r-sm); padding: 8px 12px;
-  border: 1px solid var(--border);
+  background: #F1F5F9; border-radius: var(--r-sm); padding: 10px 14px;
+  border: 1.5px solid #CBD5E1;
 }
-.saldo-lbl { font-size: 12px; color: var(--text3); font-weight: 600; }
+.saldo-lbl { font-size: 13px; color: #001E50; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
 .saldo-num { font-size: 16px; font-weight: 700; font-family: var(--mono); }
 .resultado-row {
   display: flex; align-items: center; justify-content: space-between;
@@ -1598,12 +1601,11 @@ function renderCellMenu(ds){
   if(badge) badge.textContent = SETORES.length;
 
   let html = `
-    <button class="cell-nav-item ${currentCell === 'all' ? 'active' : ''}" onclick="selectCell('all')" style="border-bottom:1px solid #EEF2F6">
+    <button class="cell-nav-item ${currentCell === 'all' ? 'active' : ''}" onclick="selectCell('all')" style="border-bottom:1px solid rgba(255,255,255,0.12);margin-bottom:6px">
       <div style="display:flex;align-items:center;gap:9px">
-        
         <div style="text-align:left">
-          <div style="font-weight:700;font-size:13px;color:${currentCell==='all'?'#001E50':'var(--text)'}">Todas as Células</div>
-          <div style="font-size:10px;color:var(--text3)">Visão panorâmica</div>
+          <div style="font-weight:800;font-size:13.5px;color:#FFFFFF">Todas as Células</div>
+          <div style="font-size:11px;color:${currentCell==='all'?'#E0F2FE':'#CBD5E1'};font-weight:600">Visão panorâmica</div>
         </div>
       </div>
     </button>
@@ -1612,22 +1614,22 @@ function renderCellMenu(ds){
   SETORES.forEach(s => {
     const isSel = (currentCell === s);
     const res = resultado(s, ds);
-    let dotColor = '#059669', glow = 'rgba(5,150,105,.35)';
-    if(res < 0){ dotColor = '#DC2626'; glow = 'rgba(220,38,38,.35)'; }
-    else if(res === 0){ dotColor = '#D97706'; glow = 'rgba(217,119,6,.35)'; }
-    const resColor = res > 0 ? '#15803D' : (res < 0 ? '#DC2626' : '#64748B');
+    let dotColor = '#4ADE80', glow = 'rgba(74,222,128,.5)';
+    if(res < 0){ dotColor = '#F87171'; glow = 'rgba(248,113,113,.5)'; }
+    else if(res === 0){ dotColor = '#FBBF24'; glow = 'rgba(251,191,36,.5)'; }
+    const resColor = res > 0 ? '#4ADE80' : (res < 0 ? '#F87171' : '#F1F5F9');
     const lider = lideres[s] || '';
 
     html += `
       <button class="cell-nav-item ${isSel ? 'active' : ''}" onclick="selectCell('${s}')">
         <div style="display:flex;align-items:center;gap:9px;min-width:0">
-          <div style="width:10px;height:10px;border-radius:50%;background:${dotColor};box-shadow:0 0 6px ${glow};flex-shrink:0"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:${dotColor};box-shadow:0 0 8px ${glow};flex-shrink:0"></div>
           <div style="text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-            <div style="font-weight:700;font-size:13px;color:${isSel?'#001E50':'var(--text)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s}</div>
-            ${lider ? `<div style="font-size:10px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Líder: ${lider}</div>` : ''}
+            <div style="font-weight:800;font-size:13.5px;color:#FFFFFF;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s}</div>
+            ${lider ? `<div style="font-size:11px;color:${isSel?'#E0F2FE':'#CBD5E1'};font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Líder: ${lider}</div>` : ''}
           </div>
         </div>
-        <div style="font-family:var(--mono);font-size:12px;font-weight:700;color:${resColor};flex-shrink:0;margin-left:8px">
+        <div style="font-family:var(--mono);font-size:13px;font-weight:800;color:${resColor};flex-shrink:0;margin-left:8px">
           ${res >= 0 ? '+' : ''}${res}
         </div>
       </button>
@@ -1670,7 +1672,7 @@ function renderAusIconStrip(ds){
         ${item.icon}
         <span style="position:absolute;top:-4px;right:-6px;min-width:18px;height:18px;background:${item.color};color:#fff;font-size:11px;font-weight:700;border-radius:999px;display:flex;align-items:center;justify-content:center;padding:0 4px;line-height:1;box-shadow:0 1px 4px rgba(0,0,0,.18)">${item.val}</span>
       </div>
-      <span style="font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.2px">${item.label}</span>
+      <span style="font-size:11px;color:#001E50;font-weight:800;letter-spacing:.3px;text-transform:uppercase">${item.label}</span>
     </div>
   `).join('');
 }
@@ -1763,11 +1765,11 @@ function _semaforo(res, ausReal, op) {
     </div>
     <div style="display:flex;flex-direction:column;gap:2px;flex:1">
       <div style="font-size:12px;font-weight:700;color:${cor};letter-spacing:.5px">${label}</div>
-      <div style="font-size:12px;font-weight:600;color:var(--text3)">resultado <span style="font-weight:800;color:${cor};font-size:32px;display:block;line-height:1.1;margin-top:2px">${res>=0?'+':''}${res}</span></div>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#1E293B">resultado <span style="font-weight:800;color:${cor};font-size:34px;display:block;line-height:1.1;margin-top:2px">${res>=0?'+':''}${res}</span></div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
       <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:${pctReal>15?'#DC2626':pctReal>5?'#D97706':'#059669'}">${pctReal}%</div>
-      <div style="font-size:9px;color:var(--text3);text-align:right">aus. reais<br>(sem F/BH)</div>
+      <div style="font-size:10.5px;font-weight:700;color:#1E293B;text-align:right;line-height:1.2">aus. reais<br>(sem F/BH)</div>
     </div>
   </div>`;
 }
@@ -1815,10 +1817,9 @@ function renderCards(ds){
                   <span style="font-size:16px;font-weight:700;color:#38BDF8;line-height:1.3;white-space:nowrap;letter-spacing:.1px">${lider}</span>
                 </div>
               </div>`
-            : `<div style="display:flex;align-items:center;gap:6px;border:1px dashed rgba(148,163,184,.25);border-radius:7px;padding:6px 10px;opacity:.5">
-                
-                <span style="font-size:11px;color:var(--text3);font-style:italic">Sem líder cadastrado</span>
-              </div>`}
+            : `<div style="display:flex;align-items:center;gap:6px;border:1.5px dashed #CBD5E1;background:#F8FAFC;border-radius:7px;padding:6px 12px">
+      <span style="font-size:11.5px;color:#334155;font-weight:700">Sem líder cadastrado</span>
+    </div>`}
         </div>
         <div class="tag-row">
           ${aus>0?`<span class="tag tag-aus">−${aus} aus.</span>`:''}
@@ -1848,8 +1849,8 @@ function renderCards(ds){
             <div class="aus-item"><span class="aus-num" style="color:#94A3B8">${out}</span><span class="aus-lbl2">outros</span></div>
             <div class="aus-item"><span class="aus-num" style="color:#C084FC">${ausLic(setor,ds)}</span><span class="aus-lbl2">licenças</span></div>
             <div style="width:1px;height:32px;background:#E2E6EE;flex-shrink:0;align-self:center"></div>
-            <div class="aus-item"><span class="aus-num" style="color:#22C55E">${emp.recebeu>0?'+'+emp.recebeu:'0'}</span><span class="aus-lbl2" style="color:#22C55E">apoio rec.</span></div>
-            <div class="aus-item"><span class="aus-num" style="color:#EF4444">${emp.enviou>0?'-'+emp.enviou:'0'}</span><span class="aus-lbl2" style="color:#EF4444">apoio ced.</span></div>
+            <div class="aus-item"><span class="aus-num" style="color:#22C55E">${emp.recebeu>0?'+'+emp.recebeu:'0'}</span><span class="aus-lbl2" style="color:#047857;font-weight:800">apoio rec.</span></div>
+            <div class="aus-item"><span class="aus-num" style="color:#EF4444">${emp.enviou>0?'-'+emp.enviou:'0'}</span><span class="aus-lbl2" style="color:#B91C1C;font-weight:800">apoio ced.</span></div>
           </div>
         </div>
         <div class="saldo-row">
@@ -1868,48 +1869,48 @@ function renderCards(ds){
           <span style="font-size:11px;font-weight:700;color:#14B8A6">ENF</span>
           <div style="display:flex;flex-direction:column;gap:1px;flex:1">
             <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#EF4444">Enfermaria</span>
-            <span style="font-size:10px;color:var(--text3)">+ foi agora · − retornou</span>
+            <span style="font-size:11px;color:#334155;font-weight:600">+ foi agora · − retornou</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
-            <button onclick="setEnfVoltou('${setor}','${ds}',Math.max(0,(enfVoltouQtd('${setor}','${ds}')||0)-1))" style="height:28px;padding:0 10px;border-radius:14px;border:1px solid rgba(239,68,68,.4);background:var(--bg3);color:#EF4444;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap">↩ Retornou</button>
+            <button onclick="setEnfVoltou('${setor}','${ds}',Math.max(0,(enfVoltouQtd('${setor}','${ds}')||0)-1))" style="height:28px;padding:0 10px;border-radius:14px;border:1px solid rgba(239,68,68,.4);background:#FFFFFF;color:#DC2626;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap">↩ Retornou</button>
             <span id="enfv-${key}" style="font-size:20px;font-weight:700;font-family:var(--mono);color:#EF4444;min-width:28px;text-align:center">${enfVoltouQtd(setor,ds)}</span>
-            <button onclick="incrementarFoiEnfermaria('${setor}','${ds}')" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(239,68,68,.4);background:var(--bg3);color:#EF4444;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
+            <button onclick="incrementarFoiEnfermaria('${setor}','${ds}')" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(239,68,68,.4);background:#FFFFFF;color:#DC2626;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:var(--r-sm)">
           <span style="font-size:11px;font-weight:700;color:#7C3AED">SAÍDA</span>
           <div style="display:flex;flex-direction:column;gap:1px;flex:1">
             <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7C3AED">Saída temporária</span>
-            <span style="font-size:10px;color:var(--text3)">saída temporária, ainda não voltou</span>
+            <span style="font-size:11px;color:#334155;font-weight:600">saída temporária, ainda não voltou</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
-            <button onclick="setSaiuVoltou('${setor}','${ds}',Math.max(0,(saiuVoltouQtd('${setor}','${ds}')||0)-1))" style="height:28px;padding:0 10px;border-radius:14px;border:1px solid rgba(139,92,246,.4);background:var(--bg3);color:#7C3AED;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap">↩ Retornou</button>
+            <button onclick="setSaiuVoltou('${setor}','${ds}',Math.max(0,(saiuVoltouQtd('${setor}','${ds}')||0)-1))" style="height:28px;padding:0 10px;border-radius:14px;border:1px solid rgba(139,92,246,.4);background:#FFFFFF;color:#6D28D9;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap">↩ Retornou</button>
             <span id="saiu-${key}" style="font-size:20px;font-weight:700;font-family:var(--mono);color:#7C3AED;min-width:28px;text-align:center">${saiuVoltouQtd(setor,ds)}</span>
-            <button onclick="setSaiuVoltou('${setor}','${ds}',(saiuVoltouQtd('${setor}','${ds}')||0)+1)" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(139,92,246,.4);background:var(--bg3);color:#7C3AED;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
+            <button onclick="setSaiuVoltou('${setor}','${ds}',(saiuVoltouQtd('${setor}','${ds}')||0)+1)" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(139,92,246,.4);background:#FFFFFF;color:#6D28D9;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(13,148,136,.06);border:1px solid rgba(13,148,136,.22);border-radius:var(--r-sm)">
           <span style="font-size:11px;font-weight:700;color:#0D9488">LIB</span>
           <div style="display:flex;flex-direction:column;gap:1px;flex:1">
             <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#0D9488">Liberação programada</span>
-            <span style="font-size:10px;color:var(--text3)">curso, evento, palestra — retorna depois</span>
+            <span style="font-size:11px;color:#334155;font-weight:600">curso, evento, palestra — retorna depois</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
-            <button onclick="setLiberado('${setor}','${ds}',Math.max(0,(liberadoQtd('${setor}','${ds}')||0)-1))" style="height:28px;padding:0 10px;border-radius:14px;border:1px solid rgba(13,148,136,.4);background:var(--bg3);color:#0D9488;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap">↩ Retornou</button>
+            <button onclick="setLiberado('${setor}','${ds}',Math.max(0,(liberadoQtd('${setor}','${ds}')||0)-1))" style="height:28px;padding:0 10px;border-radius:14px;border:1px solid rgba(13,148,136,.4);background:#FFFFFF;color:#0F766E;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap">↩ Retornou</button>
             <span id="lib-${key}" style="font-size:20px;font-weight:700;font-family:var(--mono);color:#0D9488;min-width:28px;text-align:center">${liberadoQtd(setor,ds)}</span>
-            <button onclick="setLiberado('${setor}','${ds}',(liberadoQtd('${setor}','${ds}')||0)+1)" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(13,148,136,.4);background:var(--bg3);color:#0D9488;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
+            <button onclick="setLiberado('${setor}','${ds}',(liberadoQtd('${setor}','${ds}')||0)+1)" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(13,148,136,.4);background:#FFFFFF;color:#0F766E;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(219,39,119,.06);border:1px solid rgba(219,39,119,.22);border-radius:var(--r-sm)">
           <span style="font-size:11px;font-weight:700;color:#DB2777">ATEST</span>
           <div style="display:flex;flex-direction:column;gap:1px;flex:1">
             <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#DB2777">Atestado</span>
-            <span style="font-size:10px;color:var(--text3)">chegou com atestado médico, não estava agendado</span>
+            <span style="font-size:11px;color:#334155;font-weight:600">chegou com atestado médico, não estava agendado</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
-            <button onclick="setAtestado('${setor}','${ds}',Math.max(0,(atestadoQtd('${setor}','${ds}')||0)-1))" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(219,39,119,.4);background:var(--bg3);color:#DB2777;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">−</button>
+            <button onclick="setAtestado('${setor}','${ds}',Math.max(0,(atestadoQtd('${setor}','${ds}')||0)-1))" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(219,39,119,.4);background:#FFFFFF;color:#BE185D;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">−</button>
             <span id="atst-${key}" style="font-size:20px;font-weight:700;font-family:var(--mono);color:#DB2777;min-width:28px;text-align:center">${atestadoQtd(setor,ds)}</span>
-            <button onclick="setAtestado('${setor}','${ds}',(atestadoQtd('${setor}','${ds}')||0)+1)" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(219,39,119,.4);background:var(--bg3);color:#DB2777;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
+            <button onclick="setAtestado('${setor}','${ds}',(atestadoQtd('${setor}','${ds}')||0)+1)" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(219,39,119,.4);background:#FFFFFF;color:#BE185D;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
           </div>
         </div>
         </div>
@@ -3006,8 +3007,8 @@ function renderDashSidebar(){
     return `
       <div class="dash-nav-item ${isActive ? 'active' : ''}" onclick="selectDashSection('${s.id}')">
         <div class="dash-nav-item-info">
-          <div class="dash-nav-item-name">${s.title}</div>
-          <div class="dash-nav-item-sub">${s.sub}</div>
+          <div class="dash-nav-item-name" style="font-weight:800;font-size:13.5px;color:#FFFFFF">${s.title}</div>
+          <div class="dash-nav-item-sub" style="font-size:11px;color:${isActive?'#E0F2FE':'#CBD5E1'};font-weight:600">${s.sub}</div>
         </div>
       </div>
     `;
