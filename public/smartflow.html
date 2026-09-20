@@ -308,10 +308,39 @@ input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.85); curs
 .cell-nav-item:hover { background: #F8FAFC; }
 .cell-nav-item.active { background: #EFF6FF; border-left-color: #3B82F6; }
 .cells-content-area { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
-@media (max-width: 860px) {
-  .cells-layout-container { flex-direction: column; }
-  .cells-nav-sidebar { width: 100%; position: static; }
+
+/* ============================================================
+   DASHBOARD VERTICAL LAYOUT & SIDEBAR
+============================================================ */
+.dash-layout-container { display: flex; gap: 16px; align-items: flex-start; margin-top: 10px; }
+.dash-nav-sidebar {
+  width: 250px; flex-shrink: 0; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; position: sticky; top: 70px;
 }
+.dash-nav-header {
+  padding: 12px 14px; background: #FAFBFC; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dash-nav-title {
+  font-family: var(--font-display); font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.8px; color: var(--text2);
+}
+.dash-count-badge {
+  font-size: 11px; font-weight: 700; background: #001E50; color: #fff;
+  padding: 2px 7px; border-radius: 999px;
+}
+.dash-menu-list {
+  display: flex; flex-direction: column; padding: 4px 0; max-height: calc(100vh - 220px); overflow-y: auto;
+}
+.dash-nav-item {
+  display: flex; align-items: center; justify-content: space-between; padding: 10px 14px;
+  border: none; background: transparent; cursor: pointer; transition: all .15s ease;
+  border-left: 4px solid transparent; width: 100%; font-family: inherit; text-align: left;
+}
+.dash-nav-item:hover { background: #F8FAFC; }
+.dash-nav-item.active { background: #EFF6FF; border-left-color: #3B82F6; }
+.dash-content-area { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.dash-section { width: 100%; }
 .sc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
 .sc-card {
   background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
@@ -664,27 +693,56 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
 .fw6 { font-weight: 700; } .mono { font-family: var(--mono); }
 
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVIDADE (MOBILE & DESKTOP)
 ============================================================ */
+@media (max-width: 860px) {
+  .cells-layout-container, .dash-layout-container { flex-direction: column; }
+  .cells-nav-sidebar, .dash-nav-sidebar { width: 100%; position: static; box-shadow: none; }
+  .cells-menu-list, .dash-menu-list {
+    flex-direction: row; overflow-x: auto; max-height: none; padding: 8px 6px; gap: 8px;
+    -webkit-overflow-scrolling: touch; white-space: nowrap; scrollbar-width: none;
+  }
+  .cells-menu-list::-webkit-scrollbar, .dash-menu-list::-webkit-scrollbar { display: none; }
+  .cell-nav-item, .dash-nav-item {
+    width: auto; flex-shrink: 0; border-left: none; border-bottom: 3px solid transparent;
+    border-radius: 8px; padding: 8px 12px; background: #F1F5F9;
+  }
+  .cell-nav-item.active, .dash-nav-item.active {
+    border-left: none; border-bottom-color: #3B82F6; background: #EFF6FF;
+  }
+}
+
 @media(max-width:640px) {
-  .hdr { padding: 8px 12px; min-height: auto; gap: 6px; }
-  .hdr-subtitle { display: none; }
-  .hdr-right { width: 100%; justify-content: space-between; }
-  .date-pill { flex: 1; }
-  .hdr-actions { gap: 4px; }
+  .hdr { padding: 8px 12px; min-height: auto; gap: 8px; flex-direction: column; align-items: stretch; }
+  .hdr-brand { justify-content: space-between; width: 100%; }
+  .hdr-smartflow { font-size: 18px; letter-spacing: 1px; }
+  .hdr-subtitle { font-size: 9px; letter-spacing: 0.8px; }
+  .hdr-right { width: 100%; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+  .btn-painel-link { padding: 4px 8px; font-size: 11px; }
+  .date-pill { padding: 4px 8px; flex: 1; min-width: 100px; }
+  .date-pill label { font-size: 10px; }
+  input[type=date] { font-size: 11px; }
+  .hdr-actions { gap: 4px; display: flex; align-items: center; }
   .hdr-actions .btn { padding: 5px 8px; font-size: 11px; }
-  .footer { padding: 8px 12px; }
-  .footer-ts { font-size: 10px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .page { padding: 12px; }
-  .tabs-bar { padding: 0 8px; }
-  .legend-bar { padding: 6px 12px; }
+
+  #turnoBar { padding: 8px 12px; gap: 8px; flex-direction: column; align-items: stretch; }
+  #turnoRelogio { font-size: 20px; }
+
+  .page { padding: 8px; }
+  .tabs-bar { padding: 0 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tabs-bar::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 8px 10px; font-size: 12px; white-space: nowrap; }
+
+  .summary-strip { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .kpi { padding: 8px 10px; }
+  .kpi-val { font-size: 18px; }
+
   .sc-grid { grid-template-columns: 1fr; }
   .dash-grid-2 { grid-template-columns: 1fr; }
   .rem-grid { grid-template-columns: 1fr; }
-  .summary-strip { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
 }
 @media(min-width:1200px) {
-  .sc-grid { grid-template-columns: repeat(3, 1fr); }
+  .sc-grid { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
   .prev-grid { grid-template-columns: repeat(10, 1fr); }
 }
 </style>
@@ -937,137 +995,183 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
 <div id="tab-dashboard" class="page">
   <div class="summary-strip" id="dashSummary"></div>
 
-  <div class="card">
-    <div class="card-head"><span class="card-title">📌 Resumo Executivo</span></div>
-    <div class="card-body" id="resumoExecCard"></div>
-  </div>
-
-  <div class="card">
-    <div class="card-head"><span class="card-title">🗺️ Mapa de Situação dos Setores</span></div>
-    <div class="card-body"><div id="mapaSetoresGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px"></div></div>
-  </div>
-
-  <div class="dash-grid-2">
-    <div class="card">
-      <div class="card-head"><span class="card-title">🏆 Melhores Setores (resultado)</span></div>
-      <div class="card-body" id="rankMelhoresSetores"></div>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="card-title">🚨 Setores que Precisam de Atenção</span></div>
-      <div class="card-body" id="rankAtencaoSetores"></div>
-    </div>
-  </div>
-
-  <div class="dash-grid-2">
-    <div class="card">
-      <div class="card-head"><span class="card-title">❤️ Índice de Saúde da Linha</span></div>
-      <div class="card-body" id="saudeLinhaCard"></div>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="card-title">🏥 Enfermaria — Foi / Retornou</span></div>
-      <div class="card-body" id="enfermariaCard"></div>
-    </div>
-  </div>
-
-  <div class="dash-grid-2">
-    <div class="card">
-      <div class="card-head"><span class="card-title">🤖 Análise Inteligente (automática)</span></div>
-      <div class="card-body" id="analiseAutomaticaCard"></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-head" style="flex-direction:column;align-items:flex-start;gap:8px">
-      <span class="card-title">📈 Tendência — Últimos 30 dias</span>
-      <div style="display:flex;gap:4px">
-        <button id="tendTabAus" onclick="setTendenciaModo('aus')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #3B82F6;background:#3B82F6;color:#fff;cursor:pointer">Total de ausências</button>
-        <button id="tendTabSaldo" onclick="setTendenciaModo('saldo')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #E2E6EE;background:transparent;color:#6B7280;cursor:pointer">Saldo diário</button>
+  <div class="dash-layout-container">
+    <!-- Sidebar Vertical do Dashboard -->
+    <div class="dash-nav-sidebar">
+      <div class="dash-nav-header">
+        <span class="dash-nav-title">Métricas / Cards</span>
+        <span id="dashCountBadge" class="dash-count-badge">12</span>
       </div>
+      <div id="dashVerticalMenu" class="dash-menu-list"></div>
     </div>
-    <div class="card-body"><div class="chart-wrap" style="height:200px"><canvas id="tendenciaChart" role="img" aria-label="Tendência"></canvas></div></div>
-  </div>
 
-  <div class="card">
-    <div class="card-head"><span class="card-title">📅 Comparativo</span></div>
-    <div class="card-body"><div id="comparativoTabela"></div></div>
-  </div>
-
-  <div class="card">
-    <div class="card-head"><span class="card-title">Ausências por setor (hoje)</span></div>
-    <div class="card-body"><div class="bar-chart" id="barChart"></div></div>
-  </div>
-  <div class="dash-grid-2">
-    <div class="card">
-      <div class="card-head"><span class="card-title">Composição de ausências</span></div>
-      <div class="card-body"><div class="chart-wrap" style="height:180px"><canvas id="pieChart" role="img" aria-label="Composição"></canvas></div></div>
-    </div>
-    <div class="card">
-      <div class="card-head"><span class="card-title">Status dos monitores</span></div>
-      <div class="card-body"><div class="chart-wrap" style="height:180px"><canvas id="monChart" role="img" aria-label="Monitores"></canvas></div></div>
-    </div>
-  </div>
-  <div class="dash-grid-2">
-    <div class="card">
-      <div class="card-head"><span class="card-title">Resultado final por setor</span></div>
-      <div class="card-body"><div class="chart-wrap" style="height:200px"><canvas id="saldoBar" role="img" aria-label="Resultado"></canvas></div></div>
-    </div>
-    <div class="card">
-      <div class="card-head" style="flex-direction:column;align-items:flex-start;gap:8px">
-        <span class="card-title">🏆 Ranking — Ausências Reais</span>
-        <div style="display:flex;gap:4px">
-          <button id="rankTabHoje" onclick="setRankTab('hoje')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #3B82F6;background:#3B82F6;color:#fff;cursor:pointer">Hoje</button>
-          <button id="rankTabSem" onclick="setRankTab('semanal')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #E2E6EE;background:transparent;color:#6B7280;cursor:pointer">Semana</button>
-          <button id="rankTabMes" onclick="setRankTab('mensal')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #E2E6EE;background:transparent;color:#6B7280;cursor:pointer">Mês</button>
-          <span id="rankPeriodoLabel" style="font-size:10px;color:var(--text3);align-self:center;margin-left:4px">sem férias e BH</span>
+    <!-- Área de Conteúdo dos Cards -->
+    <div class="dash-content-area" id="dashContentArea">
+      <!-- Seção: Resumo Executivo -->
+      <div class="dash-section" data-dash-sec="resumo">
+        <div class="card">
+          <div class="card-head"><span class="card-title">📌 Resumo Executivo</span></div>
+          <div class="card-body" id="resumoExecCard"></div>
         </div>
       </div>
-      <div id="rankingAusencias" style="overflow:hidden"></div>
-    </div>
-  </div>
-  <!-- Resultados Semanal e Mensal -->
-  <div class="dash-grid-2">
-    <div class="card">
-      <div class="card-head">
-        <span class="card-title">📅 Resultado Semanal</span>
-        <span id="dashSemanaLabel" style="font-size:10px;color:var(--text3)"></span>
-      </div>
-      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
-        <div id="dashSemanalKpis" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-        <div class="chart-wrap" style="height:160px"><canvas id="semanalBar"></canvas></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-head">
-        <span class="card-title">📆 Resultado Mensal</span>
-        <span id="dashMesLabel" style="font-size:10px;color:var(--text3)"></span>
-      </div>
-      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
-        <div id="dashMensalKpis" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-        <div class="chart-wrap" style="height:160px"><canvas id="mensalBar"></canvas></div>
-      </div>
-    </div>
-  </div>
 
-  <div class="card">
-    <div class="card-head"><span class="card-title">Histórico — últimos 15 dias</span></div>
-    <div class="card-body">
-      <div class="prev-grid" id="historicoGrid"></div>
-      <div class="chart-wrap" style="height:200px"><canvas id="histChart" role="img" aria-label="Histórico"></canvas></div>
-    </div>
-  </div>
+      <!-- Seção: Mapa de Situação dos Setores -->
+      <div class="dash-section" data-dash-sec="mapa">
+        <div class="card">
+          <div class="card-head"><span class="card-title">🗺️ Mapa de Situação dos Setores</span></div>
+          <div class="card-body"><div id="mapaSetoresGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px"></div></div>
+        </div>
+      </div>
 
-  <div class="card">
-    <div class="card-head"><span class="card-title">Previsão — próximos 15 dias</span></div>
-    <div class="card-body">
-      <div class="prev-grid" id="previsaoGrid"></div>
-      <div class="chart-wrap" style="height:200px"><canvas id="prevChart" role="img" aria-label="Previsão"></canvas></div>
-    </div>
-  </div>
+      <!-- Seção: Melhores & Atenção -->
+      <div class="dash-section" data-dash-sec="destaques">
+        <div class="dash-grid-2">
+          <div class="card">
+            <div class="card-head"><span class="card-title">🏆 Melhores Setores (resultado)</span></div>
+            <div class="card-body" id="rankMelhoresSetores"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">🚨 Setores que Precisam de Atenção</span></div>
+            <div class="card-body" id="rankAtencaoSetores"></div>
+          </div>
+        </div>
+      </div>
 
-  <div class="card">
-    <div class="card-head"><span class="card-title">👷 Previsão de Mão de Obra — Presença vs. Necessário</span></div>
-    <div class="card-body">
-      <div class="chart-wrap" style="height:220px"><canvas id="maoDeObraChart" role="img" aria-label="Previsão de mão de obra"></canvas></div>
+      <!-- Seção: Saúde & Enfermaria -->
+      <div class="dash-section" data-dash-sec="saude_enf">
+        <div class="dash-grid-2">
+          <div class="card">
+            <div class="card-head"><span class="card-title">❤️ Índice de Saúde da Linha</span></div>
+            <div class="card-body" id="saudeLinhaCard"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">🏥 Enfermaria — Foi / Retornou</span></div>
+            <div class="card-body" id="enfermariaCard"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção: Análise Inteligente -->
+      <div class="dash-section" data-dash-sec="ia">
+        <div class="card">
+          <div class="card-head"><span class="card-title">🤖 Análise Inteligente (automática)</span></div>
+          <div class="card-body" id="analiseAutomaticaCard"></div>
+        </div>
+      </div>
+
+      <!-- Seção: Tendência (30 dias) -->
+      <div class="dash-section" data-dash-sec="tendencia">
+        <div class="card">
+          <div class="card-head" style="flex-direction:column;align-items:flex-start;gap:8px">
+            <span class="card-title">📈 Tendência — Últimos 30 dias</span>
+            <div style="display:flex;gap:4px">
+              <button id="tendTabAus" onclick="setTendenciaModo('aus')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #3B82F6;background:#3B82F6;color:#fff;cursor:pointer">Total de ausências</button>
+              <button id="tendTabSaldo" onclick="setTendenciaModo('saldo')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #E2E6EE;background:transparent;color:#6B7280;cursor:pointer">Saldo diário</button>
+            </div>
+          </div>
+          <div class="card-body"><div class="chart-wrap" style="height:200px"><canvas id="tendenciaChart" role="img" aria-label="Tendência"></canvas></div></div>
+        </div>
+      </div>
+
+      <!-- Seção: Comparativo -->
+      <div class="dash-section" data-dash-sec="comparativo">
+        <div class="card">
+          <div class="card-head"><span class="card-title">📅 Comparativo</span></div>
+          <div class="card-body"><div id="comparativoTabela"></div></div>
+        </div>
+      </div>
+
+      <!-- Seção: Ausências por Setor & Composição -->
+      <div class="dash-section" data-dash-sec="ausencias">
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-head"><span class="card-title">Ausências por setor (hoje)</span></div>
+          <div class="card-body"><div class="bar-chart" id="barChart"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Composição de ausências</span></div>
+          <div class="card-body"><div class="chart-wrap" style="height:180px"><canvas id="pieChart" role="img" aria-label="Composição"></canvas></div></div>
+        </div>
+      </div>
+
+      <!-- Seção: Monitores & Resultado Final -->
+      <div class="dash-section" data-dash-sec="monitores">
+        <div class="dash-grid-2">
+          <div class="card">
+            <div class="card-head"><span class="card-title">Status dos monitores</span></div>
+            <div class="card-body"><div class="chart-wrap" style="height:180px"><canvas id="monChart" role="img" aria-label="Monitores"></canvas></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">Resultado final por setor</span></div>
+            <div class="card-body"><div class="chart-wrap" style="height:200px"><canvas id="saldoBar" role="img" aria-label="Resultado"></canvas></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção: Ranking Ausências Reais -->
+      <div class="dash-section" data-dash-sec="ranking_reais">
+        <div class="card">
+          <div class="card-head" style="flex-direction:column;align-items:flex-start;gap:8px">
+            <span class="card-title">🏆 Ranking — Ausências Reais</span>
+            <div style="display:flex;gap:4px">
+              <button id="rankTabHoje" onclick="setRankTab('hoje')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #3B82F6;background:#3B82F6;color:#fff;cursor:pointer">Hoje</button>
+              <button id="rankTabSem" onclick="setRankTab('semanal')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #E2E6EE;background:transparent;color:#6B7280;cursor:pointer">Semana</button>
+              <button id="rankTabMes" onclick="setRankTab('mensal')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #E2E6EE;background:transparent;color:#6B7280;cursor:pointer">Mês</button>
+              <span id="rankPeriodoLabel" style="font-size:10px;color:var(--text3);align-self:center;margin-left:4px">sem férias e BH</span>
+            </div>
+          </div>
+          <div id="rankingAusencias" style="overflow:hidden"></div>
+        </div>
+      </div>
+
+      <!-- Seção: Semanal & Mensal -->
+      <div class="dash-section" data-dash-sec="periodos">
+        <div class="dash-grid-2">
+          <div class="card">
+            <div class="card-head">
+              <span class="card-title">📅 Resultado Semanal</span>
+              <span id="dashSemanaLabel" style="font-size:10px;color:var(--text3)"></span>
+            </div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+              <div id="dashSemanalKpis" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+              <div class="chart-wrap" style="height:160px"><canvas id="semanalBar"></canvas></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <span class="card-title">📆 Resultado Mensal</span>
+              <span id="dashMesLabel" style="font-size:10px;color:var(--text3)"></span>
+            </div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+              <div id="dashMensalKpis" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+              <div class="chart-wrap" style="height:160px"><canvas id="mensalBar"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção: Histórico & Previsão -->
+      <div class="dash-section" data-dash-sec="previsao">
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-head"><span class="card-title">Histórico — últimos 15 dias</span></div>
+          <div class="card-body">
+            <div class="prev-grid" id="historicoGrid"></div>
+            <div class="chart-wrap" style="height:200px"><canvas id="histChart" role="img" aria-label="Histórico"></canvas></div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-head"><span class="card-title">Previsão — próximos 15 dias</span></div>
+          <div class="card-body">
+            <div class="prev-grid" id="previsaoGrid"></div>
+            <div class="chart-wrap" style="height:200px"><canvas id="prevChart" role="img" aria-label="Previsão"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">👷 Previsão de Mão de Obra — Presença vs. Necessário</span></div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:220px"><canvas id="maoDeObraChart" role="img" aria-label="Previsão de mão de obra"></canvas></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -2885,6 +2989,74 @@ function renderDashboard(){
   renderRanking('hoje', ds);
   renderPrevisao(ds);
   renderHistorico(ds);
+
+  // Menu lateral do Dashboard
+  renderDashSidebar();
+  applyDashSectionFilter();
+}
+
+const DASH_SECTIONS = [
+  { id: 'all',          icon: '📊', title: 'Todos os Cards',         sub: 'Visão panorâmica completa' },
+  { id: 'resumo',       icon: '📌', title: 'Resumo Executivo',       sub: 'Síntese operacional' },
+  { id: 'mapa',         icon: '🗺️', title: 'Mapa de Situação',       sub: 'Distribuição dos setores' },
+  { id: 'destaques',    icon: '🏆', title: 'Melhores & Atenção',     sub: 'Destaques operacionais' },
+  { id: 'saude_enf',    icon: '❤️', title: 'Saúde & Enfermaria',     sub: 'Índice de saúde e retorno' },
+  { id: 'ia',           icon: '🤖', title: 'Análise Inteligente',    sub: 'Diagnóstico automático' },
+  { id: 'tendencia',    icon: '📈', title: 'Tendência 30 Dias',      sub: 'Evolução histórica' },
+  { id: 'comparativo',  icon: '📅', title: 'Comparativo',            sub: 'Tabela comparativa' },
+  { id: 'ausencias',    icon: '📊', title: 'Ausências & Composição', sub: 'Por setor e tipo' },
+  { id: 'monitores',    icon: '⏱️', title: 'Monitores & Resultado',   sub: 'Cobertura e saldos' },
+  { id: 'ranking_reais',icon: '🏅', title: 'Ranking de Ausências',   sub: 'Sem férias e BH' },
+  { id: 'periodos',     icon: '📆', title: 'Semanal & Mensal',       sub: 'Visão consolidada' },
+  { id: 'previsao',     icon: '🔮', title: 'Histórico & Previsão',   sub: '15 dias e mão de obra' }
+];
+let currentDashSection = 'all';
+
+function renderDashSidebar(){
+  const menu = document.getElementById('dashVerticalMenu');
+  if(!menu) return;
+  menu.innerHTML = DASH_SECTIONS.map(s => {
+    const isActive = (currentDashSection === s.id);
+    return `
+      <div class="dash-nav-item ${isActive ? 'active' : ''}" onclick="selectDashSection('${s.id}')">
+        <span class="dash-nav-item-icon">${s.icon}</span>
+        <div class="dash-nav-item-info">
+          <div class="dash-nav-item-name">${s.title}</div>
+          <div class="dash-nav-item-sub">${s.sub}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function selectDashSection(secId){
+  currentDashSection = secId;
+  renderDashSidebar();
+  applyDashSectionFilter();
+}
+
+function applyDashSectionFilter(){
+  const sections = document.querySelectorAll('.dash-section');
+  sections.forEach(sec => {
+    const secName = sec.getAttribute('data-dash-sec');
+    if(currentDashSection === 'all' || currentDashSection === secName){
+      sec.style.display = 'block';
+    } else {
+      sec.style.display = 'none';
+    }
+  });
+
+  setTimeout(() => {
+    if(window.pieInst && typeof window.pieInst.resize === 'function') window.pieInst.resize();
+    if(window.monInst && typeof window.monInst.resize === 'function') window.monInst.resize();
+    if(window.saldoInst && typeof window.saldoInst.resize === 'function') window.saldoInst.resize();
+    if(window.tendenciaInst && typeof window.tendenciaInst.resize === 'function') window.tendenciaInst.resize();
+    if(window.histInst && typeof window.histInst.resize === 'function') window.histInst.resize();
+    if(window.prevInst && typeof window.prevInst.resize === 'function') window.prevInst.resize();
+    if(window.maoDeObraInst && typeof window.maoDeObraInst.resize === 'function') window.maoDeObraInst.resize();
+    if(window.semInst && typeof window.semInst.resize === 'function') window.semInst.resize();
+    if(window.mesInst && typeof window.mesInst.resize === 'function') window.mesInst.resize();
+  }, 60);
 }
 
 let _rankTabAtual = 'hoje';
