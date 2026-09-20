@@ -1,4 +1,4 @@
-﻿// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
 // auditoria.ts — Log de alterações de status por usuário
 // ─────────────────────────────────────────────────────────
 
@@ -14,7 +14,8 @@ export interface EntradaAuditoria {
   statusNovo: string;
 }
 
-const AUDIT_KEY = "sf_auditoria";
+const AUDIT_KEY = "vw_auditoria";
+const AUDIT_KEY_LEGACY = "sf_auditoria";
 
 function gerarId(): string {
   return Math.random().toString(36).slice(2, 10);
@@ -27,7 +28,7 @@ function horaAtual(): string {
 
 export function getAuditoria(): EntradaAuditoria[] {
   try {
-    const raw = localStorage.getItem(AUDIT_KEY);
+    const raw = localStorage.getItem(AUDIT_KEY) || localStorage.getItem(AUDIT_KEY_LEGACY);
     const all = raw ? (JSON.parse(raw) as EntradaAuditoria[]) : [];
     // Retorna só os registros das últimas 24h
     const corte = Date.now() - 24 * 60 * 60 * 1000;
@@ -60,10 +61,23 @@ export function registrarAlteracao(
   const lista = getAuditoria();
   lista.unshift(entrada); // mais recente primeiro
   // Guarda no máximo 200 registros
-  localStorage.setItem(AUDIT_KEY, JSON.stringify(lista.slice(0, 200)));
+  const serializado = JSON.stringify(lista.slice(0, 200));
+  localStorage.setItem(AUDIT_KEY, serializado);
+  localStorage.setItem(AUDIT_KEY_LEGACY, serializado);
+
+  // Sincroniza em background com Firebase
+  import("./firebase").then(({ db, authReady }) => {
+    authReady.then(() => {
+      import("firebase/database").then(({ ref, set }) => {
+        set(ref(db, `smartflow/dados/${AUDIT_KEY}`), serializado).catch(() => {});
+      });
+    });
+  });
+
   return entrada;
 }
 
 export function limparAuditoria(): void {
   localStorage.removeItem(AUDIT_KEY);
+  localStorage.removeItem(AUDIT_KEY_LEGACY);
 }

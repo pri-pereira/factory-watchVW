@@ -24,7 +24,7 @@ const BC_CHANNEL = "vw_smartflow_operadores";
 /** Carrega estado inicial: prefere localStorage como cache rápido */
 function carregarEstadoInicial(): OperadorComAuditoria[] {
   try {
-    const saved = localStorage.getItem(LS_KEY);
+    const saved = localStorage.getItem(OPERADORES_FB_KEY) || localStorage.getItem(LS_KEY);
     if (saved) return JSON.parse(saved);
   } catch (_) {}
   return operators as OperadorComAuditoria[];
@@ -47,7 +47,9 @@ export function useOperadoresSync() {
           if (!Array.isArray(remoto) || remoto.length === 0) return;
           applyingRemote.current = true;
           setOperadores(remoto);
-          localStorage.setItem(LS_KEY, JSON.stringify(remoto));
+          const raw = JSON.stringify(remoto);
+          localStorage.setItem(LS_KEY, raw);
+          localStorage.setItem(OPERADORES_FB_KEY, raw);
           applyingRemote.current = false;
         } catch (_) {}
       }
@@ -72,6 +74,7 @@ export function useOperadoresSync() {
             applyingRemote.current = true;
             setOperadores(remoto);
             localStorage.setItem(LS_KEY, valor);
+            localStorage.setItem(OPERADORES_FB_KEY, valor);
             applyingRemote.current = false;
           } catch (_) {}
         },
@@ -112,6 +115,7 @@ export function useOperadoresSync() {
     if (applyingRemote.current) return;
     const serializado = JSON.stringify(novosOperadores);
     localStorage.setItem(LS_KEY, serializado);
+    localStorage.setItem(OPERADORES_FB_KEY, serializado);
 
     // BroadcastChannel: instantâneo para todas as abas na mesma máquina
     if ("BroadcastChannel" in window) {
