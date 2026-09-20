@@ -717,13 +717,8 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <input type="date" id="dataAtual">
     </div>
     <div class="hdr-actions">
-      <button class="btn btn-pdf btn-sm" onclick="exportarPDF()">PDF</button>
-      <button class="btn btn-wa btn-sm" onclick="compartilharWA()">WA</button>
-      <button class="btn btn-resumo btn-sm" onclick="gerarResumoImagemWA()" title="Gerar imagem-resumo do dia para WhatsApp">📸 Resumo</button>
-      <button class="btn btn-accent btn-sm" onclick="salvar()">Salvar</button>
-      <button class="btn btn-ghost btn-sm" onclick="limpar()">Limpar</button>
       <button class="btn btn-backup btn-sm" onclick="exportarBackup()" title="Exportar backup de todos os dados">💾 Backup</button>
-      <button class="btn btn-wa-send btn-sm" onclick="compartilharBackupWA()" title="Compartilhar backup pelo WhatsApp">📤 Enviar</button>
+      <button class="btn btn-wa-send btn-sm" onclick="abrirModalEnviar()" title="Compartilhar informações operacionais do turno">📤 Enviar</button>
       <label class="btn btn-import btn-sm" title="Importar backup">📂 Importar<input type="file" accept=".json" onchange="importarBackup(event)" style="display:none"></label>
     </div>
   </div>
@@ -3176,6 +3171,113 @@ function renderHistorico(ds){
         x:{grid:{display:false},ticks:{color:'#8A90A8',font:{size:10},maxRotation:45},border:{color:'rgba(0,0,0,.08)'}}
       }
     }
+  });
+}
+
+/* ============================================================
+   COMPARTILHAR INFORMAÇÕES (MODAL ENVIAR)
+============================================================ */
+function abrirModalEnviar(){
+  let overlay = document.getElementById('modalEnviarInfo');
+  if(!overlay){
+    overlay = document.createElement('div');
+    overlay.id = 'modalEnviarInfo';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.7);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;font-family:var(--font-display,sans-serif)';
+    document.body.appendChild(overlay);
+  }
+  overlay.innerHTML = `
+    <div style="background:#1E293B;border:1px solid rgba(255,255,255,.15);border-radius:16px;max-width:420px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.5);overflow:hidden;animation:fadeIn .2s ease">
+      <div style="padding:16px 20px;background:#0F172A;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:20px">📤</span>
+          <div>
+            <div style="font-size:15px;font-weight:800;color:#FFFFFF;letter-spacing:.5px">COMPARTILHAR INFORMAÇÕES</div>
+            <div style="font-size:11px;color:#94A3B8">Envie o status operacional e quadro do dia</div>
+          </div>
+        </div>
+        <button onclick="document.getElementById('modalEnviarInfo').style.display='none'" style="background:none;border:none;color:#94A3B8;font-size:20px;cursor:pointer;line-height:1">×</button>
+      </div>
+      <div style="padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+        <button onclick="compartilharWA(); document.getElementById('modalEnviarInfo').style.display='none'" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1px solid #25D366;background:rgba(37,211,102,.12);color:#25D366;font-size:13px;font-weight:700;cursor:pointer;text-align:left;transition:all .15s ease">
+          <span style="font-size:20px">💬</span>
+          <div style="flex:1">
+            <div>Enviar via WhatsApp</div>
+            <div style="font-size:10px;font-weight:400;color:#86EFAC">Relatório formatado com ausências e apoio</div>
+          </div>
+        </button>
+
+        <button onclick="gerarResumoImagemWA(); document.getElementById('modalEnviarInfo').style.display='none'" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1px solid #6366F1;background:rgba(99,102,241,.12);color:#818CF8;font-size:13px;font-weight:700;cursor:pointer;text-align:left;transition:all .15s ease">
+          <span style="font-size:20px">📸</span>
+          <div style="flex:1">
+            <div>Gerar Imagem Resumo</div>
+            <div style="font-size:10px;font-weight:400;color:#C7D2FE">Card visual do turno para WhatsApp / Status</div>
+          </div>
+        </button>
+
+        <button onclick="copiarResumoTexto(); document.getElementById('modalEnviarInfo').style.display='none'" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1px solid #38BDF8;background:rgba(56,189,248,.12);color:#38BDF8;font-size:13px;font-weight:700;cursor:pointer;text-align:left;transition:all .15s ease">
+          <span style="font-size:20px">📋</span>
+          <div style="flex:1">
+            <div>Copiar Relatório em Texto</div>
+            <div style="font-size:10px;font-weight:400;color:#BAE6FD">Copia dados para Teams, E-mail ou Bloco de Notas</div>
+          </div>
+        </button>
+
+        <button onclick="exportarPDF(); document.getElementById('modalEnviarInfo').style.display='none'" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1px solid #EF4444;background:rgba(239,68,68,.12);color:#F87171;font-size:13px;font-weight:700;cursor:pointer;text-align:left;transition:all .15s ease">
+          <span style="font-size:20px">📄</span>
+          <div style="flex:1">
+            <div>Exportar Documento em PDF</div>
+            <div style="font-size:10px;font-weight:400;color:#FECACA">Relatório oficial para impressão ou arquivo</div>
+          </div>
+        </button>
+      </div>
+      <div style="padding:12px 20px;background:#0F172A;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:flex-end">
+        <button onclick="document.getElementById('modalEnviarInfo').style.display='none'" style="padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#94A3B8;font-size:12px;font-weight:600;cursor:pointer">Fechar</button>
+      </div>
+    </div>`;
+  overlay.style.display = 'flex';
+}
+
+function copiarResumoTexto(){
+  const ds=getDate();
+  const [y,m,d]=ds.split('-');
+  const sabSt=isSab(ds)?sabStatus(ds):null;
+  let txt=`*VW TAUBATÉ — AUSÊNCIAS ${d}/${m}/${y}*`;
+  if(sabSt==='prod') txt+=` 🏭 _Sáb. produção_`;
+  if(sabSt==='nao') txt+=` ⛔ _Sáb. sem produção_`;
+  txt+='\n\n';
+  let tOp=0,tOps=0,tF=0,tB=0,tA=0,tFalt=0;
+  SETORES.forEach(s=>{
+    const op=quadros[s]?.operadores||0,ops=quadros[s]?.operacoes||0;
+    const f=ausF(s,ds),b=ausB(s,ds),a=ausA(s,ds),falt=ausFalt(s,ds),cob=monCob(s),res=resultado(s,ds);
+    tOp+=op;tOps+=ops;tF+=f;tB+=b;tA+=a;tFalt+=falt;
+    if(op>0||(f+b+a+falt)>0){
+      txt+=`*${s}*\nOp:${op} Ops:${ops}`;
+      if(f>0) txt+=` | F:${f}`;
+      if(b>0) txt+=` | BH:${b}`;
+      if(a>0) txt+=` | Af:${a}`;
+      if(falt>0) txt+=` | Ft:${falt}`;
+      const enf2=ausEnf(s,ds),out2=ausOut(s,ds);
+      if(enf2>0) txt+=` | En:${enf2}`;
+      if(out2>0) txt+=` | Ot:${out2}`;
+      if(cob>0) txt+=` | Mon:+${cob}`;
+      txt+=` | Res:${res>=0?'+':''}${res}\n`;
+    }
+  });
+  const tres=SETORES.reduce((a,s)=>a+resultado(s,ds),0);
+  const tAusCompleto=SETORES.reduce((a,s)=>a+totalAus(s,ds)+enfVoltouQtd(s,ds)+saiuVoltouQtd(s,ds)+liberadoQtd(s,ds)+atestadoQtd(s,ds)+customTotalQtd(s,ds),0);
+  txt+=`\n*TOTAIS*\nOp:${tOp} | Ops:${tOps} | Aus:${tAusCompleto}\nMon.Cob.:${totalMonCob()} | Resultado:${tres>=0?'+':''}${tres}\n`;
+  const empDia=emprestados[ds]||[];
+  if(empDia.length>0){
+    txt+=`\n*APOIO OPERACIONAL (EMPRÉSTIMOS)*\n`;
+    empDia.forEach(e=>{ txt+=`${e.origem} → ${e.destino}: ${e.qtd} op.${e.nome?' ('+e.nome+')':''} ${PERIODO_LABEL[e.periodo]||''}\n`; });
+  }
+  const obs=document.getElementById('obsGeral')?.value;
+  if(obs) txt+=`\n_${obs}_`;
+  navigator.clipboard.writeText(txt).then(()=>{
+    if(typeof _showToast==='function') _showToast('📋 Informações copiadas para a área de transferência!', '#38BDF8');
+    else alert('Informações copiadas com sucesso!');
+  }).catch(()=>{
+    alert('Informações: erro ao copiar para clipboard.');
   });
 }
 
