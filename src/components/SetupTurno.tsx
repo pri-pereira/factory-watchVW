@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Factory, AlertTriangle, Radio, Unlock } from "lucide-react";
 
 // ──────────────────────────────────────────────
 // Tipos
@@ -41,7 +42,7 @@ function OperadorCard({ op, status }: { op: Operador; status: StatusCard }) {
       name:   "text-slate-400",
       role:   "text-slate-600",
       badge:  "bg-white/5 text-slate-500 border border-white/10",
-      badgeText: "⏳ Aguardando crachá",
+      badgeText: "Aguardando crachá",
     },
     presente: {
       card:   "border-emerald-500/40 bg-emerald-950/60 shadow-emerald-500/10 shadow-lg -translate-y-1 scale-[1.02]",
@@ -49,7 +50,7 @@ function OperadorCard({ op, status }: { op: Operador; status: StatusCard }) {
       name:   "text-emerald-200",
       role:   "text-emerald-500/70",
       badge:  "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30",
-      badgeText: "✅ Presente",
+      badgeText: "Presente",
     },
     ausente: {
       card:   "border-red-500/40 bg-red-950/60 shadow-red-500/10 shadow-lg",
@@ -57,7 +58,7 @@ function OperadorCard({ op, status }: { op: Operador; status: StatusCard }) {
       name:   "text-red-300",
       role:   "text-red-500/70",
       badge:  "bg-red-500/20 text-red-400 border border-red-500/30",
-      badgeText: "🔴 Não encontrado",
+      badgeText: "Não encontrado",
     },
   };
 
@@ -164,7 +165,7 @@ export function SetupTurno({ onLiberar }: SetupTurnoProps) {
         <div className="mb-3 flex items-center justify-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl text-2xl"
             style={{ background: "linear-gradient(135deg,#1d4ed8,#3b82f6)", boxShadow: "0 6px 20px rgba(59,130,246,0.35)" }}>
-            🏭
+            <Factory className="h-6 w-6 text-white" />
           </div>
           <div className="text-left">
             <p className="text-[10px] font-bold uppercase tracking-[2.5px] text-slate-500">VW Smart Flow</p>
@@ -205,7 +206,7 @@ export function SetupTurno({ onLiberar }: SetupTurnoProps) {
         <div className="mb-5 w-full max-w-3xl rounded-2xl border-2 border-red-500/40 bg-red-950/60 p-4 shadow-[0_8px_32px_rgba(248,113,113,0.2)] animate-in fade-in slide-in-from-top-4 duration-500">
           <div className="mb-2 flex items-center gap-3">
             <div className="flex h-9 w-9 shrink-0 animate-pulse items-center justify-center rounded-xl bg-red-500/20 text-lg">
-              🚨
+              <AlertTriangle className="h-5 w-5 text-red-400" />
             </div>
             <div>
               <p className="text-sm font-black text-red-300">Alerta de Cobertura</p>
@@ -228,7 +229,7 @@ export function SetupTurno({ onLiberar }: SetupTurnoProps) {
           disabled={simulando}
           className="flex items-center gap-2 rounded-xl border-2 border-indigo-500/40 bg-indigo-500/15 px-8 py-3.5 text-sm font-bold text-indigo-300 transition-all hover:enabled:border-indigo-400/70 hover:enabled:bg-indigo-500/25 hover:enabled:-translate-y-0.5 hover:enabled:shadow-[0_8px_24px_rgba(99,102,241,0.25)] disabled:cursor-not-allowed disabled:opacity-40"
         >
-          <span>📡</span>
+          <Radio className="h-4 w-4" />
           <span>Simular Entrada de Turno</span>
         </button>
 
@@ -242,7 +243,7 @@ export function SetupTurno({ onLiberar }: SetupTurnoProps) {
               : "cursor-not-allowed border-emerald-500/20 bg-emerald-950/30 text-emerald-500/30"
           }`}
         >
-          <span>🔓</span>
+          <Unlock className="h-4 w-4" />
           <span>Liberar SEQ e Iniciar Turno</span>
         </button>
       </div>

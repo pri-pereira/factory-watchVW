@@ -13,7 +13,7 @@ export const validateEnv = () => {
     if (error instanceof z.ZodError) {
       const missingKeys = error.errors.map((err) => err.path.join(".")).join(", ");
       console.error(
-        `❌ Erro de validação nas variáveis de ambiente: ${missingKeys}\n` +
+        `[ERRO] Falha de validação nas variáveis de ambiente: ${missingKeys}\n` +
         `Verifique o arquivo .env e compare com .env.example`
       );
     }

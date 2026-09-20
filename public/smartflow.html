@@ -774,9 +774,9 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <input type="date" id="dataAtual">
     </div>
     <div class="hdr-actions">
-      <button class="btn btn-backup btn-sm" onclick="exportarBackup()" title="Exportar backup de todos os dados">💾 Backup</button>
-      <button class="btn btn-wa-send btn-sm" onclick="abrirModalEnviar()" title="Compartilhar informações operacionais do turno">📤 Enviar</button>
-      <label class="btn btn-import btn-sm" title="Importar backup">📂 Importar<input type="file" accept=".json" onchange="importarBackup(event)" style="display:none"></label>
+      <button class="btn btn-backup btn-sm" onclick="exportarBackup()" title="Exportar backup de todos os dados">Backup</button>
+      <button class="btn btn-wa-send btn-sm" onclick="abrirModalEnviar()" title="Compartilhar informações operacionais do turno">Enviar</button>
+      <label class="btn btn-import btn-sm" title="Importar backup">Importar<input type="file" accept=".json" onchange="importarBackup(event)" style="display:none"></label>
     </div>
   </div>
 </header>
@@ -832,7 +832,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
     </div>
     <!-- Meta -->
     <div style="display:flex;flex-direction:column;align-items:center;padding:8px 16px;background:rgba(99,102,241,.12);cursor:pointer" onclick="editarMeta()" title="Clique para editar a meta">
-      <span style="font-size:10px;color:#A5B4FC;font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;font-family:var(--font-display)">Meta ✎</span>
+      <span style="font-size:10px;color:#A5B4FC;font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;font-family:var(--font-display)">Meta</span>
       <div style="display:flex;align-items:baseline;gap:3px;margin-top:2px">
         <span id="turnoMetaDisplay" style="font-size:22px;font-weight:800;color:#818cf8;font-family:var(--mono);line-height:1;font-variant-numeric:tabular-nums">400</span>
         <span style="font-size:11px;color:#A5B4FC;font-weight:600">veíc.</span>
@@ -840,7 +840,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
     </div>
     <!-- Velocidade da linha -->
     <div style="display:flex;flex-direction:column;align-items:center;padding:8px 16px;background:rgba(20,184,166,.12);cursor:pointer;border-left:1px solid rgba(255,255,255,.08)" onclick="editarVelocidade()" title="Clique para editar a velocidade da linha">
-      <span style="font-size:10px;color:#5EEAD4;font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;font-family:var(--font-display)">Velocidade ✎</span>
+      <span style="font-size:10px;color:#5EEAD4;font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;font-family:var(--font-display)">Velocidade</span>
       <div style="display:flex;align-items:baseline;gap:3px;margin-top:2px">
         <span id="turnoVelocDisplay" style="font-size:22px;font-weight:800;color:#14B8A6;font-family:var(--mono);line-height:1;font-variant-numeric:tabular-nums">--</span>
         <span style="font-size:11px;color:#5EEAD4;font-weight:600">veíc/h</span>
@@ -851,15 +851,15 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
 
 <!-- TABS -->
 <nav class="tabs-bar">
-  <button class="tab-btn active" onclick="showTab('tab-setores',this)"><span class="tab-icon">📋</span>Setores do dia</button>
-  <button class="tab-btn" onclick="showTab('tab-monitores',this)"><span class="tab-icon">👷</span>Monitores</button>
-  <button class="tab-btn" onclick="showTab('tab-agenda',this)"><span class="tab-icon">📅</span>Agenda</button>
-  <button class="tab-btn" onclick="showTab('tab-dashboard',this)"><span class="tab-icon">📊</span>Dashboard</button>
-  <button class="tab-btn" onclick="showTab('tab-obs',this)"><span class="tab-icon">📝</span>Observações</button>
-  <button class="tab-btn" onclick="showTab('tab-emprestados',this)"><span class="tab-icon">🔄</span>Emprestados</button>
-  <button class="tab-btn" onclick="showTab('tab-setores-cfg',this)"><span class="tab-icon">⚙️</span>Setores</button>
-  <button class="tab-btn" id="tab-presencas-btn" onclick="showTab('tab-presencas',this); renderPresencasOperadores()"><span class="tab-icon">🏭</span>Presenças</button>
-  <button class="tab-btn" id="tab-ia-btn" onclick="showTab('tab-ia',this); iaTabAberto()"><span class="tab-icon">🤖</span>Análise IA</button>
+  <button class="tab-btn active" onclick="showTab('tab-setores',this)">Setores do dia</button>
+  <button class="tab-btn" onclick="showTab('tab-monitores',this)">Monitores</button>
+  <button class="tab-btn" onclick="showTab('tab-agenda',this)">Agenda</button>
+  <button class="tab-btn" onclick="showTab('tab-dashboard',this)">Dashboard</button>
+  <button class="tab-btn" onclick="showTab('tab-obs',this)">Observações</button>
+  <button class="tab-btn" onclick="showTab('tab-emprestados',this)">Emprestados</button>
+  <button class="tab-btn" onclick="showTab('tab-setores-cfg',this)">Setores</button>
+  <button class="tab-btn" id="tab-presencas-btn" onclick="showTab('tab-presencas',this); renderPresencasOperadores()">Presenças</button>
+  <button class="tab-btn" id="tab-ia-btn" onclick="showTab('tab-ia',this); iaTabAberto()">Análise IA</button>
 </nav>
 
 <!-- =================== PRESENÇAS OPERADORES (sync com Gestão Operacional) =================== -->
@@ -867,12 +867,12 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
   <div style="padding:16px 20px;max-width:900px;margin:0 auto">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
       <div>
-        <h2 style="font-size:17px;font-weight:700;color:var(--text);letter-spacing:.03em">🏭 Presença de Operadores</h2>
+        <h2 style="font-size:17px;font-weight:700;color:var(--text);letter-spacing:.03em">Presença de Operadores</h2>
         <p style="font-size:12px;color:var(--text3);margin-top:2px">Sincronizado em tempo real com o Painel de Gestão Operacional</p>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <button onclick="_simularPresencasSmartflow()" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;background:#EEF2FF;color:#4F46E5;border:1px solid #C7D2FE;transition:all .15s;display:flex;align-items:center;gap:4px">⚡ Simular Teste</button>
-        <div id="presencas-status" style="font-size:11px;padding:4px 10px;border-radius:20px;background:#F0FDF4;color:#15803D;border:1px solid #BBF7D0;font-weight:600">⏳ Aguardando dados...</div>
+        <button onclick="_simularPresencasSmartflow()" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;background:#EEF2FF;color:#4F46E5;border:1px solid #C7D2FE;transition:all .15s;display:flex;align-items:center;gap:4px">Simular Teste</button>
+        <div id="presencas-status" style="font-size:11px;padding:4px 10px;border-radius:20px;background:#F0FDF4;color:#15803D;border:1px solid #BBF7D0;font-weight:600">Aguardando dados...</div>
       </div>
     </div>
     <!-- Cards de contagem total -->
@@ -924,7 +924,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
 
   <!-- LÍDERES POR SETOR -->
   <div class="card" style="max-width:700px">
-    <div class="card-head"><span class="card-title">👑 Líderes por setor</span></div>
+    <div class="card-head"><span class="card-title"> Líderes por setor</span></div>
     <div class="card-body" style="display:flex;flex-direction:column;gap:12px">
       <div style="font-size:12px;color:var(--text3)">O líder cadastrado aparece no Quadro do Dia de cada setor.</div>
       <div id="lideresGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px"></div>
@@ -966,8 +966,8 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
         <div class="ff"><label>Data (sábado)</label><input type="date" id="sabDataInp" style="width:160px"></div>
         <div class="ff"><label>Tipo</label>
           <select id="sabTipoInp" style="width:180px">
-            <option value="prod">✅ Sábado de produção</option>
-            <option value="nao">⛔ Sábado sem produção</option>
+            <option value="prod">Sábado de produção</option>
+            <option value="nao">Sábado sem produção</option>
           </select>
         </div>
         <button class="btn btn-accent btn-sm" onclick="addSabado()">Salvar</button>
@@ -1010,7 +1010,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <!-- Seção: Resumo Executivo -->
       <div class="dash-section" data-dash-sec="resumo">
         <div class="card">
-          <div class="card-head"><span class="card-title">📌 Resumo Executivo</span></div>
+          <div class="card-head"><span class="card-title">Resumo Executivo</span></div>
           <div class="card-body" id="resumoExecCard"></div>
         </div>
       </div>
@@ -1018,7 +1018,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <!-- Seção: Mapa de Situação dos Setores -->
       <div class="dash-section" data-dash-sec="mapa">
         <div class="card">
-          <div class="card-head"><span class="card-title">🗺️ Mapa de Situação dos Setores</span></div>
+          <div class="card-head"><span class="card-title">Mapa de Situação dos Setores</span></div>
           <div class="card-body"><div id="mapaSetoresGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px"></div></div>
         </div>
       </div>
@@ -1027,11 +1027,11 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <div class="dash-section" data-dash-sec="destaques">
         <div class="dash-grid-2">
           <div class="card">
-            <div class="card-head"><span class="card-title">🏆 Melhores Setores (resultado)</span></div>
+            <div class="card-head"><span class="card-title">Melhores Setores (resultado)</span></div>
             <div class="card-body" id="rankMelhoresSetores"></div>
           </div>
           <div class="card">
-            <div class="card-head"><span class="card-title">🚨 Setores que Precisam de Atenção</span></div>
+            <div class="card-head"><span class="card-title">Setores de Atenção</span></div>
             <div class="card-body" id="rankAtencaoSetores"></div>
           </div>
         </div>
@@ -1041,11 +1041,11 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <div class="dash-section" data-dash-sec="saude_enf">
         <div class="dash-grid-2">
           <div class="card">
-            <div class="card-head"><span class="card-title">❤️ Índice de Saúde da Linha</span></div>
+            <div class="card-head"><span class="card-title">Índice de Saúde da Linha</span></div>
             <div class="card-body" id="saudeLinhaCard"></div>
           </div>
           <div class="card">
-            <div class="card-head"><span class="card-title">🏥 Enfermaria — Foi / Retornou</span></div>
+            <div class="card-head"><span class="card-title">Enfermaria — Foi / Retornou</span></div>
             <div class="card-body" id="enfermariaCard"></div>
           </div>
         </div>
@@ -1054,7 +1054,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <!-- Seção: Análise Inteligente -->
       <div class="dash-section" data-dash-sec="ia">
         <div class="card">
-          <div class="card-head"><span class="card-title">🤖 Análise Inteligente (automática)</span></div>
+          <div class="card-head"><span class="card-title">Análise Inteligente (automática)</span></div>
           <div class="card-body" id="analiseAutomaticaCard"></div>
         </div>
       </div>
@@ -1063,7 +1063,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <div class="dash-section" data-dash-sec="tendencia">
         <div class="card">
           <div class="card-head" style="flex-direction:column;align-items:flex-start;gap:8px">
-            <span class="card-title">📈 Tendência — Últimos 30 dias</span>
+            <span class="card-title">Tendência — Últimos 30 dias</span>
             <div style="display:flex;gap:4px">
               <button id="tendTabAus" onclick="setTendenciaModo('aus')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #3B82F6;background:#3B82F6;color:#fff;cursor:pointer">Total de ausências</button>
               <button id="tendTabSaldo" onclick="setTendenciaModo('saldo')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #E2E6EE;background:transparent;color:#6B7280;cursor:pointer">Saldo diário</button>
@@ -1076,7 +1076,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <!-- Seção: Comparativo -->
       <div class="dash-section" data-dash-sec="comparativo">
         <div class="card">
-          <div class="card-head"><span class="card-title">📅 Comparativo</span></div>
+          <div class="card-head"><span class="card-title">Comparativo</span></div>
           <div class="card-body"><div id="comparativoTabela"></div></div>
         </div>
       </div>
@@ -1111,7 +1111,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <div class="dash-section" data-dash-sec="ranking_reais">
         <div class="card">
           <div class="card-head" style="flex-direction:column;align-items:flex-start;gap:8px">
-            <span class="card-title">🏆 Ranking — Ausências Reais</span>
+            <span class="card-title">Ranking — Ausências Reais</span>
             <div style="display:flex;gap:4px">
               <button id="rankTabHoje" onclick="setRankTab('hoje')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #3B82F6;background:#3B82F6;color:#fff;cursor:pointer">Hoje</button>
               <button id="rankTabSem" onclick="setRankTab('semanal')" style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid #E2E6EE;background:transparent;color:#6B7280;cursor:pointer">Semana</button>
@@ -1128,7 +1128,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
         <div class="dash-grid-2">
           <div class="card">
             <div class="card-head">
-              <span class="card-title">📅 Resultado Semanal</span>
+              <span class="card-title">Resultado Semanal</span>
               <span id="dashSemanaLabel" style="font-size:10px;color:var(--text3)"></span>
             </div>
             <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
@@ -1138,7 +1138,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
           </div>
           <div class="card">
             <div class="card-head">
-              <span class="card-title">📆 Resultado Mensal</span>
+              <span class="card-title">Resultado Mensal</span>
               <span id="dashMesLabel" style="font-size:10px;color:var(--text3)"></span>
             </div>
             <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
@@ -1166,7 +1166,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
           </div>
         </div>
         <div class="card">
-          <div class="card-head"><span class="card-title">👷 Previsão de Mão de Obra — Presença vs. Necessário</span></div>
+          <div class="card-head"><span class="card-title">Previsão de Mão de Obra — Presença vs. Necessário</span></div>
           <div class="card-body">
             <div class="chart-wrap" style="height:220px"><canvas id="maoDeObraChart" role="img" aria-label="Previsão de mão de obra"></canvas></div>
           </div>
@@ -1272,7 +1272,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
         <div id="setoresCfgList" style="display:flex;flex-direction:column;gap:5px"></div>
       </div>
       <div style="font-size:11px;color:var(--text3);padding:8px;background:var(--bg3);border-radius:var(--r-sm);border:1px solid var(--border)">
-        ⚠️ Ao remover um setor, os dados de agenda, quadro e monitores associados a ele serão perdidos. Esta ação não pode ser desfeita.
+        Atenção: Ao remover um setor, os dados de agenda, quadro e monitores associados a ele serão perdidos. Esta ação não pode ser desfeita.
       </div>
     </div>
   </div>
@@ -1287,7 +1287,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <div style="font-size:12px;color:#a5b4fc;margin-top:3px">Copie os dados abaixo e cole no assistente do Claude.ai</div>
     </div>
     <button onclick="copiarDadosIA()" class="btn" style="background:#6366f1;border-color:#6366f1;color:#fff;font-size:13px;font-weight:600;padding:10px 22px;gap:8px">
-      <span id="iaCopyIcon">📋</span> <span id="iaCopyTxt">Copiar dados do dia</span>
+      <span id="iaCopyIcon"></span> <span id="iaCopyTxt">Copiar dados do dia</span>
     </button>
   </div>
 
@@ -1302,7 +1302,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px;flex-shrink:0">2️⃣</span><span>Abra o <b>Claude.ai</b> no navegador e inicie uma conversa (ou use a conversa atual).</span></div>
       <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px;flex-shrink:0">3️⃣</span><span>Cole os dados (<b>Ctrl+V</b> ou segurar e colar no celular) e envie com um comando como: <i>"Analise esses dados e me dê sugestões de remanejamento."</i></span></div>
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--text3)">
-        💡 Dica: você também pode usar os atalhos abaixo — cada um já inclui os dados e uma pergunta pronta, é só clicar e colar no Claude.ai.
+        Nota: você também pode usar os atalhos abaixo — cada um já inclui os dados e uma pergunta pronta, é só clicar e colar no Claude.ai.
       </div>
     </div>
   </div>
@@ -1311,7 +1311,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
   <div class="card">
     <div class="card-head">
       <span class="card-title">Dados que serão copiados</span>
-      <button onclick="copiarDadosIA()" class="btn btn-sm" style="background:#6366f1;border-color:#6366f1;color:#fff">📋 Copiar</button>
+      <button onclick="copiarDadosIA()" class="btn btn-sm" style="background:#6366f1;border-color:#6366f1;color:#fff">Copiar</button>
     </div>
     <div class="card-body">
       <pre id="iaPreviewDados" style="font-family:var(--mono);font-size:11px;color:var(--text2);white-space:pre-wrap;line-height:1.6;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;max-height:280px;overflow-y:auto"></pre>
@@ -1320,17 +1320,17 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
 
   <!-- Atalhos prontos -->
   <div class="card">
-    <div class="card-head"><span class="card-title">⚡ Atalhos — copia dados + pergunta pronta</span></div>
+    <div class="card-head"><span class="card-title">Atalhos — Copia dados e pergunta pronta</span></div>
     <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
       <div style="font-size:12px;color:var(--text3);margin-bottom:4px">Clique num atalho → os dados + a pergunta são copiados → cole no Claude.ai e envie.</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn" onclick="copiarComPergunta('Quais setores estão em situação crítica agora? Me dê a ordem de prioridade para remanejamento e diga quem pode cobrir quem.')">🚨 Setores críticos</button>
-        <button class="btn" onclick="copiarComPergunta('Com base nos próximos dias da agenda, em quais dias há maior risco de falta? Me alerte para os mais críticos.')">📅 Risco nos próximos dias</button>
-        <button class="btn" onclick="copiarComPergunta('Sugira um plano prático de redistribuição: quem tem sobra e pode emprestar para quem tem falta, com quantidade de operadores.')">🔄 Plano de redistribuição</button>
-        <button class="btn" onclick="copiarComPergunta('Escreva um resumo executivo profissional do dia para eu enviar ao meu supervisor via WhatsApp ou e-mail.')">📋 Resumo para supervisor</button>
-        <button class="btn" onclick="copiarComPergunta('Analise o padrão de ausências por tipo (férias, BH, afastamento, falta). O que mais está impactando? Alguma tendência preocupante?')">📊 Padrão de ausências</button>
+        <button class="btn" onclick="copiarComPergunta('Quais setores estão em situação crítica agora? Me dê a ordem de prioridade para remanejamento e diga quem pode cobrir quem.')">Setores críticos</button>
+        <button class="btn" onclick="copiarComPergunta('Com base nos próximos dias da agenda, em quais dias há maior risco de falta? Me alerte para os mais críticos.')">Risco nos próximos dias</button>
+        <button class="btn" onclick="copiarComPergunta('Sugira um plano prático de redistribuição: quem tem sobra e pode emprestar para quem tem falta, com quantidade de operadores.')">Plano de redistribuição</button>
+        <button class="btn" onclick="copiarComPergunta('Escreva um resumo executivo profissional do dia para eu enviar ao meu supervisor via WhatsApp ou e-mail.')">Resumo para supervisor</button>
+        <button class="btn" onclick="copiarComPergunta('Analise o padrão de ausências por tipo (férias, BH, afastamento, falta). O que mais está impactando? Alguma tendência preocupante?')">Padrão de ausências</button>
       </div>
-      <div id="iaCopyMsg" style="font-size:12px;color:var(--ok);display:none;font-weight:600;padding:4px 0">✅ Copiado! Agora cole no Claude.ai.</div>
+      <div id="iaCopyMsg" style="font-size:12px;color:var(--ok);display:none;font-weight:600;padding:4px 0">Copiado! Agora cole no Claude.ai.</div>
     </div>
   </div>
 </div>
@@ -1345,10 +1345,10 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
 ============================================================ */
 let SETORES=['Mezanino','Chicotes','Vidros','DressUp','Fahrwerk','Para Choque','Bancos','Door Less','MQB'];
 const TIPO_LABEL={feria:'Férias',bh:'Banco de horas',afastamento:'Afastamento médico',falta:'Falta',enfermaria:'Enfermaria',outros:'Outros',
-  casamento:'💍 Casamento', lic_paternidade:'👶 Licença Paternidade', lic_maternidade:'🤰 Licença Maternidade', adocao:'👶 Adoção', falecimento:'🕊️ Falecimento de Familiar',
-  eleicoes:'🗳️ Folga — Trabalho nas Eleições', doacao_sangue:'🩸 Doação de Sangue',
-  atestado_medico:'🤒 Atestado Médico', consulta_medica:'🩺 Consulta Médica', exames:'💉 Exames', acidente_trabalho:'♿ Acidente de Trabalho',
-  vestibular:'📖 Vestibular / ENEM', acompanhamento_dependente:'👨\u200d👩\u200d👧 Acompanhamento de Dependente', outras_licencas:'📄 Outras Licenças'};
+  casamento:'Casamento', lic_paternidade:'Licença Paternidade', lic_maternidade:'Licença Maternidade', adocao:'Adoção', falecimento:'Falecimento de Familiar',
+  eleicoes:'Folga — Trabalho nas Eleições', doacao_sangue:'Doação de Sangue',
+  atestado_medico:'Atestado Médico', consulta_medica:'Consulta Médica', exames:'Exames', acidente_trabalho:'Acidente de Trabalho',
+  vestibular:'Vestibular / ENEM', acompanhamento_dependente:'Acompanhamento de Dependente', outras_licencas:'Outras Licenças'};
 const TIPO_COLOR={feria:'#3B82F6',bh:'#06B6D4',afastamento:'#8B5CF6',falta:'#DC2626',enfermaria:'#0EA5E9',outros:'#64748B',
   casamento:'#F472B6', lic_paternidade:'#60A5FA', lic_maternidade:'#F472B6', adocao:'#F9A8D4', falecimento:'#64748B',
   eleicoes:'#4ADE80', doacao_sangue:'#EF4444',
@@ -1465,11 +1465,11 @@ function renderBanner(ds){
   if(!isSab(ds)){el.innerHTML='';return;}
   const st=sabStatus(ds);
   if(st==='prod'){
-    el.innerHTML=`<div class="sab-banner prod" style="margin-bottom:8px"><span class="sab-banner-icon">🏭</span><div class="sab-banner-text"><div class="sab-banner-title" style="color:#b45309">Sábado de produção</div><div class="sab-banner-sub">${fmtDate(ds)}</div></div></div>`;
+    el.innerHTML=`<div class="sab-banner prod" style="margin-bottom:8px"><span class="sab-banner-icon" style="display:none"></span><div class="sab-banner-text"><div class="sab-banner-title" style="color:#b45309">Sábado de produção</div><div class="sab-banner-sub">${fmtDate(ds)}</div></div></div>`;
   } else if(st==='nao'){
-    el.innerHTML=`<div class="sab-banner nao" style="margin-bottom:8px"><span class="sab-banner-icon">⛔</span><div class="sab-banner-text"><div class="sab-banner-title" style="color:var(--sabnao)">Sábado sem produção</div><div class="sab-banner-sub">${fmtDate(ds)} — dados exibidos como referência</div></div></div>`;
+    el.innerHTML=`<div class="sab-banner nao" style="margin-bottom:8px"><span class="sab-banner-icon" style="display:none"></span><div class="sab-banner-text"><div class="sab-banner-title" style="color:var(--sabnao)">Sábado sem produção</div><div class="sab-banner-sub">${fmtDate(ds)} — dados exibidos como referência</div></div></div>`;
   } else {
-    el.innerHTML=`<div class="sab-banner undef" style="margin-bottom:8px"><span class="sab-banner-icon">📅</span><div class="sab-banner-text"><div class="sab-banner-title" style="color:var(--blue)">Sábado — tipo não definido</div><div class="sab-banner-sub">Defina na aba Agenda se é produção ou sem produção</div></div></div>`;
+    el.innerHTML=`<div class="sab-banner undef" style="margin-bottom:8px"><span class="sab-banner-icon" style="display:none"></span><div class="sab-banner-text"><div class="sab-banner-title" style="color:var(--blue)">Sábado — tipo não definido</div><div class="sab-banner-sub">Defina na aba Agenda se é produção ou sem produção</div></div></div>`;
   }
 }
 
@@ -1546,7 +1546,7 @@ window.addEventListener('storage', (e) => {
           const statusEl = document.getElementById('presencas-status');
           if(statusEl){
             const ts = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-            statusEl.textContent = `⚡ Atualizado às ${ts} (tempo real)`;
+            statusEl.textContent = `Atualizado às ${ts} (tempo real)`;
             statusEl.style.background='#EFF6FF'; statusEl.style.color='#2563EB'; statusEl.style.borderColor='#93C5FD';
           }
           if(document.getElementById('tab-presencas')?.classList.contains('active')){
@@ -1581,7 +1581,7 @@ function renderCellMenu(ds){
   let html = `
     <button class="cell-nav-item ${currentCell === 'all' ? 'active' : ''}" onclick="selectCell('all')" style="border-bottom:1px solid #EEF2F6">
       <div style="display:flex;align-items:center;gap:9px">
-        <span style="font-size:15px">🏢</span>
+        
         <div style="text-align:left">
           <div style="font-weight:700;font-size:13px;color:${currentCell==='all'?'#001E50':'var(--text)'}">Todas as Células</div>
           <div style="font-size:10px;color:var(--text3)">Visão panorâmica</div>
@@ -1605,7 +1605,7 @@ function renderCellMenu(ds){
           <div style="width:10px;height:10px;border-radius:50%;background:${dotColor};box-shadow:0 0 6px ${glow};flex-shrink:0"></div>
           <div style="text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
             <div style="font-weight:700;font-size:13px;color:${isSel?'#001E50':'var(--text)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s}</div>
-            ${lider ? `<div style="font-size:10px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">👑 ${lider}</div>` : ''}
+            ${lider ? `<div style="font-size:10px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Líder: ${lider}</div>` : ''}
           </div>
         </div>
         <div style="font-family:var(--mono);font-size:12px;font-weight:700;color:${resColor};flex-shrink:0;margin-left:8px">
@@ -1632,9 +1632,9 @@ function renderAusIconStrip(ds){
     {label:'outros',   val:tOut,  color:'#64748B', bg:'rgba(100,116,139,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(100,116,139,.12)" stroke="#64748B" stroke-width="1.5"/><path d="M12 8c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm0 2c-.55 0-1 .45-1 1v5c0 .55.45 1 1 1s1-.45 1-1v-5c0-.55-.45-1-1-1z" fill="#64748B"/></svg>`},
     {label:'atrasado', val:tAtrd, color:'#D97706', bg:'rgba(217,119,6,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(217,119,6,.12)" stroke="#D97706" stroke-width="1.5"/><path d="M12 7v5l3 1.5-.5 1L11 13V7h1zm0-5a10 10 0 100 20A10 10 0 0012 2zm0 18a8 8 0 110-16 8 8 0 010 16z" fill="#D97706"/></svg>`},
     {label:'saiu/volta', val:tSaiu, color:'#4F46E5', bg:'rgba(79,70,229,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(79,70,229,.12)" stroke="#4F46E5" stroke-width="1.5"/><path d="M13.5 5.5c0 .83-.67 1.5-1.5 1.5S10.5 6.33 10.5 5.5 11.17 4 12 4s1.5.67 1.5 1.5zM12 9c-2.21 0-4 1.79-4 4v5h2v-5c0-.55.22-1.05.59-1.41L12 13l1.41-1.41c.37.36.59.86.59 1.41v5h2v-5c0-2.21-1.79-4-4-4z" fill="#4F46E5"/></svg>`},
-    {label:'liberação', val:tLib, color:'#65A30D', bg:'rgba(101,163,13,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(101,163,13,.12)" stroke="#65A30D" stroke-width="1.5"/><text x="12" y="16" font-size="11" text-anchor="middle">🎓</text></svg>`},
-    {label:'atestado', val:tAtst, color:'#E11D48', bg:'rgba(225,29,72,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(225,29,72,.12)" stroke="#E11D48" stroke-width="1.5"/><text x="12" y="16" font-size="11" text-anchor="middle">📄</text></svg>`},
-    {label:'licenças', val:tLic, color:'#D946EF', bg:'rgba(217,70,239,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(217,70,239,.12)" stroke="#D946EF" stroke-width="1.5"/><text x="12" y="16" font-size="11" text-anchor="middle">👨‍👩‍👧</text></svg>`},
+    {label:'liberação', val:tLib, color:'#65A30D', bg:'rgba(101,163,13,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(101,163,13,.12)" stroke="#65A30D" stroke-width="1.5"/><text x="12" y="16" font-size="9" text-anchor="middle" font-weight="700" fill="#65A30D">LIB</text></svg>`},
+    {label:'atestado', val:tAtst, color:'#E11D48', bg:'rgba(225,29,72,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(225,29,72,.12)" stroke="#E11D48" stroke-width="1.5"/><text x="12" y="16" font-size="9" text-anchor="middle" font-weight="700" fill="#E11D48">ATE</text></svg>`},
+    {label:'licenças', val:tLic, color:'#D946EF', bg:'rgba(217,70,239,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(217,70,239,.12)" stroke="#D946EF" stroke-width="1.5"/><text x="12" y="9" font-size="9" text-anchor="middle" font-weight="700" fill="#D946EF">LIC</text></svg>`},
   ];
 
   // Apenas categorias que possuem registros (> 0) para manter minimalista e clean
@@ -1691,7 +1691,7 @@ function renderSummary(ds){
     html += `<div class="kpi"><div class="kpi-label">Mon. fora</div><div class="kpi-val" style="color:#818CF8">${fora}</div></div>`;
   }
   if(sabSt){
-    html += `<div class="kpi"><div class="kpi-label">Sábado</div><div class="kpi-val" style="font-size:14px;margin-top:4px">${sabSt==='prod'?'🏭 Prod.':'⛔ Sem prod.'}</div></div>`;
+    html += `<div class="kpi"><div class="kpi-label">Sábado</div><div class="kpi-val" style="font-size:14px;margin-top:4px">${sabSt==='prod'?'Produção':'Sem produção'}</div></div>`;
   }
   el.innerHTML = html;
 }
@@ -1797,7 +1797,7 @@ function renderCards(ds){
                 </div>
               </div>`
             : `<div style="display:flex;align-items:center;gap:6px;border:1px dashed rgba(148,163,184,.25);border-radius:7px;padding:6px 10px;opacity:.5">
-                <span style="font-size:13px">👤</span>
+                
                 <span style="font-size:11px;color:var(--text3);font-style:italic">Sem líder cadastrado</span>
               </div>`}
         </div>
@@ -1839,14 +1839,14 @@ function renderCards(ds){
         </div>
         ${emp.enviou>0||emp.recebeu>0?`
         <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(244,114,182,.07);border:1px solid rgba(244,114,182,.2);border-radius:var(--r-sm);font-size:12px;flex-wrap:wrap">
-          <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#F472B6">🔄 Apoio Operacional (Empréstimo)</span>
+          <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#F472B6">Apoio Operacional (Empréstimo)</span>
           ${emp.enviou>0?`<span style="color:#EF4444;font-weight:600">−${emp.enviou} cedido</span>`:''}
           ${emp.recebeu>0?`<span style="color:#22C55E;font-weight:600">+${emp.recebeu} recebido</span>`:''}
           <span style="color:var(--text3)">|</span>
           <span style="font-weight:600;color:${emp.saldo>=0?'#22C55E':'#EF4444'}">${emp.saldo>=0?'+':''}${emp.saldo} no resultado</span>
         </div>`:''}
         <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:var(--r-sm)">
-          <span style="font-size:18px">🏥</span>
+          <span style="font-size:11px;font-weight:700;color:#14B8A6">ENF</span>
           <div style="display:flex;flex-direction:column;gap:1px;flex:1">
             <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#EF4444">Enfermaria</span>
             <span style="font-size:10px;color:var(--text3)">+ foi agora · − retornou</span>
@@ -1858,7 +1858,7 @@ function renderCards(ds){
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:var(--r-sm)">
-          <span style="font-size:18px">🚶</span>
+          <span style="font-size:11px;font-weight:700;color:#7C3AED">SAÍDA</span>
           <div style="display:flex;flex-direction:column;gap:1px;flex:1">
             <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7C3AED">Saída temporária</span>
             <span style="font-size:10px;color:var(--text3)">saída temporária, ainda não voltou</span>
@@ -1870,7 +1870,7 @@ function renderCards(ds){
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(13,148,136,.06);border:1px solid rgba(13,148,136,.22);border-radius:var(--r-sm)">
-          <span style="font-size:18px">🎓</span>
+          <span style="font-size:11px;font-weight:700;color:#0D9488">LIB</span>
           <div style="display:flex;flex-direction:column;gap:1px;flex:1">
             <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#0D9488">Liberação programada</span>
             <span style="font-size:10px;color:var(--text3)">curso, evento, palestra — retorna depois</span>
@@ -1882,7 +1882,7 @@ function renderCards(ds){
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(219,39,119,.06);border:1px solid rgba(219,39,119,.22);border-radius:var(--r-sm)">
-          <span style="font-size:18px">📄</span>
+          <span style="font-size:11px;font-weight:700;color:#DB2777">ATEST</span>
           <div style="display:flex;flex-direction:column;gap:1px;flex:1">
             <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#DB2777">Atestado</span>
             <span style="font-size:10px;color:var(--text3)">chegou com atestado médico, não estava agendado</span>
@@ -2074,7 +2074,7 @@ function abrirNovoCartao(){
       <div class="ff"><label style="font-size:11px">Nome</label><input id="ncNome" type="text" maxlength="30" placeholder="Ex: Treinamento externo" style="width:100%;padding:8px;border:1px solid #CDD2DD;border-radius:8px;font-size:13px"></div>
       <div class="ff"><label style="font-size:11px">Descrição curta (opcional)</label><input id="ncDesc" type="text" maxlength="50" placeholder="Ex: fora da fábrica o dia todo" style="width:100%;padding:8px;border:1px solid #CDD2DD;border-radius:8px;font-size:13px"></div>
       <div style="display:flex;gap:8px">
-        <div class="ff" style="flex:1"><label style="font-size:11px">Ícone (emoji)</label><input id="ncIcone" type="text" maxlength="4" value="⭐" style="width:100%;padding:8px;border:1px solid #CDD2DD;border-radius:8px;font-size:16px;text-align:center"></div>
+        <div class="ff" style="flex:1"><label style="font-size:11px">Sigla / Rótulo</label><input id="ncIcone" type="text" maxlength="4" value="CARD" style="width:100%;padding:8px;border:1px solid #CDD2DD;border-radius:8px;font-size:16px;text-align:center"></div>
         <div class="ff" style="flex:1"><label style="font-size:11px">Cor</label><input id="ncCor" type="color" value="#4F46E5" style="width:100%;height:37px;padding:2px;border:1px solid #CDD2DD;border-radius:8px"></div>
       </div>
       <div id="ncEmojiGrid" style="display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:-4px"></div>
@@ -2084,7 +2084,7 @@ function abrirNovoCartao(){
       </div>
     </div>`;
   document.body.appendChild(overlay);
-  const EMOJIS_CARTAO=['⭐','🔧','🚗','🛠️','📋','🦺','🧯','🚨','☕','🍽️','🚻','🧹','🧼','📞','💻','🖨️','📦','🚚','🔋','⚡','🌡️','🩹','🧪','🔬','🚧','⚠️','🛑','✅','❌','⏳','📅','🗓️','👥','🧑‍🏭','🎯','📈','📉','🔔','🚪','🏭'];
+  const EMOJIS_CARTAO=['OP','APOIO','TREIN','SERV','ESP','MANUT','QUAL','INSP','SEG','LOG'];
   const gridEl=overlay.querySelector('#ncEmojiGrid');
   gridEl.innerHTML=EMOJIS_CARTAO.map(em=>`<button type="button" class="_ncEmojiBtn" data-em="${em}" style="font-size:16px;padding:5px 0;border:1px solid #E2E6EE;border-radius:6px;background:#F8F9FB;cursor:pointer">${em}</button>`).join('');
   gridEl.querySelectorAll('._ncEmojiBtn').forEach(b=>{
@@ -2095,7 +2095,7 @@ function abrirNovoCartao(){
     const nome=overlay.querySelector('#ncNome').value.trim();
     if(!nome){ alert('Dê um nome ao cartão.'); return; }
     const desc=overlay.querySelector('#ncDesc').value.trim();
-    const icone=overlay.querySelector('#ncIcone').value.trim()||'⭐';
+    const icone=overlay.querySelector('#ncIcone').value.trim()||'CARD';
     const cor=overlay.querySelector('#ncCor').value||'#4F46E5';
     if(!customCards) customCards=[];
     customCards.push({id:uid(),nome,desc,icone,cor});
@@ -2188,7 +2188,7 @@ function renderLideres(){
           onkeydown="if(event.key==='Enter') this.blur()">
         ${lider ? `<span style="font-size:14px;cursor:pointer" title="Limpar" onclick="lideres['${s}']='';document.getElementById('lider-${key}').value='';_autoSave();renderSetores();">×</span>` : ''}
       </div>
-      ${lider ? `<div style="font-size:11px;color:#F59E0B;font-weight:600">👑 ${lider}</div>` : ''}
+      ${lider ? `<div style="font-size:11px;color:#F59E0B;font-weight:600">Líder: ${lider}</div>` : ''}
     </div>`;
   }).join('');
 }
@@ -2299,7 +2299,7 @@ function addMonFromAba(){
   }
   salvarMon();
   document.getElementById('novoMonNome').value='';
-  _showMonMsg(`✓ "${nome}" adicionado ao setor ${setor}.`,'var(--ok)');
+  _showMonMsg(`"${nome}" adicionado ao setor ${setor}.`,'var(--ok)');
   renderMonitores();
   renderSetores(); // atualiza Setores do dia imediatamente
 }
@@ -2343,27 +2343,27 @@ function renderAgenda(){
               <option value="afastamento">Afastamento médico</option>
               <option value="falta">Falta</option>
               <option value="outros">Outros</option>
-              <optgroup label="👨‍👩‍👧 Licenças Familiares">
-                <option value="casamento">💍 Casamento</option>
-                <option value="lic_paternidade">👶 Licença Paternidade</option>
-                <option value="lic_maternidade">🤰 Licença Maternidade</option>
-                <option value="adocao">👶 Adoção</option>
-                <option value="falecimento">🕊️ Falecimento de Familiar</option>
+              <optgroup label="Licenças Familiares">
+                <option value="casamento">Casamento</option>
+                <option value="lic_paternidade">Licença Paternidade</option>
+                <option value="lic_maternidade">Licença Maternidade</option>
+                <option value="adocao">Adoção</option>
+                <option value="falecimento">Falecimento de Familiar</option>
               </optgroup>
-              <optgroup label="⚖️ Direitos Legais">
-                <option value="eleicoes">🗳️ Folga por Trabalho nas Eleições</option>
-                <option value="doacao_sangue">🩸 Doação de Sangue</option>
+              <optgroup label="Direitos Legais">
+                <option value="eleicoes">Folga por Trabalho nas Eleições</option>
+                <option value="doacao_sangue">Doação de Sangue</option>
               </optgroup>
-              <optgroup label="🏥 Saúde">
-                <option value="atestado_medico">🤒 Atestado Médico</option>
-                <option value="consulta_medica">🩺 Consulta Médica</option>
-                <option value="exames">💉 Exames</option>
-                <option value="acidente_trabalho">♿ Acidente de Trabalho</option>
+              <optgroup label="Saúde">
+                <option value="atestado_medico">Atestado Médico</option>
+                <option value="consulta_medica">Consulta Médica</option>
+                <option value="exames">Exames</option>
+                <option value="acidente_trabalho">Acidente de Trabalho</option>
               </optgroup>
-              <optgroup label="📚 Outros">
-                <option value="vestibular">📖 Vestibular / ENEM</option>
-                <option value="acompanhamento_dependente">👨‍👩‍👧 Acompanhamento de Dependente</option>
-                <option value="outras_licencas">📄 Outras Licenças</option>
+              <optgroup label="Outros">
+                <option value="vestibular">Vestibular / ENEM</option>
+                <option value="acompanhamento_dependente">Acompanhamento de Dependente</option>
+                <option value="outras_licencas">Outras Licenças</option>
               </optgroup>
             </select>
           </div>
@@ -2378,7 +2378,7 @@ function renderAgenda(){
         </div>
       </div>
       <div class="entry-list">${entries.length?entries.map(e=>`
-        <div class="ag-entry"><div class="ag-entry-left"><div class="tipo-dot" style="background:${TIPO_COLOR[e.tipo]}"></div><span class="fw6" style="font-size:12px">${TIPO_LABEL[e.tipo]}</span><span class="ag-dates">${fmtDate(e.inicio)} → ${fmtDate(e.fim)}</span></div><div style="display:flex;gap:4px"><button class="btn-x" onclick="editEntry('${setor}','${e.id}')" title="Editar" style="color:var(--text3)">✎</button><button class="btn-x" onclick="delEntry('${setor}','${e.id}')" title="Excluir">×</button></div></div>`).join('')
+        <div class="ag-entry"><div class="ag-entry-left"><div class="tipo-dot" style="background:${TIPO_COLOR[e.tipo]}"></div><span class="fw6" style="font-size:12px">${TIPO_LABEL[e.tipo]}</span><span class="ag-dates">${fmtDate(e.inicio)} → ${fmtDate(e.fim)}</span></div><div style="display:flex;gap:4px"><button class="btn-x" onclick="editEntry('${setor}','${e.id}')" title="Editar" style="color:var(--text3);font-size:11px;font-weight:700">EDIT</button><button class="btn-x" onclick="delEntry('${setor}','${e.id}')" title="Excluir">×</button></div></div>`).join('')
       :`<div class="empty-msg">Nenhuma ausência registrada</div>`}
       </div>`;
     g.appendChild(div);
@@ -2462,14 +2462,14 @@ function renderSabList(){
   el.innerHTML=sorted.map(ds=>{
     const st=sabados[ds];
     return `<div class="sab-item ${st}">
-      <div class="sab-item-left"><span style="font-size:16px">${st==='prod'?'🏭':'⛔'}</span>
+      <div class="sab-item-left"><span style="font-size:11px;font-weight:700;color:${st==='prod'?'#b45309':'#5C6480'}">${st==='prod'?'PROD':'FOLGA'}</span>
         <div><span class="fw6">${fmtDate(ds)}</span><span class="c-text3" style="font-size:11px"> — Sáb</span></div>
         ${st==='prod'?`<span class="sab-badge-prod">Produção</span>`:`<span class="sab-badge-nao">Sem produção</span>`}
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <select class="sab-tipo-sel" onchange="chSabTipo('${ds}',this.value)">
-          <option value="prod"${st==='prod'?' selected':''}>✅ Produção</option>
-          <option value="nao"${st==='nao'?' selected':''}>⛔ Sem produção</option>
+          <option value="prod"${st==='prod'?' selected':''}>Produção</option>
+          <option value="nao"${st==='nao'?' selected':''}>Sem produção</option>
         </select>
         <button class="btn-x" onclick="delSabado('${ds}')">×</button>
       </div>
@@ -2508,7 +2508,7 @@ function renderTimeline(){
     else if(sabSt==='prod') cls+=' is-sab-prod';
     else if(sabSt==='nao') cls+=' is-sab-nao';
     const n=parseInt(day.split('-')[2]);
-    const extra=sabSt==='prod'?'★':sabSt==='nao'?'×':'';
+    const extra=sabSt==='prod'?'[P]':sabSt==='nao'?'[F]':'';
     html+=`<th class="${cls}">${n}${extra}</th>`;
   });
   html+=`</tr></thead><tbody>`;
@@ -2536,7 +2536,7 @@ function renderTimeline(){
       if(sabSt==='prod') cls+=' is-sab-prod';
       else if(sabSt==='nao') cls+=' is-sab-nao';
       if(day===hoje) cls+=' is-hoje';
-      html+=`<td><div class="${cls}">${tip?`<span class="tl-tip">${tip}${sabSt?' '+(sabSt==='prod'?'★Prod':'⛔NãoProd'):''}</span>`:''}</div></td>`;
+      html+=`<td><div class="${cls}">${tip?`<span class="tl-tip">${tip}${sabSt?' '+(sabSt==='prod'?'Prod':'SemProd'):''}</span>`:''}</div></td>`;
     });
     html+=`</tr>`;
   });
@@ -2712,9 +2712,9 @@ function renderResumoExecutivo(ds, tOp, tAus, tAusReais, tres, cob){
   const setoresCriticos = SETORES.filter(s=>resultado(s,ds)<0);
   const nCriticos = setoresCriticos.length;
   let situacao, situacaoCor;
-  if(nCriticos===0){ situacao='🟢 Controlada'; situacaoCor='#059669'; }
-  else if(nCriticos<=2){ situacao='🟡 Atenção'; situacaoCor='#D97706'; }
-  else { situacao='🔴 Crítica'; situacaoCor='#DC2626'; }
+  if(nCriticos===0){ situacao='Controlada'; situacaoCor='#059669'; }
+  else if(nCriticos<=2){ situacao='Atenção'; situacaoCor='#D97706'; }
+  else { situacao='Crítica'; situacaoCor='#DC2626'; }
 
   const resumoEl=document.getElementById('resumoExecCard');
   if(resumoEl){
@@ -2739,9 +2739,9 @@ function renderResumoExecutivo(ds, tOp, tAus, tAusReais, tres, cob){
     mapaEl.innerHTML=SETORES.map(s=>{
       const res=resultado(s,ds);
       let cor,bg,label;
-      if(res>=0){ cor='#059669'; bg='rgba(5,150,105,.08)'; label='🟢'; }
-      else if(res===-1){ cor='#D97706'; bg='rgba(217,119,6,.08)'; label='🟡'; }
-      else { cor='#DC2626'; bg='rgba(220,38,38,.08)'; label='🔴'; }
+      if(res>=0){ cor='#059669'; bg='rgba(5,150,105,.08)'; label='OK'; }
+      else if(res===-1){ cor='#D97706'; bg='rgba(217,119,6,.08)'; label='ATEN'; }
+      else { cor='#DC2626'; bg='rgba(220,38,38,.08)'; label='CRIT'; }
       return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;background:${bg};border:1px solid ${_hexToRgba(cor,.3)};border-radius:var(--r-sm)">
         <span style="font-size:16px">${label}</span>
         <span style="font-size:11px;font-weight:700;text-align:center;color:var(--text2)">${s}</span>
@@ -2753,7 +2753,7 @@ function renderResumoExecutivo(ds, tOp, tAus, tAusReais, tres, cob){
   // Ranking — melhores setores
   const ordenados=SETORES.map(s=>({s,res:resultado(s,ds)})).sort((a,b)=>b.res-a.res);
   const melhores=ordenados.slice(0,3);
-  const medalhas=['🥇','🥈','🥉'];
+  const medalhas=['1º','2º','3º'];
   const melhoresEl=document.getElementById('rankMelhoresSetores');
   if(melhoresEl){
     melhoresEl.innerHTML=melhores.length?melhores.map((m,i)=>`
@@ -2771,12 +2771,12 @@ function renderResumoExecutivo(ds, tOp, tAus, tAusReais, tres, cob){
     atencaoEl.innerHTML=piores.length?piores.map(p=>{
       const cobEsteSetor=monCob(p.s);
       return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid var(--border)">
-        <span style="font-size:16px">${p.res<=-2?'🔴':'🟡'}</span>
+        <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:${p.res<=-2?'rgba(220,38,38,.1)':'rgba(217,119,6,.1)'};color:${p.res<=-2?'#DC2626':'#D97706'}">${p.res<=-2?'CRÍTICO':'ATENÇÃO'}</span>
         <span style="flex:1;font-size:13px;font-weight:600">${p.s}</span>
         <span style="font-size:11px;color:var(--text3)">${cobEsteSetor>0?cobEsteSetor+' mon. cobrindo':'sem cobertura'}</span>
         <span style="font-size:14px;font-weight:700;font-family:var(--mono);color:#DC2626">${p.res}</span>
       </div>`;
-    }).join('') : `<div class="empty-msg" style="color:#059669">🟢 Nenhum setor crítico hoje</div>`;
+    }).join('') : `<div class="empty-msg" style="color:#059669">Nenhum setor crítico hoje</div>`;
   }
 }
 
@@ -2832,7 +2832,7 @@ function renderAnaliseESaude(ds, tOp, tAus, tres, cob){
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
         <div style="font-size:36px;font-weight:800;font-family:var(--mono);color:${corFaixa}">${indice}%</div>
         <div style="display:flex;flex-direction:column;gap:2px">
-          <span style="font-size:15px;font-weight:700;color:${corFaixa}">${indice>=90?'🟢':indice>=60?'🟡':'🔴'} ${faixa}</span>
+          <span style="font-size:15px;font-weight:700;color:${corFaixa}">${faixa}</span>
           <span style="font-size:10px;color:var(--text3)">com base em presença, saldo, setores críticos e cobertura</span>
         </div>
       </div>
@@ -2996,19 +2996,19 @@ function renderDashboard(){
 }
 
 const DASH_SECTIONS = [
-  { id: 'all',          icon: '📊', title: 'Todos os Cards',         sub: 'Visão panorâmica completa' },
-  { id: 'resumo',       icon: '📌', title: 'Resumo Executivo',       sub: 'Síntese operacional' },
-  { id: 'mapa',         icon: '🗺️', title: 'Mapa de Situação',       sub: 'Distribuição dos setores' },
-  { id: 'destaques',    icon: '🏆', title: 'Melhores & Atenção',     sub: 'Destaques operacionais' },
-  { id: 'saude_enf',    icon: '❤️', title: 'Saúde & Enfermaria',     sub: 'Índice de saúde e retorno' },
-  { id: 'ia',           icon: '🤖', title: 'Análise Inteligente',    sub: 'Diagnóstico automático' },
-  { id: 'tendencia',    icon: '📈', title: 'Tendência 30 Dias',      sub: 'Evolução histórica' },
-  { id: 'comparativo',  icon: '📅', title: 'Comparativo',            sub: 'Tabela comparativa' },
-  { id: 'ausencias',    icon: '📊', title: 'Ausências & Composição', sub: 'Por setor e tipo' },
-  { id: 'monitores',    icon: '⏱️', title: 'Monitores & Resultado',   sub: 'Cobertura e saldos' },
-  { id: 'ranking_reais',icon: '🏅', title: 'Ranking de Ausências',   sub: 'Sem férias e BH' },
-  { id: 'periodos',     icon: '📆', title: 'Semanal & Mensal',       sub: 'Visão consolidada' },
-  { id: 'previsao',     icon: '🔮', title: 'Histórico & Previsão',   sub: '15 dias e mão de obra' }
+  { id: 'all',          title: 'Todos os Cards',         sub: 'Visão panorâmica completa' },
+  { id: 'resumo',       title: 'Resumo Executivo',       sub: 'Síntese operacional' },
+  { id: 'mapa',         title: 'Mapa de Situação',       sub: 'Distribuição dos setores' },
+  { id: 'destaques',    title: 'Melhores & Atenção',     sub: 'Destaques operacionais' },
+  { id: 'saude_enf',    title: 'Saúde & Enfermaria',     sub: 'Índice de saúde e retorno' },
+  { id: 'ia',           title: 'Análise Inteligente',    sub: 'Diagnóstico automático' },
+  { id: 'tendencia',    title: 'Tendência 30 Dias',      sub: 'Evolução histórica' },
+  { id: 'comparativo',  title: 'Comparativo',            sub: 'Tabela comparativa' },
+  { id: 'ausencias',    title: 'Ausências & Composição', sub: 'Por setor e tipo' },
+  { id: 'monitores',    title: 'Monitores & Resultado',   sub: 'Cobertura e saldos' },
+  { id: 'ranking_reais',title: 'Ranking de Ausências',   sub: 'Sem férias e BH' },
+  { id: 'periodos',     title: 'Semanal & Mensal',       sub: 'Visão consolidada' },
+  { id: 'previsao',     title: 'Histórico & Previsão',   sub: '15 dias e mão de obra' }
 ];
 let currentDashSection = 'all';
 
@@ -3019,7 +3019,6 @@ function renderDashSidebar(){
     const isActive = (currentDashSection === s.id);
     return `
       <div class="dash-nav-item ${isActive ? 'active' : ''}" onclick="selectDashSection('${s.id}')">
-        <span class="dash-nav-item-icon">${s.icon}</span>
         <div class="dash-nav-item-info">
           <div class="dash-nav-item-name">${s.title}</div>
           <div class="dash-nav-item-sub">${s.sub}</div>
@@ -3120,7 +3119,7 @@ function renderRanking(tab, ds){
   const maxPct = rankingData[0].pct || 1;
   rankEl.innerHTML = rankingData.map((item, i) => {
     const cor = item.pct > 15 ? '#DC2626' : item.pct > 5 ? '#D97706' : '#059669';
-    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}º`;
+    const medal = i === 0 ? '1º' : i === 1 ? '2º' : i === 2 ? '3º' : `${i+1}º`;
     return `<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--border)">
       <span style="font-size:14px;min-width:24px;text-align:center">${medal}</span>
       <div style="flex:1;min-width:0">
@@ -3219,7 +3218,7 @@ function renderPrevisao(ds){
     const resColor=res>0?'#059669':res<0?'#DC2626':'#9AA0B8';
     const div=document.createElement('div'); div.className=cardClass;
     div.innerHTML=`
-      <div class="prev-date">${dowName(day)} ${fmtDate(day)}${isHoje?`<span class="prev-hoje-dot">●</span>`:''}${sabSt==='prod'?`<span style="font-size:9px;background:rgba(245,200,66,.15);color:#b45309;padding:1px 5px;border-radius:999px;font-weight:600">🏭</span>`:''}${sabSt==='nao'?`<span style="font-size:9px;background:rgba(92,100,128,.15);color:#5C6480;padding:1px 5px;border-radius:999px">⛔</span>`:''}
+      <div class="prev-date">${dowName(day)} ${fmtDate(day)}${isHoje?`<span class="prev-hoje-dot">●</span>`:''}${sabSt==='prod'?`<span style="font-size:9px;background:rgba(245,200,66,.15);color:#b45309;padding:1px 5px;border-radius:999px;font-weight:700">PROD</span>`:''}${sabSt==='nao'?`<span style="font-size:9px;background:rgba(92,100,128,.15);color:#5C6480;padding:1px 5px;border-radius:999px;font-weight:700">SEM PROD</span>`:''}
       </div>
       ${sabSt==='nao'?`<div style="font-size:10px;color:var(--sabnao);font-style:italic;margin-bottom:4px">Sem produção</div>`:''}
       ${tF>0?`<div class="prev-aus-row"><span class="prev-label c-feria">Férias</span><span class="fw6 c-feria mono">${tF}</span></div>`:''}
@@ -3292,7 +3291,7 @@ function renderHistorico(ds){
     const resColor=res>0?'#059669':res<0?'#DC2626':'#9AA0B8';
     const div=document.createElement('div'); div.className=cardClass;
     div.innerHTML=`
-      <div class="prev-date">${dowName(day)} ${fmtDate(day)}${sabSt==='prod'?`<span style="font-size:9px;background:rgba(245,200,66,.15);color:#b45309;padding:1px 5px;border-radius:999px;font-weight:600">🏭</span>`:''}${sabSt==='nao'?`<span style="font-size:9px;background:rgba(92,100,128,.15);color:#5C6480;padding:1px 5px;border-radius:999px">⛔</span>`:''}
+      <div class="prev-date">${dowName(day)} ${fmtDate(day)}${sabSt==='prod'?`<span style="font-size:9px;background:rgba(245,200,66,.15);color:#b45309;padding:1px 5px;border-radius:999px;font-weight:700">PROD</span>`:''}${sabSt==='nao'?`<span style="font-size:9px;background:rgba(92,100,128,.15);color:#5C6480;padding:1px 5px;border-radius:999px;font-weight:700">SEM PROD</span>`:''}
       </div>
       ${semRegistro?`<div class="empty-msg" style="padding:4px 0">Sem registro salvo</div>`:`
       ${sabSt==='nao'?`<div style="font-size:10px;color:var(--sabnao);font-style:italic;margin-bottom:4px">Sem produção</div>`:''}
@@ -3347,7 +3346,7 @@ function abrirModalEnviar(){
     <div style="background:#1E293B;border:1px solid rgba(255,255,255,.15);border-radius:16px;max-width:420px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.5);overflow:hidden;animation:fadeIn .2s ease">
       <div style="padding:16px 20px;background:#0F172A;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between">
         <div style="display:flex;align-items:center;gap:10px">
-          <span style="font-size:20px">📤</span>
+          
           <div>
             <div style="font-size:15px;font-weight:800;color:#FFFFFF;letter-spacing:.5px">COMPARTILHAR INFORMAÇÕES</div>
             <div style="font-size:11px;color:#94A3B8">Envie o status operacional e quadro do dia</div>
@@ -3357,7 +3356,7 @@ function abrirModalEnviar(){
       </div>
       <div style="padding:18px 20px;display:flex;flex-direction:column;gap:10px">
         <button onclick="compartilharWA(); document.getElementById('modalEnviarInfo').style.display='none'" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1px solid #25D366;background:rgba(37,211,102,.12);color:#25D366;font-size:13px;font-weight:700;cursor:pointer;text-align:left;transition:all .15s ease">
-          <span style="font-size:20px">💬</span>
+          
           <div style="flex:1">
             <div>Enviar via WhatsApp</div>
             <div style="font-size:10px;font-weight:400;color:#86EFAC">Relatório formatado com ausências e apoio</div>
@@ -3365,7 +3364,7 @@ function abrirModalEnviar(){
         </button>
 
         <button onclick="gerarResumoImagemWA(); document.getElementById('modalEnviarInfo').style.display='none'" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1px solid #6366F1;background:rgba(99,102,241,.12);color:#818CF8;font-size:13px;font-weight:700;cursor:pointer;text-align:left;transition:all .15s ease">
-          <span style="font-size:20px">📸</span>
+          
           <div style="flex:1">
             <div>Gerar Imagem Resumo</div>
             <div style="font-size:10px;font-weight:400;color:#C7D2FE">Card visual do turno para WhatsApp / Status</div>
@@ -3373,7 +3372,7 @@ function abrirModalEnviar(){
         </button>
 
         <button onclick="copiarResumoTexto(); document.getElementById('modalEnviarInfo').style.display='none'" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1px solid #38BDF8;background:rgba(56,189,248,.12);color:#38BDF8;font-size:13px;font-weight:700;cursor:pointer;text-align:left;transition:all .15s ease">
-          <span style="font-size:20px">📋</span>
+          
           <div style="flex:1">
             <div>Copiar Relatório em Texto</div>
             <div style="font-size:10px;font-weight:400;color:#BAE6FD">Copia dados para Teams, E-mail ou Bloco de Notas</div>
@@ -3381,7 +3380,7 @@ function abrirModalEnviar(){
         </button>
 
         <button onclick="exportarPDF(); document.getElementById('modalEnviarInfo').style.display='none'" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1px solid #EF4444;background:rgba(239,68,68,.12);color:#F87171;font-size:13px;font-weight:700;cursor:pointer;text-align:left;transition:all .15s ease">
-          <span style="font-size:20px">📄</span>
+          
           <div style="flex:1">
             <div>Exportar Documento em PDF</div>
             <div style="font-size:10px;font-weight:400;color:#FECACA">Relatório oficial para impressão ou arquivo</div>
@@ -3400,8 +3399,8 @@ function copiarResumoTexto(){
   const [y,m,d]=ds.split('-');
   const sabSt=isSab(ds)?sabStatus(ds):null;
   let txt=`*VW TAUBATÉ — AUSÊNCIAS ${d}/${m}/${y}*`;
-  if(sabSt==='prod') txt+=` 🏭 _Sáb. produção_`;
-  if(sabSt==='nao') txt+=` ⛔ _Sáb. sem produção_`;
+  if(sabSt==='prod') txt+=` _Sáb. produção_`;
+  if(sabSt==='nao') txt+=` _Sáb. sem produção_`;
   txt+='\n\n';
   let tOp=0,tOps=0,tF=0,tB=0,tA=0,tFalt=0;
   SETORES.forEach(s=>{
@@ -3432,7 +3431,7 @@ function copiarResumoTexto(){
   const obs=document.getElementById('obsGeral')?.value;
   if(obs) txt+=`\n_${obs}_`;
   navigator.clipboard.writeText(txt).then(()=>{
-    if(typeof _showToast==='function') _showToast('📋 Informações copiadas para a área de transferência!', '#38BDF8');
+    if(typeof _showToast==='function') _showToast('Informações copiadas para a área de transferência!', '#38BDF8');
     else alert('Informações copiadas com sucesso!');
   }).catch(()=>{
     alert('Informações: erro ao copiar para clipboard.');
@@ -3447,8 +3446,8 @@ function compartilharWA(){
   const [y,m,d]=ds.split('-');
   const sabSt=isSab(ds)?sabStatus(ds):null;
   let txt=`*VW TAUBATÉ — AUSÊNCIAS ${d}/${m}/${y}*`;
-  if(sabSt==='prod') txt+=` 🏭 _Sáb. produção_`;
-  if(sabSt==='nao') txt+=` ⛔ _Sáb. sem produção_`;
+  if(sabSt==='prod') txt+=` _Sáb. produção_`;
+  if(sabSt==='nao') txt+=` _Sáb. sem produção_`;
   txt+='\n\n';
   let tOp=0,tOps=0,tF=0,tB=0,tA=0,tFalt=0;
   SETORES.forEach(s=>{
@@ -3535,7 +3534,7 @@ async function gerarResumoImagemWA(){
   const cob=totalMonCob();
   const criticos=SETORES.filter(s=>resultado(s,ds)<0);
   const presentes=tOp-tAus;
-  const situacao=criticos.length===0?['🟢 Controlada','#059669']:criticos.length<=2?['🟡 Atenção','#D97706']:['🔴 Crítica','#DC2626'];
+  const situacao=criticos.length===0?['Controlada','#059669']:criticos.length<=2?['Atenção','#D97706']:['Crítica','#DC2626'];
 
   // ---- Situação geral ----
   cy+=22;
@@ -3568,7 +3567,7 @@ async function gerarResumoImagemWA(){
   ctx.fillStyle='#fff'; _rr(ctx,28,cy,W-56,72,8); ctx.fill();
   ctx.strokeStyle='#E8EBF2'; _rr(ctx,28,cy,W-56,72,8); ctx.stroke();
   ctx.fillStyle=faixaCor; ctx.font='800 34px Arial'; ctx.fillText(indice+'%',48,cy+48);
-  ctx.font='700 15px Arial'; ctx.fillText('❤️ Índice de Saúde da Linha — '+faixaTxt,150,cy+32);
+  ctx.font='700 15px Arial'; ctx.fillText('Índice de Saúde da Linha — '+faixaTxt,150,cy+32);
   ctx.fillStyle='#8A90A8'; ctx.font='500 11px Arial'; ctx.fillText('presença, saldo, setores críticos e cobertura',150,cy+52);
   cy+=94;
 
@@ -3620,16 +3619,16 @@ async function gerarResumoImagemWA(){
   // ---- Ranking ----
   const ordenados=[...resSetores].sort((a,b)=>b.res-a.res);
   const melhores=ordenados.slice(0,3), piores=criticos.map(s=>({s,res:resultado(s,ds)})).sort((a,b)=>a.res-b.res).slice(0,3);
-  const medalhas=['🥇','🥈','🥉'];
+  const medalhas=['1º','2º','3º'];
   ctx.font='700 13px Arial'; ctx.fillStyle='#111827';
-  ctx.fillText('🏆 Melhores setores',28,cy+14);
-  ctx.fillText('🚨 Precisam de atenção',W/2+14,cy+14);
+  ctx.fillText('Melhores setores',28,cy+14);
+  ctx.fillText('Precisam de atenção',W/2+14,cy+14);
   cy+=32;
   ctx.font='500 12px Arial';
   const maxLinhas=Math.max(melhores.length,piores.length||1);
   for(let i=0;i<maxLinhas;i++){
     if(melhores[i]){ ctx.fillStyle='#374151'; ctx.fillText(`${medalhas[i]} ${melhores[i].s} — ${melhores[i].res>=0?'+':''}${melhores[i].res}`,28,cy+i*22); }
-    if(piores[i]){ ctx.fillStyle='#DC2626'; ctx.fillText(`🔴 ${piores[i].s} — ${piores[i].res}`,W/2+14,cy+i*22); }
+    if(piores[i]){ ctx.fillStyle='#DC2626'; ctx.fillText(`${piores[i].s} — ${piores[i].res}`,W/2+14,cy+i*22); }
     else if(i===0 && piores.length===0){ ctx.fillStyle='#059669'; ctx.fillText('Nenhum setor crítico hoje',W/2+14,cy+i*22); }
   }
   cy+=maxLinhas*22+24;
@@ -3637,7 +3636,7 @@ async function gerarResumoImagemWA(){
   // ---- Análise automática (resumida) ----
   ctx.fillStyle='#F7F8FA'; _rr(ctx,28,cy,W-56,110,8); ctx.fill();
   ctx.strokeStyle='#E8EBF2'; _rr(ctx,28,cy,W-56,110,8); ctx.stroke();
-  ctx.fillStyle='#111827'; ctx.font='700 13px Arial'; ctx.fillText('🤖 Análise automática',44,cy+22);
+  ctx.fillStyle='#111827'; ctx.font='700 13px Arial'; ctx.fillText('Análise Automática',44,cy+22);
   ctx.font='500 12px Arial'; ctx.fillStyle='#4A5068';
   let analiseTxt=`Foram registradas ${tAus} ausências no turno. `;
   if(cob>0) analiseTxt+=`Foram realizadas ${cob} coberturas pelos monitores. `;
@@ -3695,13 +3694,13 @@ function exportarPDF(){
     const res2=(tOp2-tF2-tB2-tA2-tFalt2-tEnf2-tOut2-tExtras2)-tOps2+tCob2;
     const rc2=res2>0?'#059669':res2<0?'#dc2626':'#6b7280';
     const sabSt2=isSab(day)?sabStatus(day):null;
-    const sabL=sabSt2==='prod'?' 🏭':sabSt2==='nao'?' ⛔':'';
+    const sabL=sabSt2==='prod'?' (Prod)':sabSt2==='nao'?' (Sem Prod)':'';
     prevRows+=`<tr><td>${dowName(day)} ${fmtDate(day)}${sabL}</td><td>${tF2}</td><td>${tB2}</td><td>${tA2}</td><td>${tFalt2}</td><td>${tEnf2}</td><td>${tOut2}</td><td>${tCob2}</td><td>${tF2+tB2+tA2+tFalt2+tEnf2+tOut2+tExtras2}</td><td style="color:${rc2};font-weight:700">${res2>=0?'+':''}${res2}</td></tr>`;
   }
   let monRows='';
   SETORES.forEach(s=>{const mons=monitores[s]||[];if(mons.length){monRows+=`<tr><td colspan="3" style="font-weight:700;background:#f3f4f6">${s}</td></tr>`;mons.forEach(mn=>{monRows+=`<tr><td style="padding-left:16px;color:#6b7280">${mn.nome}</td><td>${MON_STATUS[mn.status].label}</td><td style="font-style:italic;color:#9ca3af">${mn.obs||'—'}</td></tr>`;});}});
   const obs=document.getElementById('obsGeral').value;
-  const sabBadge=sabSt?`<span style="margin-left:10px;padding:2px 10px;border-radius:4px;font-size:12px;background:${sabSt==='prod'?'#FEF9E7':'#f3f4f6'};color:${sabSt==='prod'?'#b45309':'#6b7280'}">${sabSt==='prod'?'🏭 Sábado de produção':'⛔ Sábado sem produção'}</span>`:'';
+  const sabBadge=sabSt?`<span style="margin-left:10px;padding:2px 10px;border-radius:4px;font-size:12px;background:${sabSt==='prod'?'#FEF9E7':'#f3f4f6'};color:${sabSt==='prod'?'#b45309':'#6b7280'}">${sabSt==='prod'?'Sábado de produção':'Sábado sem produção'}</span>`:'';
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Ausências VW ${df}</title>
 <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:11px;color:#1f2937;padding:20px}
 .hdr{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #F5C842;padding-bottom:10px;margin-bottom:14px}
@@ -3853,7 +3852,7 @@ function addEmprestado(){
   document.getElementById('empNome').value='';
   document.getElementById('empQtd').value='1';
   salvarEmp();
-  _showEmpMsg(`✓ ${qtd} operador${qtd>1?'es':''} de ${origem} → ${destino} registrado${qtd>1?'s':''}.`,'var(--ok)');
+  _showEmpMsg(`${qtd} operador${qtd>1?'es':''} de ${origem} → ${destino} registrado${qtd>1?'s':''}.`,'var(--ok)');
   renderEmprestados();
   renderSetores(); // atualiza cards e semáforos imediatamente
 }
@@ -3881,7 +3880,7 @@ function devolverEmprestado(ds, id){
   salvarEmp();
   renderEmprestados();
   renderSetores();
-  _showEmpMsg(`✓ Devolução registrada: ${emp.qtd} op. retornou para ${emp.origem}.`, 'var(--ok)');
+  _showEmpMsg(`Devolução registrada: ${emp.qtd} op. retornou para ${emp.origem}.`, 'var(--ok)');
 }
 
 function carregarEmp(){
@@ -3925,7 +3924,7 @@ function renderDisponibilidade(ds){
   el.innerHTML=`
     <div class="disp-card">
       <div class="disp-card-head pode">
-        <span>✅ Pode emprestar</span>
+        <span>Pode emprestar</span>
         <span style="font-weight:400;font-size:11px">${podeCeder.length} setor${podeCeder.length!==1?'es':''} com sobra</span>
       </div>
       ${podeCeder.length>0
@@ -3934,7 +3933,7 @@ function renderDisponibilidade(ds){
     </div>
     <div class="disp-card">
       <div class="disp-card-head precisa">
-        <span>🔴 Precisa receber</span>
+        <span>Precisa receber</span>
         <span style="font-weight:400;font-size:11px">${precisaReceber.length} setor${precisaReceber.length!==1?'es':''} com necessidade</span>
       </div>
       ${precisaReceber.length>0
@@ -4047,7 +4046,7 @@ function renderEmprestados(){
     function _monRow(m){
       const na = m.status==='cobrindo';
       const cor = na?'#DC2626':'#059669';
-      const icone = na?'🔴':'🟢';
+      const icone = na?'OFFLINE':'ONLINE';
       const label = na?'Na linha':'Fora';
       return '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid #F1F4F9">'
         +'<span style="font-size:13px">'+icone+'</span>'
@@ -4377,7 +4376,7 @@ function importarDados(input){
       carregar(getDate()); renderSetores(); renderSetoresCfg();
       const _ftsRes = document.getElementById('footerTs');
       if(_ftsRes) _ftsRes.textContent=`Backup restaurado em ${new Date().toLocaleTimeString('pt-BR')}`;
-      alert(`✓ Backup restaurado com sucesso!\n${total} registros carregados.`);
+      alert(`Backup restaurado com sucesso!\n${total} registros carregados.`);
     }catch(err){
       alert('Erro ao ler o arquivo de backup.\n'+err.message);
     }
@@ -4444,7 +4443,7 @@ function _avisoNovoDia(novaData){
     el.style.cssText='position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;font-size:12px;font-weight:600;padding:8px 16px;border-radius:20px;z-index:99999;box-shadow:0 4px 14px rgba(0,0,0,.25)';
     document.body.appendChild(el);
   }
-  el.textContent=`📅 Novo dia — ${dd}/${mm}/${yy}`;
+  el.textContent=`Novo dia — ${dd}/${mm}/${yy}`;
   el.style.display='block';
   setTimeout(()=>{ el.style.display='none'; }, 5000);
 }
@@ -4517,7 +4516,7 @@ function exportarBackup(){
   a.click();
   URL.revokeObjectURL(url);
   localStorage.setItem('vw_ultimo_backup', Date.now());
-  _showToast('✅ Backup exportado com sucesso!', '#059669');
+  _showToast('Backup exportado com sucesso!', '#059669');
 }
 
 function compartilharBackupWA(){
@@ -4550,13 +4549,13 @@ function compartilharBackupWA(){
   const banner = document.createElement('div');
   banner.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
   banner.innerHTML = '<div style="background:#fff;border-radius:14px;padding:28px 24px;max-width:380px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25);font-family:sans-serif">'
-    + '<div style="font-size:40px;text-align:center;margin-bottom:12px">📋</div>'
+    + ''
     + '<div style="font-size:17px;font-weight:700;color:#111827;text-align:center;margin-bottom:8px">Dados recebidos!</div>'
     + '<div style="font-size:13px;color:#6B7280;text-align:center;line-height:1.6;margin-bottom:20px">'
     + 'Recebidos <strong style=\'color:#111827\'>' + chaves.length + ' registros</strong> do sistema VW Ausências.<br>Deseja importar e substituir seus dados atuais?</div>'
     + '<div style="display:flex;gap:10px">'
     + '<button id="vwCancel" style="flex:1;padding:11px;border-radius:8px;border:1px solid #E2E6EE;background:#fff;font-size:13px;font-weight:600;color:#6B7280;cursor:pointer">Cancelar</button>'
-    + '<button id="vwImport" style="flex:1;padding:11px;border-radius:8px;border:none;background:#059669;font-size:13px;font-weight:700;color:#fff;cursor:pointer">✅ Importar agora</button>'
+    + '<button id="vwImport" style="flex:1;padding:11px;border-radius:8px;border:none;background:#059669;font-size:13px;font-weight:700;color:#fff;cursor:pointer">Importar agora</button>'
     + '</div></div>';
   document.body.appendChild(banner);
   document.getElementById('vwCancel').onclick = function(){ banner.remove(); };
@@ -4564,7 +4563,7 @@ function compartilharBackupWA(){
     chaves.forEach(k => localStorage.setItem(k, dados[k]));
     banner.remove();
     const t = document.createElement('div');
-    t.textContent = '✅ Dados importados! Recarregando...';
+    t.textContent = 'Dados importados! Recarregando...';
     t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#059669;color:#fff;font-size:13px;font-weight:600;padding:10px 22px;border-radius:999px;z-index:99999';
     document.body.appendChild(t);
     setTimeout(()=>location.reload(), 1200);
@@ -4589,17 +4588,17 @@ function compartilharBackupWA(){
 
   // Abre WhatsApp com instrução simples
   const msg = encodeURIComponent(
-    `📋 *VW Taubaté — Sistema de Ausências*\n` +
-    `📅 ${dd}/${mm}/${yy} às ${hora}  •  ${chaves} registros\n\n` +
-    `👇 *Anexe o arquivo _${nomeArq}_ que foi baixado agora.*\n\n` +
+    `*VW Taubaté — Sistema de Ausências*\n` +
+    `${dd}/${mm}/${yy} às ${hora}  •  ${chaves} registros\n\n` +
+    `*Anexe o arquivo _${nomeArq}_ que foi baixado agora.*\n\n` +
     `Para importar:\n` +
     `1. Salve o arquivo recebido\n` +
     `2. Abra o arquivo no navegador\n` +
-    `3. Clique em ✅ *Importar agora*\n` +
+    `3. Clique em *Importar agora*\n` +
     `_Todos os dados serão carregados automaticamente._`
   );
   setTimeout(()=>{ window.open('https://web.whatsapp.com/send?text='+msg,'_blank'); }, 600);
-  _showToast('✅ Arquivo gerado! Anexe-o no WhatsApp.', '#25D366');
+  _showToast('Arquivo gerado! Anexe-o no WhatsApp.', '#25D366');
 }
 
 function _verificarHashImport(){
@@ -4616,7 +4615,7 @@ function _verificarHashImport(){
     banner.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
     banner.innerHTML = `
       <div style="background:#fff;border-radius:14px;padding:28px 24px;max-width:380px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25)">
-        <div style="font-size:40px;text-align:center;margin-bottom:12px">📋</div>
+        
         <div style="font-size:17px;font-weight:700;color:#111827;text-align:center;margin-bottom:8px">Dados recebidos!</div>
         <div style="font-size:13px;color:#6B7280;text-align:center;line-height:1.6;margin-bottom:20px">
           Recebidos <strong style="color:#111827">${chaves.length} registros</strong> do sistema VW.<br>
@@ -4629,7 +4628,7 @@ function _verificarHashImport(){
           </button>
           <button id="btnConfirmImport"
             style="flex:1;padding:11px;border-radius:8px;border:none;background:#059669;font-size:13px;font-weight:700;color:#fff;cursor:pointer">
-            ✅ Importar agora
+            Importar agora
           </button>
         </div>
       </div>`;
@@ -4639,7 +4638,7 @@ function _verificarHashImport(){
       chaves.forEach(k => localStorage.setItem(k, dados[k]));
       banner.remove();
       history.replaceState(null,'',window.location.pathname);
-      _showToast('✅ Dados importados! Recarregando...','#059669');
+      _showToast('Dados importados! Recarregando...','#059669');
       setTimeout(()=>location.reload(), 1200);
     };
   } catch(e){
@@ -4657,14 +4656,14 @@ function importarBackup(event){
       const chaves = Object.keys(dados);
       // Valida que é um backup do app
       const valido = chaves.some(k => k.startsWith('vw_'));
-      if(!valido) { _showToast('⚠️ Arquivo inválido — não é um backup VW.', '#DC2626'); return; }
+      if(!valido) { _showToast('Arquivo inválido — não é um backup VW.', '#DC2626'); return; }
       if(!confirm(`Importar backup com ${chaves.length} registros? Os dados atuais serão substituídos.`)) return;
       // Grava tudo no localStorage
       chaves.forEach(k => { if(k.startsWith('vw_')) localStorage.setItem(k, dados[k]); });
-      _showToast('✅ Backup importado! Recarregando...', '#059669');
+      _showToast('Backup importado! Recarregando...', '#059669');
       setTimeout(() => location.reload(), 1200);
     } catch(err) {
-      _showToast('⚠️ Erro ao ler o arquivo: ' + err.message, '#DC2626');
+      _showToast('Erro ao ler o arquivo: ' + err.message, '#DC2626');
     }
   };
   reader.readAsText(file);
@@ -4686,12 +4685,12 @@ function _verificarLembreteBackup(){
       : `Último backup há <b>${diasSem} dias</b>. Recomendado a cada 3 dias.`;
     banner.innerHTML = `
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <span style="font-size:18px">💾</span>
+        
         <div style="flex:1;font-size:13px;color:#92400e;line-height:1.5">${msg}</div>
         <div style="display:flex;gap:8px">
           <button onclick="exportarBackup();this.closest('.backup-banner').remove()" 
             style="background:#d97706;border:none;color:#fff;font-size:12px;font-weight:700;padding:7px 14px;border-radius:6px;cursor:pointer;white-space:nowrap">
-            💾 Fazer backup agora
+            Fazer backup agora
           </button>
           <button onclick="this.closest('.backup-banner').remove()" 
             style="background:transparent;border:1px solid #d97706;color:#92400e;font-size:12px;font-weight:600;padding:7px 12px;border-radius:6px;cursor:pointer;white-space:nowrap">
@@ -4725,15 +4724,15 @@ const TURNO = {
   inicio:   { h:15, m:0  },
   fim:      { h:23, m:45 },
   paradas: [
-    { nome:'☕ Café',    ini:{ h:18, m:0  }, fim:{ h:18, m:10 } },
-    { nome:'🚻 Banheiro', ini:{ h:19, m:30 }, fim:{ h:19, m:37 } },
-    { nome:'🍽️ Janta',   ini:{ h:21, m:0  }, fim:{ h:22, m:0  } },
+    { nome:'Café',    ini:{ h:18, m:0  }, fim:{ h:18, m:10 } },
+    { nome:'Banheiro', ini:{ h:19, m:30 }, fim:{ h:19, m:37 } },
+    { nome:'Jantar',   ini:{ h:21, m:0  }, fim:{ h:22, m:0  } },
   ],
   // Sábado: início 12:00, fim 18:00
   sabIni:   { h:12, m:0  },
   sabFim:   { h:18, m:0  },
   sabParadas: [
-    { nome:'☕ Café',    ini:{ h:15, m:0  }, fim:{ h:15, m:15 } },
+    { nome:'Café',    ini:{ h:15, m:0  }, fim:{ h:15, m:15 } },
   ],
   META: _metaSalva
 };
@@ -4831,7 +4830,7 @@ function editarVelocidade(){
     localStorage.setItem('vw_meta_turno', novaMeta);
     const display = document.getElementById('turnoMetaDisplay');
     if(display) display.textContent = novaMeta;
-    _showToast('✅ Velocidade e meta atualizadas!', '#14B8A6');
+    _showToast('Velocidade e meta atualizadas!', '#14B8A6');
   }
 }
 
@@ -4868,16 +4867,16 @@ function _tickTurno(){
   const statusEl = document.getElementById('turnoStatusLabel');
   if (statusEl) {
     if (agoraMin < iniMin) {
-      statusEl.textContent = '⏳ Turno começa em breve';
+      statusEl.textContent = 'Turno começa em breve';
       statusEl.style.color = '#F1F5F9';
     } else if (agoraMin >= fimMin) {
-      statusEl.textContent = '✅ Turno encerrado';
+      statusEl.textContent = 'Turno encerrado';
       statusEl.style.color = '#4ade80';
     } else if (paradaAtual) {
       const restParada = Math.ceil(_hm(paradaAtual.fim) - agoraMin);
       statusEl.innerHTML = `<span style="color:#FCD34D;font-weight:800">${paradaAtual.nome}</span> <span style="color:#E2E8F0;font-weight:600">— volta em ${_fmtDuracao(restParada)}</span>`;
     } else {
-      statusEl.textContent = '🟢 Produção em andamento';
+      statusEl.textContent = 'Produção em andamento';
       statusEl.style.color = '#4ade80';
     }
   }
@@ -5023,14 +5022,14 @@ function _gerarTextoIA(ctx, perguntaExtra) {
     if (s.emprestados.enviou) partes.push(`enviou:${s.emprestados.enviou}`);
     if (s.emprestados.recebeu) partes.push(`recebeu:${s.emprestados.recebeu}`);
     const res = s.resultado;
-    linhas.push(`${s.setor}: ${partes.join(' | ')} → Resultado: ${res >= 0 ? '+' : ''}${res}${res < 0 ? ' ⚠️' : res > 0 ? ' ✅' : ''}`);
+    linhas.push(`${s.setor}: ${partes.join(' | ')} → Resultado: ${res >= 0 ? '+' : ''}${res}`);
   });
   linhas.push(``);
   linhas.push(`PREVISÃO PRÓXIMOS 7 DIAS (ausências agendadas):`);
   ctx.previsaoProximosDias.forEach(d => {
     let linha = `${d.diaSemana} ${d.data}: ${d.totalAusencias} ausências`;
-    if (d.sabado === 'prod') linha += ' 🏭';
-    if (d.sabado === 'nao') linha += ' ⛔ sem produção';
+    if (d.sabado === 'prod') linha += ' (Prod)';
+    if (d.sabado === 'nao') linha += ' (Sem produção)';
     linhas.push(linha);
   });
   if (ctx.observacoes) {
@@ -5059,11 +5058,11 @@ function _renderContextPills(ctx) {
   const cor = res >= 0 ? '#059669' : '#DC2626';
   const criticos = ctx.setores.filter(s => s.resultado < 0).length;
   el.innerHTML = `
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:var(--text2)">📅 <b>${ctx.diaSemana}, ${ctx.data}</b></div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:var(--text2)">👷 ${ctx.resumoGeral.totalOperadores} operadores</div>
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:var(--text2)">❌ ${ctx.resumoGeral.totalAusencias} ausências</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:var(--text2)"><b>${ctx.diaSemana}, ${ctx.data}</b></div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:var(--text2)">${ctx.resumoGeral.totalOperadores} operadores</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:var(--text2)">${ctx.resumoGeral.totalAusencias} ausências</div>
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;font-weight:700;color:${cor}">Resultado ${res >= 0 ? '+' : ''}${res}</div>
-    ${criticos > 0 ? `<div style="background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:#DC2626;font-weight:600">⚠️ ${criticos} setor(es) crítico(s)</div>` : ''}
+    ${criticos > 0 ? `<div style="background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);border-radius:var(--r-sm);padding:5px 12px;font-size:12px;color:#DC2626;font-weight:600">${criticos} setor(es) crítico(s)</div>` : ''}
   `;
 }
 
@@ -5080,10 +5079,10 @@ function copiarDadosIA() {
   navigator.clipboard.writeText(texto).then(() => {
     const icon = document.getElementById('iaCopyIcon');
     const txt = document.getElementById('iaCopyTxt');
-    if (icon) icon.textContent = '✅';
+    if (icon) icon.textContent = 'OK';
     if (txt) txt.textContent = 'Copiado!';
     setTimeout(() => {
-      if (icon) icon.textContent = '📋';
+      if (icon) icon.textContent = '';
       if (txt) txt.textContent = 'Copiar dados do dia';
     }, 2500);
   }).catch(() => {
@@ -5097,10 +5096,10 @@ function copiarDadosIA() {
     document.body.removeChild(ta);
     const icon = document.getElementById('iaCopyIcon');
     const txt = document.getElementById('iaCopyTxt');
-    if (icon) icon.textContent = '✅';
+    if (icon) icon.textContent = 'OK';
     if (txt) txt.textContent = 'Copiado!';
     setTimeout(() => {
-      if (icon) icon.textContent = '📋';
+      if (icon) icon.textContent = '';
       if (txt) txt.textContent = 'Copiar dados do dia';
     }, 2500);
   });
@@ -5243,7 +5242,7 @@ function _configurarPresenca(){
 
 _db.ref('.info/connected').on('value', snap=>{
   const conectado = snap.val()===true;
-  _mostrarStatusConexao(conectado ? '🟢 Online — sincronizando' : '🔴 Sem conexão (offline)');
+  _mostrarStatusConexao(conectado ? 'Online — sincronizando' : 'Offline (sem conexão)');
   if(conectado) _configurarPresenca();
 });
 
@@ -5269,7 +5268,7 @@ function _aplicarOperadoresRemotos(arr, origem) {
   const statusEl = document.getElementById('presencas-status');
   if(statusEl){
     const ts = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    const emoji = origem === 'bc' ? '⚡' : '✅';
+    const emoji = origem === 'bc' ? '[BC]' : '[OK]';
     statusEl.textContent = `${emoji} Atualizado às ${ts} (${origem === 'bc' ? 'tempo real' : 'remoto'})`;
     statusEl.style.background = origem === 'bc' ? '#EFF6FF' : '#F0FDF4';
     statusEl.style.color = origem === 'bc' ? '#2563EB' : '#15803D';
@@ -5496,7 +5495,7 @@ function renderPresencasOperadores(){
             <option value="afastado" ${op.status==='afastado'?'selected':''}>Férias/Licença</option>
           </select>
         </div>
-        <div style="font-size:10px;color:#94A3B8;font-family:var(--mono,monospace);margin-top:2px">${op.batida ? '⏱ '+op.batida : op.alteradoPor ? '✏️ '+op.alteradoPor : 'Aguardando...'}</div>
+        <div style="font-size:10px;color:#94A3B8;font-family:var(--mono,monospace);margin-top:2px">${op.batida ? op.batida : op.alteradoPor ? op.alteradoPor : 'Aguardando...'}</div>
       </div>
     </div>`;
   }).join('');
@@ -5592,18 +5591,18 @@ function _mostrarStatusConexao(texto){
 let _statusAntesAtualizar=null;
 async function _atualizarManualmente(){
   _statusAntesAtualizar = document.getElementById('syncStatusPill')?.textContent || null;
-  _mostrarStatusConexao('🔄 Atualizando...');
+  _mostrarStatusConexao('Atualizando...');
   try{
     const snap = await _syncRef.once('value');
     const dados = snap.val();
     if(dados) _aplicarDadosRemotos(dados);
-    _mostrarStatusConexao('✅ Atualizado agora');
+    _mostrarStatusConexao('Atualizado agora');
   }catch(e){
-    _mostrarStatusConexao('⚠️ Falha ao atualizar — verifique a internet');
+    _mostrarStatusConexao('Falha ao atualizar — verifique a internet');
   }
   setTimeout(()=>{
     _db.ref('.info/connected').once('value').then(s=>{
-      _mostrarStatusConexao(s.val()===true ? '🟢 Online — sincronizando' : '🔴 Sem conexão (offline)');
+      _mostrarStatusConexao(s.val()===true ? 'Online — sincronizando' : 'Offline (sem conexão)');
     });
   }, 2000);
 }
