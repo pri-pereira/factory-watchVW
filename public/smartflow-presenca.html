@@ -1089,28 +1089,6 @@ textarea.obs-inp:focus{outline:none;border-color:var(--accent)}
   <div id="sabBanner"></div>
   <div class="summary-strip" id="summaryRow"></div>
   <div id="ausIconStrip" style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;padding:14px 16px;background:#FFFFFF;border:1px solid #E8EBF2;border-radius:var(--r);margin-bottom:4px;box-shadow:0 1px 3px rgba(0,0,0,.04)"></div>
-  <div>
-    <div class="section-label">Contagem por setor</div>
-    <div class="card">
-      <div class="sector-table-wrap">
-        <table class="sector-table">
-          <thead><tr>
-            <th>Setor</th>
-            <th class="c-blue">Oper.</th>
-            <th class="c-blue">Ops.</th>
-            <th class="c-feria">Férias</th>
-            <th class="c-bh">BH</th>
-            <th class="c-afas">Afas.</th>
-            <th class="c-falta">Falta</th>
-            <th style="color:#14B8A6">Enfer.</th>            <th style="color:#94A3B8">Outros</th>            <th class="c-monitor">Mon.Cob.</th>
-            <th style="color:#F472B6">Empr.</th>
-            <th class="c-resultado">Resultado</th>
-          </tr></thead>
-          <tbody id="tabelaSetores"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
   <div class="sc-grid" id="sectorGrid"></div>
   <div>
     <div class="section-label">Remanejamento</div>
@@ -1635,7 +1613,6 @@ function renderSetores(){
   renderBanner(ds);
   renderSummary(ds);
   renderAusIconStrip(ds);
-  renderTabela(ds);
   renderCards(ds);
   renderRem(ds);
 }
@@ -1703,6 +1680,8 @@ function renderSummary(ds){
 }
 
 function renderTabela(ds){
+  const el = document.getElementById('tabelaSetores');
+  if(!el) return;
   let tOp=0,tOps=0,tF=0,tB=0,tA=0,tFalt=0,tEnf=0,tOut=0,tCob=0,tRes=0;
   const empDia=emprestados[ds]||[];
   let rows='';
