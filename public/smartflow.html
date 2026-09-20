@@ -278,8 +278,40 @@ input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.85); curs
 .sector-table-wrap { overflow-x: auto; }
 
 /* ============================================================
-   SECTOR CARDS GRID
+   SECTOR CARDS GRID & CELLS LAYOUT
 ============================================================ */
+.cells-layout-container { display: flex; gap: 16px; align-items: flex-start; margin-top: 8px; }
+.cells-nav-sidebar {
+  width: 250px; flex-shrink: 0; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; position: sticky; top: 70px;
+}
+.cells-nav-header {
+  padding: 12px 14px; background: #FAFBFC; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.cells-nav-title {
+  font-family: var(--font-display); font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.8px; color: var(--text2);
+}
+.cells-count-badge {
+  font-size: 11px; font-weight: 700; background: var(--primary); color: #fff;
+  padding: 2px 7px; border-radius: 999px;
+}
+.cells-menu-list {
+  display: flex; flex-direction: column; padding: 4px 0; max-height: calc(100vh - 240px); overflow-y: auto;
+}
+.cell-nav-item {
+  display: flex; align-items: center; justify-content: space-between; padding: 9px 14px;
+  border: none; background: transparent; cursor: pointer; transition: all .15s ease;
+  border-left: 4px solid transparent; width: 100%; font-family: inherit; text-align: left;
+}
+.cell-nav-item:hover { background: #F8FAFC; }
+.cell-nav-item.active { background: #EFF6FF; border-left-color: #3B82F6; }
+.cells-content-area { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+@media (max-width: 860px) {
+  .cells-layout-container { flex-direction: column; }
+  .cells-nav-sidebar { width: 100%; position: static; }
+}
 .sc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
 .sc-card {
   background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
@@ -845,13 +877,28 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
 <div id="tab-setores" class="page active">
   <div id="sabBanner"></div>
   <div class="summary-strip" id="summaryRow"></div>
-  <div id="ausIconStrip" style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;padding:14px 16px;background:#FFFFFF;border:1px solid #E8EBF2;border-radius:var(--r);margin-bottom:4px;box-shadow:0 1px 3px rgba(0,0,0,.04)"></div>
-  <div class="sc-grid" id="sectorGrid"></div>
-  <div>
-    <div class="section-label">Remanejamento</div>
-    <div class="rem-grid">
-      <div class="card card-body"><div class="section-label c-ok" style="font-size:11px">Sobra</div><div id="listaSobra"></div></div>
-      <div class="card card-body"><div class="section-label c-danger" style="font-size:11px">Necessidade</div><div id="listaFalta"></div></div>
+  <div id="ausIconStrip" style="display:none;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;padding:14px 16px;background:#FFFFFF;border:1px solid #E8EBF2;border-radius:var(--r);margin-bottom:4px;box-shadow:0 1px 3px rgba(0,0,0,.04)"></div>
+  
+  <div class="cells-layout-container">
+    <!-- Menu Vertical de Células -->
+    <div class="cells-nav-sidebar">
+      <div class="cells-nav-header">
+        <span class="cells-nav-title">Células</span>
+        <span id="cellsCountBadge" class="cells-count-badge">0</span>
+      </div>
+      <div id="cellVerticalMenu" class="cells-menu-list"></div>
+    </div>
+
+    <!-- Conteúdo da Célula Selecionada -->
+    <div class="cells-content-area">
+      <div class="sc-grid" id="sectorGrid"></div>
+      <div>
+        <div class="section-label">Remanejamento</div>
+        <div class="rem-grid">
+          <div class="card card-body"><div class="section-label c-ok" style="font-size:11px">Sobra</div><div id="listaSobra"></div></div>
+          <div class="card card-body"><div class="section-label c-danger" style="font-size:11px">Necessidade</div><div id="listaFalta"></div></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1386,6 +1433,7 @@ function renderSetores(){
   renderBanner(ds);
   renderSummary(ds);
   renderAusIconStrip(ds);
+  renderCellMenu(ds);
   renderCards(ds);
   renderRem(ds);
 }
@@ -1466,41 +1514,93 @@ window.addEventListener('storage', (e) => {
 });
 
 
+let currentCell = localStorage.getItem('sf_selected_cell') || 'all';
+
+function selectCell(setor){
+  currentCell = setor;
+  localStorage.setItem('sf_selected_cell', setor);
+  const ds = getDate();
+  renderCellMenu(ds);
+  renderCards(ds);
+}
+
+function renderCellMenu(ds){
+  const menuEl = document.getElementById('cellVerticalMenu');
+  if(!menuEl) return;
+  const badge = document.getElementById('cellsCountBadge');
+  if(badge) badge.textContent = SETORES.length;
+
+  let html = `
+    <button class="cell-nav-item ${currentCell === 'all' ? 'active' : ''}" onclick="selectCell('all')" style="border-bottom:1px solid #EEF2F6">
+      <div style="display:flex;align-items:center;gap:9px">
+        <span style="font-size:15px">🏢</span>
+        <div style="text-align:left">
+          <div style="font-weight:700;font-size:13px;color:${currentCell==='all'?'#001E50':'var(--text)'}">Todas as Células</div>
+          <div style="font-size:10px;color:var(--text3)">Visão panorâmica</div>
+        </div>
+      </div>
+    </button>
+  `;
+
+  SETORES.forEach(s => {
+    const isSel = (currentCell === s);
+    const res = resultado(s, ds);
+    let dotColor = '#059669', glow = 'rgba(5,150,105,.35)';
+    if(res < 0){ dotColor = '#DC2626'; glow = 'rgba(220,38,38,.35)'; }
+    else if(res === 0){ dotColor = '#D97706'; glow = 'rgba(217,119,6,.35)'; }
+    const resColor = res > 0 ? '#15803D' : (res < 0 ? '#DC2626' : '#64748B');
+    const lider = lideres[s] || '';
+
+    html += `
+      <button class="cell-nav-item ${isSel ? 'active' : ''}" onclick="selectCell('${s}')">
+        <div style="display:flex;align-items:center;gap:9px;min-width:0">
+          <div style="width:10px;height:10px;border-radius:50%;background:${dotColor};box-shadow:0 0 6px ${glow};flex-shrink:0"></div>
+          <div style="text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+            <div style="font-weight:700;font-size:13px;color:${isSel?'#001E50':'var(--text)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s}</div>
+            ${lider ? `<div style="font-size:10px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">👑 ${lider}</div>` : ''}
+          </div>
+        </div>
+        <div style="font-family:var(--mono);font-size:12px;font-weight:700;color:${resColor};flex-shrink:0;margin-left:8px">
+          ${res >= 0 ? '+' : ''}${res}
+        </div>
+      </button>
+    `;
+  });
+
+  menuEl.innerHTML = html;
+}
+
 function renderAusIconStrip(ds){
   const el=document.getElementById('ausIconStrip'); if(!el) return;
   let tF=0,tB=0,tA=0,tFalt=0,tEnf=0,tOut=0,tVoltou=0,tAtrd=0,tSaiu=0,tLib=0,tAtst=0,tLic=0;
   SETORES.forEach(s=>{tF+=ausF(s,ds);tB+=ausB(s,ds);tA+=ausA(s,ds);tFalt+=ausFalt(s,ds);tEnf+=ausEnf(s,ds);tOut+=ausOut(s,ds);tVoltou+=enfVoltouQtd(s,ds);tAtrd+=atrasadoQtd(s,ds);tSaiu+=saiuVoltouQtd(s,ds);tLib+=liberadoQtd(s,ds);tAtst+=atestadoQtd(s,ds);tLic+=ausLic(s,ds);});
   tEnf=tEnf+tVoltou; // enfVoltou agora é 'foi para enfermaria', soma ao total de enfer.
-  const items=[
-    {label:'férias',   val:tF,    color:'#3B82F6', bg:'rgba(59,130,246,.12)'},
-    {label:'bh',       val:tB,    color:'#06B6D4', bg:'rgba(6,182,212,.12)'},
-    {label:'afas.',    val:tA,    color:'#8B5CF6', bg:'rgba(139,92,246,.12)'},
-    {label:'falta',    val:tFalt, color:'#DC2626', bg:'rgba(220,38,38,.12)'},
-    {label:'enfer.',   val:tEnf,  color:'#0EA5E9', bg:'rgba(14,165,233,.12)'},
-    {label:'outros',   val:tOut,  color:'#64748B', bg:'rgba(100,116,139,.12)'},
-    {label:'atrasado', val:tAtrd, color:'#D97706', bg:'rgba(217,119,6,.12)'},
-    {label:'saiu/volta', val:tSaiu, color:'#4F46E5', bg:'rgba(79,70,229,.12)'},
-    {label:'liberação', val:tLib, color:'#65A30D', bg:'rgba(101,163,13,.12)'},
-    {label:'atestado', val:tAtst, color:'#E11D48', bg:'rgba(225,29,72,.12)'},
-    {label:'licenças', val:tLic, color:'#D946EF', bg:'rgba(217,70,239,.12)'},
+  const rawItems=[
+    {label:'férias',   val:tF,    color:'#3B82F6', bg:'rgba(59,130,246,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(59,130,246,.12)" stroke="#3B82F6" stroke-width="1.5"/><path d="M12 6.5C10.62 6.5 9.5 7.62 9.5 9s1.12 2.5 2.5 2.5S14.5 10.38 14.5 9 13.38 6.5 12 6.5zM12 13.5c-2.33 0-7 1.17-7 3.5V18h14v-1c0-2.33-4.67-3.5-7-3.5z" fill="#3B82F6"/></svg>`},
+    {label:'bh',       val:tB,    color:'#06B6D4', bg:'rgba(6,182,212,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(6,182,212,.12)" stroke="#06B6D4" stroke-width="1.5"/><path d="M12 7v5l4 2.5-.75 1.2L11 13V7h1z" fill="#06B6D4"/><path d="M12 4a8 8 0 100 16A8 8 0 0012 4zm0 14.5a6.5 6.5 0 110-13 6.5 6.5 0 010 13z" fill="#06B6D4"/></svg>`},
+    {label:'afas.',    val:tA,    color:'#8B5CF6', bg:'rgba(139,92,246,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(139,92,246,.12)" stroke="#8B5CF6" stroke-width="1.5"/><path d="M12 13.5c-2.33 0-7 1.17-7 3.5V18h14v-1c0-2.33-4.67-3.5-7-3.5zm0-1c1.93 0 3.5-1.57 3.5-3.5S13.93 5.5 12 5.5 8.5 7.07 8.5 9s1.57 3.5 3.5 3.5zm3.5 2.1c1.16.42 2.5 1.1 2.5 2.4V18h2v-1c0-1.93-2.68-2.97-4.5-3.4z" fill="#8B5CF6"/></svg>`},
+    {label:'falta',    val:tFalt, color:'#DC2626', bg:'rgba(220,38,38,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(220,38,38,.12)" stroke="#DC2626" stroke-width="1.5"/><path d="M12 6a6 6 0 100 12A6 6 0 0012 6zm.75 9h-1.5v-1.5h1.5V15zm0-3h-1.5V9h1.5v3z" fill="#DC2626"/></svg>`},
+    {label:'enfer.',   val:tEnf,  color:'#0EA5E9', bg:'rgba(14,165,233,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(14,165,233,.12)" stroke="#0EA5E9" stroke-width="1.5"/><path d="M13.5 9h-3v3H7.5v3h3v3h3v-3h3v-3h-3V9z" fill="#0EA5E9"/></svg>`},
+    {label:'outros',   val:tOut,  color:'#64748B', bg:'rgba(100,116,139,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(100,116,139,.12)" stroke="#64748B" stroke-width="1.5"/><path d="M12 8c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm0 2c-.55 0-1 .45-1 1v5c0 .55.45 1 1 1s1-.45 1-1v-5c0-.55-.45-1-1-1z" fill="#64748B"/></svg>`},
+    {label:'atrasado', val:tAtrd, color:'#D97706', bg:'rgba(217,119,6,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(217,119,6,.12)" stroke="#D97706" stroke-width="1.5"/><path d="M12 7v5l3 1.5-.5 1L11 13V7h1zm0-5a10 10 0 100 20A10 10 0 0012 2zm0 18a8 8 0 110-16 8 8 0 010 16z" fill="#D97706"/></svg>`},
+    {label:'saiu/volta', val:tSaiu, color:'#4F46E5', bg:'rgba(79,70,229,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(79,70,229,.12)" stroke="#4F46E5" stroke-width="1.5"/><path d="M13.5 5.5c0 .83-.67 1.5-1.5 1.5S10.5 6.33 10.5 5.5 11.17 4 12 4s1.5.67 1.5 1.5zM12 9c-2.21 0-4 1.79-4 4v5h2v-5c0-.55.22-1.05.59-1.41L12 13l1.41-1.41c.37.36.59.86.59 1.41v5h2v-5c0-2.21-1.79-4-4-4z" fill="#4F46E5"/></svg>`},
+    {label:'liberação', val:tLib, color:'#65A30D', bg:'rgba(101,163,13,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(101,163,13,.12)" stroke="#65A30D" stroke-width="1.5"/><text x="12" y="16" font-size="11" text-anchor="middle">🎓</text></svg>`},
+    {label:'atestado', val:tAtst, color:'#E11D48', bg:'rgba(225,29,72,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(225,29,72,.12)" stroke="#E11D48" stroke-width="1.5"/><text x="12" y="16" font-size="11" text-anchor="middle">📄</text></svg>`},
+    {label:'licenças', val:tLic, color:'#D946EF', bg:'rgba(217,70,239,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(217,70,239,.12)" stroke="#D946EF" stroke-width="1.5"/><text x="12" y="16" font-size="11" text-anchor="middle">👨‍👩‍👧</text></svg>`},
   ];
-  const icons=[
-    `<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="${items[0].bg}" stroke="${items[0].color}" stroke-width="1.5"/><path d="M12 6.5C10.62 6.5 9.5 7.62 9.5 9s1.12 2.5 2.5 2.5S14.5 10.38 14.5 9 13.38 6.5 12 6.5zM12 13.5c-2.33 0-7 1.17-7 3.5V18h14v-1c0-2.33-4.67-3.5-7-3.5z" fill="${items[0].color}"/></svg>`,
-    `<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="${items[1].bg}" stroke="${items[1].color}" stroke-width="1.5"/><path d="M12 7v5l4 2.5-.75 1.2L11 13V7h1z" fill="${items[1].color}"/><path d="M12 4a8 8 0 100 16A8 8 0 0012 4zm0 14.5a6.5 6.5 0 110-13 6.5 6.5 0 010 13z" fill="${items[1].color}"/></svg>`,
-    `<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="${items[2].bg}" stroke="${items[2].color}" stroke-width="1.5"/><path d="M12 13.5c-2.33 0-7 1.17-7 3.5V18h14v-1c0-2.33-4.67-3.5-7-3.5zm0-1c1.93 0 3.5-1.57 3.5-3.5S13.93 5.5 12 5.5 8.5 7.07 8.5 9s1.57 3.5 3.5 3.5zm3.5 2.1c1.16.42 2.5 1.1 2.5 2.4V18h2v-1c0-1.93-2.68-2.97-4.5-3.4z" fill="${items[2].color}"/></svg>`,
-    `<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="${items[3].bg}" stroke="${items[3].color}" stroke-width="1.5"/><path d="M12 6a6 6 0 100 12A6 6 0 0012 6zm.75 9h-1.5v-1.5h1.5V15zm0-3h-1.5V9h1.5v3z" fill="${items[3].color}"/></svg>`,
-    `<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="${items[4].bg}" stroke="${items[4].color}" stroke-width="1.5"/><path d="M13.5 9h-3v3H7.5v3h3v3h3v-3h3v-3h-3V9z" fill="${items[4].color}"/></svg>`,
-    `<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="${items[5].bg}" stroke="${items[5].color}" stroke-width="1.5"/><path d="M12 8c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm0 2c-.55 0-1 .45-1 1v5c0 .55.45 1 1 1s1-.45 1-1v-5c0-.55-.45-1-1-1z" fill="${items[5].color}"/></svg>`,
-    `<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="${items[6].bg}" stroke="${items[6].color}" stroke-width="1.5"/><path d="M12 7v5l3 1.5-.5 1L11 13V7h1zm0-5a10 10 0 100 20A10 10 0 0012 2zm0 18a8 8 0 110-16 8 8 0 010 16z" fill="${items[6].color}"/></svg>`,
-    `<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="${items[7].bg}" stroke="${items[7].color}" stroke-width="1.5"/><path d="M13.5 5.5c0 .83-.67 1.5-1.5 1.5S10.5 6.33 10.5 5.5 11.17 4 12 4s1.5.67 1.5 1.5zM12 9c-2.21 0-4 1.79-4 4v5h2v-5c0-.55.22-1.05.59-1.41L12 13l1.41-1.41c.37.36.59.86.59 1.41v5h2v-5c0-2.21-1.79-4-4-4z" fill="${items[7].color}"/></svg>`,
-    `<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="${items[8].bg}" stroke="${items[8].color}" stroke-width="1.5"/><text x="12" y="16" font-size="11" text-anchor="middle">🎓</text></svg>`,
-    `<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="${items[9].bg}" stroke="${items[9].color}" stroke-width="1.5"/><text x="12" y="16" font-size="11" text-anchor="middle">📄</text></svg>`,
-    `<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="${items[10].bg}" stroke="${items[10].color}" stroke-width="1.5"/><text x="12" y="16" font-size="11" text-anchor="middle">👨‍👩‍👧</text></svg>`,
-  ];
-  el.innerHTML=items.map((item,i)=>`
+
+  // Apenas categorias que possuem registros (> 0) para manter minimalista e clean
+  const items = rawItems.filter(it => it.val > 0);
+  if(items.length === 0){
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+  el.style.display = 'flex';
+  el.innerHTML=items.map(item=>`
     <div style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:56px">
       <div style="position:relative">
-        ${icons[i]}
+        ${item.icon}
         <span style="position:absolute;top:-4px;right:-6px;min-width:18px;height:18px;background:${item.color};color:#fff;font-size:11px;font-weight:700;border-radius:999px;display:flex;align-items:center;justify-content:center;padding:0 4px;line-height:1;box-shadow:0 1px 4px rgba(0,0,0,.18)">${item.val}</span>
       </div>
       <span style="font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.2px">${item.label}</span>
@@ -1509,23 +1609,43 @@ function renderAusIconStrip(ds){
 }
 
 function renderSummary(ds){
+  const el = document.getElementById('summaryRow');
+  if(!el) return;
   let tOp=0,tOps=0,tAus=0,tRes=0;
   SETORES.forEach(s=>{ tOp+=quadros[s]?.operadores||0; tOps+=quadros[s]?.operacoes||0; tAus+=totalAus(s,ds)+enfVoltouQtd(s,ds)+atrasadoQtd(s,ds)+saiuVoltouQtd(s,ds)+liberadoQtd(s,ds)+atestadoQtd(s,ds)+customTotalQtd(s,ds); tRes+=resultado(s,ds); });
   const sal=tOp-tAus, cob=totalMonCob(), fora=totalMonFora();
   const sabSt=isSab(ds)?sabStatus(ds):null;
   const empDia=emprestados[ds]||[];
   const totalEmpOp=empDia.reduce((a,e)=>a+e.qtd,0);
-  document.getElementById('summaryRow').innerHTML=`
+
+  const hasDemanda = (tOp > 0 || tOps > 0 || tAus > 0 || totalEmpOp > 0 || cob > 0 || fora > 0);
+  if(!hasDemanda){
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+  el.style.display = 'flex';
+
+  let html = `
     <div class="kpi"><div class="kpi-label">Operadores</div><div class="kpi-val c-blue">${tOp}</div></div>
     <div class="kpi"><div class="kpi-label">Operações</div><div class="kpi-val c-blue">${tOps}</div></div>
     <div class="kpi"><div class="kpi-label">Ausências</div><div class="kpi-val c-danger">${tAus}</div></div>
     <div class="kpi"><div class="kpi-label">Saldo</div><div class="kpi-val ${sal>=0?'c-ok':'c-danger'}">${sal>=0?'+':''}${sal}</div></div>
     <div class="kpi"><div class="kpi-label">Resultado</div><div class="kpi-val ${tRes>=0?'c-resultado':'c-danger'}">${tRes>=0?'+':''}${tRes}</div></div>
-    <div class="kpi"><div class="kpi-label">Emprestados</div><div class="kpi-val" style="color:#F472B6">${totalEmpOp}</div></div>
-    <div class="kpi"><div class="kpi-label">Mon. cobrindo</div><div class="kpi-val c-monitor">${cob}</div></div>
-    <div class="kpi"><div class="kpi-label">Mon. fora</div><div class="kpi-val" style="color:#818CF8">${fora}</div></div>
-    ${sabSt?`<div class="kpi"><div class="kpi-label">Sábado</div><div class="kpi-val" style="font-size:14px;margin-top:4px">${sabSt==='prod'?'🏭 Prod.':'⛔ Sem prod.'}</div></div>`:''}
   `;
+  if(totalEmpOp > 0){
+    html += `<div class="kpi"><div class="kpi-label">Emprestados</div><div class="kpi-val" style="color:#F472B6">${totalEmpOp}</div></div>`;
+  }
+  if(cob > 0){
+    html += `<div class="kpi"><div class="kpi-label">Mon. cobrindo</div><div class="kpi-val c-monitor">${cob}</div></div>`;
+  }
+  if(fora > 0){
+    html += `<div class="kpi"><div class="kpi-label">Mon. fora</div><div class="kpi-val" style="color:#818CF8">${fora}</div></div>`;
+  }
+  if(sabSt){
+    html += `<div class="kpi"><div class="kpi-label">Sábado</div><div class="kpi-val" style="font-size:14px;margin-top:4px">${sabSt==='prod'?'🏭 Prod.':'⛔ Sem prod.'}</div></div>`;
+  }
+  el.innerHTML = html;
 }
 
 function renderTabela(ds){
@@ -1586,8 +1706,24 @@ function _semaforo(res, ausReal, op) {
 }
 
 function renderCards(ds){
-  const g=document.getElementById('sectorGrid'); g.innerHTML='';
-  SETORES.forEach(setor=>{
+  const g=document.getElementById('sectorGrid'); if(!g) return;
+  g.innerHTML='';
+
+  let setoresParaRenderizar = SETORES;
+  if(currentCell !== 'all'){
+    if(SETORES.includes(currentCell)){
+      setoresParaRenderizar = [currentCell];
+    } else {
+      currentCell = SETORES[0] || 'Mezanino';
+      setoresParaRenderizar = [currentCell];
+    }
+    g.style.display = 'block';
+  } else {
+    g.style.display = 'grid';
+    g.style.gridTemplateColumns = 'repeat(auto-fill, minmax(310px, 1fr))';
+  }
+
+  setoresParaRenderizar.forEach(setor=>{
     const op=quadros[setor]?.operadores||0,ops=quadros[setor]?.operacoes||0;
     const f=ausF(setor,ds),b=ausB(setor,ds),a=ausA(setor,ds),falt=ausFalt(setor,ds),enf=ausEnf(setor,ds),out=ausOut(setor,ds),lic=ausLic(setor,ds);
     const pres=getPainelCount(setor,['presente'],ds);
