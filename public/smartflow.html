@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VW Smart Flow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2010,7 +2010,7 @@ function renderRem(ds){
     <div class="rem-item sobra">
       <div style="display:flex;flex-direction:column;gap:2px">
         <span class="fw6">${s}</span>
-        <span style="font-size:11px;color:var(--text3)">saldo ${saldo(s,ds)>=0?'+':''}${saldo(s,ds)} · ops ${quadros[s]?.operacoes||0} · mon.cob. ${monCob(s)}</span>
+        <span style="font-size:11px;color:var(--text3)">saldo ${saldo(s,ds)>=0?'+':''}${saldo(s,ds)} &middot; ops ${quadros[s]?.operacoes||0} &middot; mon.cob. ${monCob(s)}</span>
       </div>
       <span class="c-ok fw6 mono" style="font-size:16px">+${resultado(s,ds)}</span>
     </div>`).join(''):`<div class="empty-msg">Nenhum</div>`;
@@ -2018,7 +2018,7 @@ function renderRem(ds){
     <div class="rem-item falta">
       <div style="display:flex;flex-direction:column;gap:2px">
         <span class="fw6">${s}</span>
-        <span style="font-size:11px;color:var(--text3)">saldo ${saldo(s,ds)>=0?'+':''}${saldo(s,ds)} · ops ${quadros[s]?.operacoes||0} · aus. ${totalAus(s,ds)}</span>
+        <span style="font-size:11px;color:var(--text3)">saldo ${saldo(s,ds)>=0?'+':''}${saldo(s,ds)} &middot; ops ${quadros[s]?.operacoes||0} &middot; aus. ${totalAus(s,ds)}</span>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
         <span class="c-danger fw6 mono" style="font-size:18px">${resultado(s,ds)}</span>
@@ -2027,18 +2027,32 @@ function renderRem(ds){
     </div>`).join(''):`<div class="empty-msg">Nenhum</div>`;
 }
 
+/* ============================================================
+   FUNÇÕES DE INPUT COM DEBOUNCE — evita dismiss do teclado mobile
+============================================================ */
 let _upCampoRenderTimer=null;
+let _renderSetoresTimer=null;
+
+function _debouncedRenderSetores(){
+  clearTimeout(_renderSetoresTimer);
+  _renderSetoresTimer=setTimeout(()=>{
+    const activeEl=document.activeElement;
+    const isTyping=activeEl&&(activeEl.tagName==='INPUT'||activeEl.tagName==='TEXTAREA'||activeEl.tagName==='SELECT');
+    if(!isTyping){
+      renderSetores(); renderDashboard();
+    } else {
+      _renderSetoresTimer=setTimeout(()=>{ renderSetores(); renderDashboard(); },1200);
+    }
+  }, 900);
+}
+
 function upCampo(setor,campo,val){
   if(!quadros[setor]) quadros[setor]={operadores:0,operacoes:0};
   quadros[setor][campo]=parseInt(val)||0;
   _autoSave();
-  clearTimeout(_upCampoRenderTimer);
-  _upCampoRenderTimer=setTimeout(()=>{ renderSetores(); renderDashboard(); }, 800);
+  _debouncedRenderSetores();
 }
 
-/* ============================================================
-   MONITORES
-============================================================ */
 /* ============================================================
    ATRASADOS
 ============================================================ */
@@ -2047,11 +2061,10 @@ function setAtrasado(setor, ds, val){
   const oldV = atrasadoQtd(setor,ds)||0;
   if(v > oldV) _changeOperatorStatus(setor, ['ausente', 'pendente', 'presente'], 'ausente', 'Atrasado');
   else if (v < oldV) _changeOperatorStatus(setor, ['ausente'], 'presente', '');
-
   atrasados[setor+'||'+ds] = v;
   localStorage.setItem('vw_atrasados',JSON.stringify(atrasados));
   _autoSave();
-  renderSetores();
+  _debouncedRenderSetores();
 }
 
 /* ============================================================
@@ -2062,45 +2075,42 @@ function setSaiuVoltou(setor, ds, val){
   const oldV = saiuVoltouQtd(setor,ds)||0;
   if(v > oldV) _changeOperatorStatus(setor, ['presente'], 'ausente', 'Saída temporária');
   else if (v < oldV) _changeOperatorStatus(setor, ['ausente'], 'presente', '');
-
   saiuVoltou[setor+'||'+ds] = v;
   localStorage.setItem('vw_saiu_voltou',JSON.stringify(saiuVoltou));
   _autoSave();
-  renderSetores();
+  _debouncedRenderSetores();
 }
 
 /* ============================================================
-   LIBERAÇÃO PROGRAMADA — curso, evento, palestra
+   LIBERAÇÃO PROGRAMADA
 ============================================================ */
 function setLiberado(setor, ds, val){
   const v = Math.max(0, parseInt(val)||0);
   const oldV = liberadoQtd(setor,ds)||0;
   if(v > oldV) _changeOperatorStatus(setor, ['presente', 'ausente'], 'afastado', 'Liberação programada');
   else if (v < oldV) _changeOperatorStatus(setor, ['afastado'], 'presente', '');
-
   liberados[setor+'||'+ds] = v;
   localStorage.setItem('vw_liberados',JSON.stringify(liberados));
   _autoSave();
-  renderSetores();
+  _debouncedRenderSetores();
 }
 
 /* ============================================================
-   ATESTADO — chegou com atestado médico no dia
+   ATESTADO
 ============================================================ */
 function setAtestado(setor, ds, val){
   const v = Math.max(0, parseInt(val)||0);
   const oldV = atestadoQtd(setor,ds)||0;
   if(v > oldV) _changeOperatorStatus(setor, ['presente', 'pendente', 'ausente'], 'afastado', 'Atestado');
   else if (v < oldV) _changeOperatorStatus(setor, ['afastado'], 'presente', '');
-
   atestados[setor+'||'+ds] = v;
   localStorage.setItem('vw_atestados',JSON.stringify(atestados));
   _autoSave();
-  renderSetores();
+  _debouncedRenderSetores();
 }
 
 /* ============================================================
-   CARTÕES PERSONALIZADOS — criados pelo usuário
+   CARTÕES PERSONALIZADOS
 ============================================================ */
 function _hexToRgba(hex,alpha){
   hex=(hex||'#94A3B8').replace('#','');
@@ -2113,8 +2123,9 @@ function setCustomCount(cardId, setor, ds, val){
   customCounts[cardId+'||'+setor+'||'+ds] = v;
   localStorage.setItem('vw_custom_counts',JSON.stringify(customCounts));
   _autoSave();
-  renderSetores();
+  _debouncedRenderSetores();
 }
+
 function abrirNovoCartao(){
   const overlay=document.createElement('div');
   overlay.id='_novoCartaoOverlay';
