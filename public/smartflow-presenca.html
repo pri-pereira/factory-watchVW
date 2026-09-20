@@ -226,6 +226,22 @@ input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.85); curs
 .btn-pdf { background: #EF4444; border-color: #EF4444; color: #fff; }
 .btn-wa { background: #25D366; border-color: #25D366; color: #fff; }
 .btn-resumo { background: #4F46E5; border-color: #4F46E5; color: #fff; }
+.btn-db { background: rgba(14, 165, 233, 0.15); border-color: rgba(14, 165, 233, 0.35); color: #7DD3FC; cursor: pointer; }
+.btn-db:hover { background: rgba(14, 165, 233, 0.25); color: #BAE6FD; }
+.db-status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #94A3B8; display: inline-block;
+  transition: all .2s ease;
+}
+.db-status-dot.online { background: #10B981; box-shadow: 0 0 8px rgba(16,185,129,0.8); }
+.db-status-dot.syncing { background: #F59E0B; box-shadow: 0 0 8px rgba(245,158,11,0.8); }
+.db-status-dot.error { background: #EF4444; box-shadow: 0 0 8px rgba(239,68,68,0.8); }
+.db-status-dot.offline { background: #94A3B8; }
+.db-badge-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: .5px; }
+.db-badge-tag.online { background: rgba(16,185,129,.15); color: #10B981; border: 1px solid rgba(16,185,129,.3); }
+.db-badge-tag.syncing { background: rgba(245,158,11,.15); color: #F59E0B; border: 1px solid rgba(245,158,11,.3); }
+.db-badge-tag.error { background: rgba(239,68,68,.15); color: #EF4444; border: 1px solid rgba(239,68,68,.3); }
+.db-badge-tag.offline { background: rgba(148,163,184,.15); color: #94A3B8; border: 1px solid rgba(148,163,184,.3); }
 
 /* ============================================================
    TURNO BAR — compacto e funcional
@@ -1351,6 +1367,10 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
       <input type="date" id="dataAtual">
     </div>
     <div class="hdr-actions">
+      <button class="btn btn-db btn-sm" id="btnStatusBanco" onclick="abrirModalBanco()" title="Banco de Dados & Sincronização">
+        <span class="db-status-dot offline" id="dbStatusDot"></span>
+        <span id="dbStatusText">Banco</span>
+      </button>
       <button class="btn btn-backup btn-sm" onclick="exportarBackup()" title="Backup">
         <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Backup
@@ -3352,6 +3372,17 @@ function renderDashSidebar(){
       </div>
     `;
   }).join('');
+}
+
+function selectDashSection(secId){
+  currentDashSection = secId;
+  renderDashSidebar();
+  applyDashSectionFilter();
+}
+
+function applyDashSectionFilter(){
+  const sections = document.querySelectorAll('.dash-section');
+  sections.forEach(sec => {
     const secName = sec.getAttribute('data-dash-sec');
     if(currentDashSection === 'all' || currentDashSection === secName){
       sec.style.display = 'block';
@@ -4036,6 +4067,33 @@ tr:nth-child(even) td{background:#f9fafb}
 .obs{background:#f9fafb;border:1px solid #e5e7eb;border-radius:5px;padding:8px;font-size:11px;white-space:pre-wrap;margin-top:4px}
 .footer{margin-top:18px;border-top:1px solid #e5e7eb;padding-top:6px;font-size:10px;color:#9ca3af;text-align:right}
 @media print{body{padding:10px}@page{margin:12mm}}</style>
+</head><body>
+<div class="hdr"><div style="display:flex;align-items:center"><span class="vw">VW</span><span class="title">Gestão de Ausências — Linha de Montagem${sabBadge}</span></div><span style="font-size:12px;color:#6b7280">Data: ${df}</span></div>
+<div class="summ">
+  <div class="kk"><div class="l">Operadores</div><div class="v" style="color:#2563eb">${tOp}</div></div>
+  <div class="kk"><div class="l">Operações</div><div class="v" style="color:#2563eb">${tOps}</div></div>
+  <div class="kk"><div class="l">Ausências</div><div class="v" style="color:#dc2626">${tF+tB+tA+tFalt+tEnf+tOut}</div></div>
+  <div class="kk"><div class="l">Mon. cobrindo</div><div class="v" style="color:#d97706">${tCob}</div></div>
+  <div class="kk"><div class="l">Resultado final</div><div class="v" style="color:${tres>=0?'#059669':'#dc2626'}">${tres>=0?'+':''}${tres}</div></div>
+</div>
+<h2>Contagem por setor</h2>
+<table><thead><tr><th>Setor</th><th>Oper.</th><th>Ops.</th><th>Férias</th><th>BH</th><th>Afas.</th><th>Falta</th><th>Enfer.</th><th>Outros</th><th>Mon.Cob.</th><th>Resultado</th></tr></thead>
+<tbody>${rows}<tr class="tr-total"><td>TOTAL</td><td>${tOp}</td><td>${tOps}</td><td>${tF}</td><td>${tB}</td><td>${tA}</td><td>${tFalt}</td><td>${tEnf}</td><td>${tOut}</td><td>${tCob}</td><td style="color:${trc}">${tres>=0?'+':''}${tres}</td></tr></tbody></table>
+<h2>Previsão — próximos 15 dias</h2>
+<table><thead><tr><th>Data</th><th>Férias</th><th>BH</th><th>Afas.</th><th>Falta</th><th>Enfer.</th><th>Outros</th><th>Mon.Cob.</th><th>Total aus.</th><th>Resultado</th></tr></thead><tbody>${prevRows}</tbody></table>
+${monRows?`<h2>Monitores</h2><table><thead><tr><th>Setor / Nome</th><th>Status</th><th>Obs.</th></tr></thead><tbody>${monRows}</tbody></table>`:''}
+${obs?`<h2>Observações</h2><div class="obs">${obs}</div>`:''}
+<div class="footer">VW Taubaté — gerado em ${new Date().toLocaleString('pt-BR')}</div>
+<script>window.onload=()=>{window.print()}<\/script>
+</body></html>`;
+  const w=window.open('','_blank','width=900,height=700');
+  if(w){w.document.write(html);w.document.close();}
+  else alert('Permita pop-ups para exportar o PDF.');
+}
+
+
+</script>
+
 <script src="https://cdn.tailwindcss.com"></script>
 <style id="presenca-styles">
 /* Painel de Presença - Setup de Turno */
@@ -4384,6 +4442,7 @@ ${obs?`<h2>Observações</h2><div class="obs">${obs}</div>`:''}
 <div class="footer">VW Taubaté — gerado em ${new Date().toLocaleString('pt-BR')}</div>
 <script>window.onload=()=>{window.print()}<\/script>
 </div><!-- /sistema-principal -->
+
 <script id="presenca-simulation-script">
 /* =============================================
    SCRIPT DE SETUP DE TURNO - LEITURA DE CRACHÁ
@@ -6424,7 +6483,7 @@ setInterval(_tickTurno, 1000);
    Espelha automaticamente qualquer chave "vw_*" do localStorage
    entre os aparelhos de Fabio, do outro monitor e do líder.
 ============================================================ */
-const firebaseConfig = {
+const FIREBASE_CONFIG_PADRAO = {
   apiKey: "AIzaSyBYcb-JdZ-KX_eakIXKAUSE-oKj1woE0Hk",
   authDomain: "vw-smartflow.firebaseapp.com",
   databaseURL: "https://vw-smartflow-default-rtdb.firebaseio.com",
@@ -6433,82 +6492,453 @@ const firebaseConfig = {
   messagingSenderId: "266553699370",
   appId: "1:266553699370:web:562d10e9d22329c02ee753"
 };
-firebase.initializeApp(firebaseConfig);
-const _db = firebase.database();
-const _syncRef = _db.ref('smartflow/dados');
+
+function _obterFirebaseConfig() {
+  try {
+    const salvo = localStorage.getItem('sf_firebase_custom_config');
+    if (salvo) {
+      const parsed = JSON.parse(salvo);
+      if (parsed && parsed.databaseURL) return parsed;
+    }
+  } catch(e) {}
+  return FIREBASE_CONFIG_PADRAO;
+}
+
+let _db = null;
+let _syncRef = null;
+let _dbStatus = 'offline';
+let _dbStatusDetalhe = 'Iniciando...';
+let _ultimaSincronizacao = null;
+let _logMudancas = [];
+
+function _registrarLogBanco(tipo, mensagem) {
+  const item = {
+    hora: new Date().toLocaleTimeString('pt-BR'),
+    tipo: tipo,
+    msg: mensagem
+  };
+  _logMudancas.unshift(item);
+  if (_logMudancas.length > 25) _logMudancas.pop();
+  if (typeof _renderLogsModalBanco === 'function') _renderLogsModalBanco();
+}
+
+function _atualizarBadgeBanco(status, detalhe) {
+  _dbStatus = status;
+  if (detalhe) _dbStatusDetalhe = detalhe;
+  const dot = document.getElementById('dbStatusDot');
+  const txt = document.getElementById('dbStatusText');
+  if (dot) dot.className = 'db-status-dot ' + status;
+  if (txt) {
+    if (status === 'online') txt.textContent = 'Online';
+    else if (status === 'syncing') txt.textContent = 'Salvando...';
+    else if (status === 'error') txt.textContent = 'Ajustar Regra';
+    else txt.textContent = 'Offline';
+  }
+  const modalBadge = document.getElementById('modalDbStatusBadge');
+  if (modalBadge) {
+    modalBadge.className = 'db-badge-tag ' + status;
+    modalBadge.textContent = status === 'online' ? 'Sincronizado (Online)' :
+                             status === 'syncing' ? 'Sincronizando...' :
+                             status === 'error' ? 'Ajuste de Regras Necessário' : 'Offline / Desconectado';
+  }
+  const modalDetalhe = document.getElementById('modalDbStatusDetalhe');
+  if (modalDetalhe && detalhe) modalDetalhe.textContent = detalhe;
+}
+
+function _inicializarBancoDeDados() {
+  try {
+    const config = _obterFirebaseConfig();
+    if (firebase.apps.length > 0) {
+      _db = firebase.database();
+    } else {
+      firebase.initializeApp(config);
+      _db = firebase.database();
+    }
+    _syncRef = _db.ref('smartflow/dados');
+
+    _db.ref('.info/connected').on('value', snap => {
+      const conectado = snap.val() === true;
+      if (conectado) {
+        _atualizarBadgeBanco('online', 'Conectado aos servidores da nuvem');
+        _registrarLogBanco('ok', 'Conexão ativa com Realtime Database');
+        _configurarPresenca();
+      } else {
+        _atualizarBadgeBanco('offline', 'Sem conexão com a internet ou servidor');
+        _registrarLogBanco('warn', 'Desconectado do servidor remoto');
+      }
+    });
+
+    _syncRef.on('value', snap => {
+      const dados = snap.val();
+      if (!dados) return;
+      _ultimaSincronizacao = new Date();
+      _aplicarDadosRemotos(dados);
+      _atualizarBadgeBanco('online', 'Dados sincronizados com sucesso');
+      _registrarLogBanco('ok', 'Dados remotos recebidos e aplicados');
+    }, err => {
+      console.warn('Erro ao escutar banco:', err);
+      if (err.message && err.message.includes('PERMISSION_DENIED')) {
+        _atualizarBadgeBanco('error', 'Permissão Negada: Regras do Firebase bloqueadas');
+        _registrarLogBanco('err', 'Regras do Firebase bloquearam leitura: PERMISSION_DENIED');
+        const alertBox = document.getElementById('modalDbAlertRules');
+        if (alertBox) alertBox.style.display = 'block';
+      } else {
+        _atualizarBadgeBanco('error', err.message);
+        _registrarLogBanco('err', 'Falha ao sincronizar: ' + err.message);
+      }
+    });
+
+    _db.ref('smartflow/meta/ultimaEdicao').on('value', snap => {
+      const info = snap.val();
+      const el = document.getElementById('footerTs');
+      if (info && el) {
+        el.textContent = `Última edição: ${info.por} às ${new Date(info.quando).toLocaleTimeString('pt-BR')}`;
+      }
+    }, err => {
+      if (err.message && err.message.includes('PERMISSION_DENIED')) {
+        _atualizarBadgeBanco('error', 'Regras do Firebase bloqueadas');
+      }
+    });
+
+    _syncRef.once('value').then(snap => {
+      if (!snap.exists()) {
+        _sincronizarTudoLocalParaBanco(true);
+      }
+    }).catch(err => {
+      if (err.message && err.message.includes('PERMISSION_DENIED')) {
+        _atualizarBadgeBanco('error', 'Regras do Firebase bloqueando gravação/leitura');
+        _registrarLogBanco('err', 'Verifique a aba Regras do Firebase (PERMISSION_DENIED)');
+        const alertBox = document.getElementById('modalDbAlertRules');
+        if (alertBox) alertBox.style.display = 'block';
+      }
+    });
+
+  } catch(e) {
+    console.error('Falha ao iniciar Firebase:', e);
+    _atualizarBadgeBanco('error', 'Erro na configuração do Firebase: ' + e.message);
+    _registrarLogBanco('err', 'Erro de inicialização: ' + e.message);
+  }
+}
 
 let _applyingRemote = false;
 const _pushTimers = {};
-const _chavesPendentes = new Set(); // chaves com edição local ainda não enviada pro Firebase
+const _chavesPendentes = new Set();
 
-// Intercepta TODO localStorage.setItem: qualquer chave "vw_*" é
-// automaticamente espelhada no Firebase (com pequeno atraso pra
-// juntar várias digitações seguidas num só envio).
 const _origSetItem = localStorage.setItem.bind(localStorage);
-localStorage.setItem = function(key, value){
+localStorage.setItem = function(key, value) {
   _origSetItem(key, value);
-  if(_applyingRemote) return; // evita eco: dado que já veio do Firebase não volta pra ele
-  if(!key.startsWith('vw_')) return; // 'sf_papel' (identidade local do aparelho) fica de fora
+  if (_applyingRemote) return;
+  if (!key.startsWith('vw_')) return;
+
   _chavesPendentes.add(key);
+  _atualizarBadgeBanco('syncing', 'Salvando ' + key.replace('vw_', '') + '...');
   clearTimeout(_pushTimers[key]);
-  _pushTimers[key] = setTimeout(()=>{
-    _syncRef.child(key).set(value);
-    _chavesPendentes.delete(key);
-    _db.ref('smartflow/meta/ultimaEdicao').set({
-      por: localStorage.getItem('sf_papel')||'desconhecido',
-      quando: new Date().toISOString()
-    });
-  }, 500);
+
+  _pushTimers[key] = setTimeout(() => {
+    if (!_syncRef) return;
+    _syncRef.child(key).set(value)
+      .then(() => {
+        _chavesPendentes.delete(key);
+        _ultimaSincronizacao = new Date();
+        _atualizarBadgeBanco('online', 'Salvo com sucesso na nuvem');
+        _registrarLogBanco('sync', key.replace('vw_', '') + ' salvo no banco');
+        if (_db) {
+          _db.ref('smartflow/meta/ultimaEdicao').set({
+            por: localStorage.getItem('sf_papel') || 'Operador',
+            quando: new Date().toISOString()
+          }).catch(() => {});
+        }
+      })
+      .catch(err => {
+        console.warn('Erro ao salvar no Firebase:', err);
+        if (err.message && err.message.includes('PERMISSION_DENIED')) {
+          _atualizarBadgeBanco('error', 'Permissão negada pelas regras do Firebase');
+          _registrarLogBanco('err', 'Falha ao salvar ' + key + ': PERMISSION_DENIED');
+          const alertBox = document.getElementById('modalDbAlertRules');
+          if (alertBox) alertBox.style.display = 'block';
+        } else {
+          _atualizarBadgeBanco('error', err.message);
+          _registrarLogBanco('err', 'Erro ao salvar: ' + err.message);
+        }
+      });
+  }, 450);
 };
 
-// Aplica dados que chegaram de outro aparelho e redesenha a tela
-function _aplicarDadosRemotos(dados){
+function _aplicarDadosRemotos(dados) {
   _applyingRemote = true;
-  try{
-    Object.keys(dados||{}).forEach(k=>{
-      if(_chavesPendentes.has(k)) return; // edição local dessa chave ainda não foi enviada — não deixa o remoto sobrescrever e apagar
+  try {
+    Object.keys(dados || {}).forEach(k => {
+      if (_chavesPendentes.has(k)) return;
       const v = dados[k];
-      if(typeof v === 'string') _origSetItem(k, v);
+      if (typeof v === 'string') _origSetItem(k, v);
     });
-    carregarSetores();
-    carregarEmp();
-    carregar(document.getElementById('dataAtual').value || today());
-    renderMonitores();
-    renderEmprestados();
-    renderSetoresCfg();
-    if(typeof renderAgenda==='function') renderAgenda();
-    if(document.getElementById('tab-dashboard')?.classList.contains('active')) renderDashboard();
-    if(dados['vw_papeis_smartflow']){ PAPEIS_SMARTFLOW = _carregarPapeis(); _renderPainelPresenca(_ultimaPresenca); }
-  }catch(e){ console.error('Erro ao aplicar dados remotos:', e); }
+    if (typeof carregarSetores === 'function') carregarSetores();
+    if (typeof carregarEmp === 'function') carregarEmp();
+    const dtEl = document.getElementById('dataAtual');
+    if (typeof carregar === 'function') carregar(dtEl?.value || today());
+    if (typeof renderMonitores === 'function') renderMonitores();
+    if (typeof renderEmprestados === 'function') renderEmprestados();
+    if (typeof renderSetoresCfg === 'function') renderSetoresCfg();
+    if (typeof renderAgenda === 'function') renderAgenda();
+    if (document.getElementById('tab-dashboard')?.classList.contains('active') && typeof renderDashboard === 'function') renderDashboard();
+    if (dados['vw_papeis_smartflow'] && typeof _carregarPapeis === 'function') {
+      PAPEIS_SMARTFLOW = _carregarPapeis();
+      if (typeof _renderPainelPresenca === 'function') _renderPainelPresenca(_ultimaPresenca);
+    }
+    if (dados['vw_sf_operadores_estado'] && document.getElementById('tab-presencas')?.classList.contains('active')) {
+      if (typeof renderPresencasOperadores === 'function') renderPresencasOperadores();
+    }
+  } catch(e) {
+    console.error('Erro ao aplicar dados remotos:', e);
+  }
   _applyingRemote = false;
 }
 
-let _primeiraSincronizacao = true;
-_syncRef.on('value', snap=>{
-  const dados = snap.val();
-  if(!dados) return; // banco ainda vazio (primeiro aparelho a ligar)
-  _aplicarDadosRemotos(dados);
-  _primeiraSincronizacao = false;
-});
+async function _sincronizarTudoLocalParaBanco(silencioso) {
+  if (!_syncRef) return;
+  _atualizarBadgeBanco('syncing', 'Enviando todos os dados locais...');
+  _registrarLogBanco('sync', 'Iniciando upload de dados locais...');
 
-_db.ref('smartflow/meta/ultimaEdicao').on('value', snap=>{
-  const info = snap.val();
-  const el = document.getElementById('footerTs');
-  if(info && el) el.textContent = `Última edição: ${info.por} às ${new Date(info.quando).toLocaleTimeString('pt-BR')}`;
-});
-
-// Se o banco estiver vazio, o primeiro aparelho a conectar envia
-// os dados locais atuais como base inicial pros outros dois.
-_syncRef.once('value').then(snap=>{
-  if(!snap.exists()){
-    const inicial = {};
-    for(let i=0;i<localStorage.length;i++){
-      const k=localStorage.key(i);
-      if(k && k.startsWith('vw_')) inicial[k]=localStorage.getItem(k);
+  const pacote = {};
+  let totalChaves = 0;
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('vw_')) {
+      pacote[k] = localStorage.getItem(k);
+      totalChaves++;
     }
-    _syncRef.set(inicial);
   }
-});
+
+  try {
+    await _syncRef.update(pacote);
+    _ultimaSincronizacao = new Date();
+    _atualizarBadgeBanco('online', totalChaves + ' tabelas sincronizadas com sucesso');
+    _registrarLogBanco('ok', totalChaves + ' tabelas salvas na nuvem');
+    if (!silencioso && typeof showToast === 'function') {
+      showToast(totalChaves + ' tabelas salvas com sucesso no banco de dados!');
+    }
+    return true;
+  } catch(err) {
+    console.warn('Erro na sincronização completa:', err);
+    if (err.message && err.message.includes('PERMISSION_DENIED')) {
+      _atualizarBadgeBanco('error', 'Permissão Negada: Regras do Firebase bloqueadas');
+      _registrarLogBanco('err', 'PERMISSION_DENIED ao enviar pacote completo');
+      const alertBox = document.getElementById('modalDbAlertRules');
+      if (alertBox) alertBox.style.display = 'block';
+    } else {
+      _atualizarBadgeBanco('error', err.message);
+      _registrarLogBanco('err', 'Erro no envio: ' + err.message);
+    }
+    return false;
+  }
+}
+
+async function _testarConexaoBanco() {
+  const btn = document.getElementById('btnTestarConexaoDb');
+  if (btn) btn.textContent = 'Testando conexão...';
+  try {
+    if (!_db) throw new Error('Firebase não inicializado');
+    const ts = Date.now();
+    await _db.ref('smartflow/meta/ping').set({ ts: ts, de: localStorage.getItem('sf_papel') || 'teste' });
+    _atualizarBadgeBanco('online', 'Conexão testada com sucesso!');
+    _registrarLogBanco('ok', 'Teste de ping bem-sucedido');
+    if (typeof showToast === 'function') showToast('Conexão com o banco de dados está perfeita!');
+  } catch(err) {
+    _registrarLogBanco('err', 'Falha no teste: ' + err.message);
+    if (err.message && err.message.includes('PERMISSION_DENIED')) {
+      _atualizarBadgeBanco('error', 'Permissão Negada');
+      const alertBox = document.getElementById('modalDbAlertRules');
+      if (alertBox) alertBox.style.display = 'block';
+      alert('Atenção: As regras do Firebase estão bloqueando o acesso (PERMISSION_DENIED).\n\nConsulte as instruções no modal para liberar.');
+    } else {
+      _atualizarBadgeBanco('error', err.message);
+      alert('Erro ao conectar ao banco: ' + err.message);
+    }
+  }
+  if (btn) btn.textContent = 'Testar Conexão';
+}
+
+function abrirModalBanco() {
+  let modal = document.getElementById('modalBancoDados');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'modalBancoDados';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,18,51,0.75);backdrop-filter:blur(6px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;font-family:var(--font,sans-serif);';
+    document.body.appendChild(modal);
+  }
+
+  const configAtual = _obterFirebaseConfig();
+  let chavesLocaisCount = 0;
+  for (let i = 0; i < localStorage.length; i++) {
+    if (localStorage.key(i)?.startsWith('vw_')) chavesLocaisCount++;
+  }
+  const horaSync = _ultimaSincronizacao ? _ultimaSincronizacao.toLocaleTimeString('pt-BR') : 'Ainda não sincronizado';
+
+  modal.innerHTML = `
+    <div style="background:#001E50;border:1px solid rgba(255,255,255,0.15);border-radius:18px;max-width:580px;width:100%;box-shadow:0 25px 60px rgba(0,0,0,0.6);overflow:hidden;color:#FFFFFF;display:flex;flex-direction:column;max-height:90vh;">
+      <div style="padding:16px 22px;background:#001538;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(2,132,199,0.2);display:flex;align-items:center;justify-content:center;color:#38BDF8;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          </div>
+          <div>
+            <div style="font-family:var(--font-display);font-size:15px;font-weight:800;letter-spacing:0.8px;text-transform:uppercase;color:#FFFFFF;">BANCO DE DADOS & SINCRONIZAÇÃO</div>
+            <div style="font-size:11px;color:#94A3B8;">Firebase Realtime Database &bull; Persistência em Nuvem</div>
+          </div>
+        </div>
+        <button onclick="fecharModalBanco()" style="background:none;border:none;color:#94A3B8;font-size:22px;cursor:pointer;line-height:1;padding:4px;">&times;</button>
+      </div>
+
+      <div style="padding:20px 22px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;flex:1;">
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <span style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;">Status da Conexão</span>
+            <span id="modalDbStatusBadge" class="db-badge-tag ${_dbStatus}">${_dbStatus === 'online' ? 'Sincronizado (Online)' : _dbStatus === 'syncing' ? 'Sincronizando...' : _dbStatus === 'error' ? 'Ajuste de Regras Necessário' : 'Offline'}</span>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:#E2E8F0;margin-bottom:6px;" id="modalDbStatusDetalhe">${_dbStatusDetalhe}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);font-size:11.5px;">
+            <div><span style="color:#94A3B8;">Última Sync:</span> <strong id="modalDbUltimaSync" style="color:#38BDF8;">${horaSync}</strong></div>
+            <div><span style="color:#94A3B8;">Tabelas Locais:</span> <strong style="color:#34D399;">${chavesLocaisCount} registros</strong></div>
+          </div>
+        </div>
+
+        <div id="modalDbAlertRules" style="display:${_dbStatus === 'error' ? 'block' : 'none'};background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;color:#F87171;font-weight:700;font-size:12.5px;margin-bottom:6px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Como liberar o banco no Firebase Console:
+          </div>
+          <div style="font-size:11.5px;color:#CBD5E1;line-height:1.5;margin-bottom:10px;">
+            Para permitir gravação no banco de dados:
+            <ol style="margin-left:16px;margin-top:6px;margin-bottom:6px;">
+              <li>Acesse o <strong>Firebase Console</strong></li>
+              <li>Vá em <strong>Build &gt; Realtime Database &gt; Regras (Rules)</strong></li>
+              <li>Cole as regras abaixo e clique em <strong>Publicar</strong>:</li>
+            </ol>
+          </div>
+          <div style="position:relative;">
+            <pre id="preRulesCode" style="background:#001233;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 12px;font-family:var(--mono,monospace);font-size:11px;color:#38BDF8;overflow-x:auto;">{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}</pre>
+            <button onclick="copiarRegrasFirebase()" style="position:absolute;top:6px;right:6px;background:rgba(2,132,199,0.3);border:1px solid #0284C7;color:#FFFFFF;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;cursor:pointer;">Copiar Regras</button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="btnSincronizarAgora" onclick="_sincronizarTudoLocalParaBanco(false)" style="flex:1;min-width:160px;background:#0284C7;border:none;border-radius:10px;padding:10px 16px;color:#FFFFFF;font-family:var(--font-display);font-size:12px;font-weight:800;letter-spacing:0.6px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            Sincronizar Tudo Agora
+          </button>
+          <button id="btnTestarConexaoDb" onclick="_testarConexaoBanco()" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:10px;padding:10px 14px;color:#E2E8F0;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:6px;">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+            Testar Conexão
+          </button>
+        </div>
+
+        <details style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 14px;">
+          <summary style="font-size:12px;font-weight:700;color:#94A3B8;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;">Configurar Credenciais do Firebase (Personalizado)</summary>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px;">
+            <div>
+              <label style="display:block;font-size:10.5px;color:#94A3B8;font-weight:600;margin-bottom:3px;">Database URL</label>
+              <input type="text" id="cfgDbUrl" value="${configAtual.databaseURL || ''}" style="width:100%;padding:7px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:#001538;color:#FFFFFF;font-family:var(--mono,monospace);font-size:11px;" placeholder="https://seu-projeto-default-rtdb.firebaseio.com">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div>
+                <label style="display:block;font-size:10.5px;color:#94A3B8;font-weight:600;margin-bottom:3px;">API Key</label>
+                <input type="text" id="cfgApiKey" value="${configAtual.apiKey || ''}" style="width:100%;padding:7px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:#001538;color:#FFFFFF;font-family:var(--mono,monospace);font-size:11px;">
+              </div>
+              <div>
+                <label style="display:block;font-size:10.5px;color:#94A3B8;font-weight:600;margin-bottom:3px;">Project ID</label>
+                <input type="text" id="cfgProjectId" value="${configAtual.projectId || ''}" style="width:100%;padding:7px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:#001538;color:#FFFFFF;font-family:var(--mono,monospace);font-size:11px;">
+              </div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:6px;">
+              <button onclick="restaurarConfigPadraoFirebase()" style="background:none;border:none;color:#94A3B8;font-size:11px;cursor:pointer;text-decoration:underline;">Restaurar Padrão</button>
+              <button onclick="salvarConfigCustomFirebase()" style="background:#0284C7;border:none;border-radius:6px;padding:6px 12px;color:#FFFFFF;font-size:11px;font-weight:700;cursor:pointer;">Salvar e Reconectar</button>
+            </div>
+          </div>
+        </details>
+
+        <div style="background:rgba(0,18,51,0.5);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;">
+          <div style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Histórico Recente de Gravações</div>
+          <div id="modalDbLogsList" style="max-height:110px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;font-family:var(--mono,monospace);font-size:10.5px;"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+  _renderLogsModalBanco();
+}
+
+function fecharModalBanco() {
+  const modal = document.getElementById('modalBancoDados');
+  if (modal) modal.style.display = 'none';
+}
+
+function _renderLogsModalBanco() {
+  const container = document.getElementById('modalDbLogsList');
+  if (!container) return;
+  if (_logMudancas.length === 0) {
+    container.innerHTML = '<span style="color:#64748B;font-style:italic;">Nenhuma atividade registrada ainda nesta sessão.</span>';
+    return;
+  }
+  container.innerHTML = _logMudancas.map(item => {
+    const cor = item.tipo === 'ok' ? '#34D399' :
+                item.tipo === 'sync' ? '#38BDF8' :
+                item.tipo === 'err' ? '#F87171' : '#FBBF24';
+    return `<div style="display:flex;gap:6px;align-items:center;line-height:1.4;">
+      <span style="color:#64748B;">[${item.hora}]</span>
+      <span style="color:${cor};">${item.msg}</span>
+    </div>`;
+  }).join('');
+}
+
+function copiarRegrasFirebase() {
+  const code = `{\n  "rules": {\n    ".read": true,\n    ".write": true\n  }\n}`;
+  navigator.clipboard.writeText(code).then(() => {
+    alert('Regras copiadas! Vá no Firebase Console > Realtime Database > Regras, cole e clique em Publicar.');
+  }).catch(() => {
+    alert('Selecione e copie manualmente as regras exibidas na caixa.');
+  });
+}
+
+function salvarConfigCustomFirebase() {
+  const dbUrl = document.getElementById('cfgDbUrl')?.value?.trim();
+  const apiKey = document.getElementById('cfgApiKey')?.value?.trim();
+  const projectId = document.getElementById('cfgProjectId')?.value?.trim();
+
+  if (!dbUrl) {
+    alert('Informe a Database URL do Firebase.');
+    return;
+  }
+
+  const novaConfig = {
+    apiKey: apiKey || FIREBASE_CONFIG_PADRAO.apiKey,
+    authDomain: projectId ? `${projectId}.firebaseapp.com` : FIREBASE_CONFIG_PADRAO.authDomain,
+    databaseURL: dbUrl,
+    projectId: projectId || FIREBASE_CONFIG_PADRAO.projectId,
+    storageBucket: projectId ? `${projectId}.firebasestorage.app` : FIREBASE_CONFIG_PADRAO.storageBucket,
+    messagingSenderId: FIREBASE_CONFIG_PADRAO.messagingSenderId,
+    appId: FIREBASE_CONFIG_PADRAO.appId
+  };
+
+  localStorage.setItem('sf_firebase_custom_config', JSON.stringify(novaConfig));
+  alert('Configuração salva! A página será recarregada para conectar ao novo banco.');
+  window.location.reload();
+}
+
+function restaurarConfigPadraoFirebase() {
+  if (confirm('Deseja restaurar as credenciais padrão do banco de dados?')) {
+    localStorage.removeItem('sf_firebase_custom_config');
+    alert('Configuração padrão restaurada. A página será recarregada.');
+    window.location.reload();
+  }
+}
+
+_inicializarBancoDeDados();
 
 function _carregarPapeis(){
   try{
