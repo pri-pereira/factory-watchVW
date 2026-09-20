@@ -729,43 +729,6 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
   </div>
 </header>
 
-<!-- BARRA DE DEBUG DO PAINEL -->
-<div id="debugPainel" style="background:#0F172A;color:#fff;padding:6px 16px;font-size:11px;font-weight:600;display:flex;justify-content:space-between;align-items:center;font-family:'Roboto Mono',monospace">
-  <span style="display:flex;align-items:center;gap:8px">📡 Conexão com Painel: <span id="debugPainelCount" style="color:var(--accent)">Verificando...</span></span>
-  <span style="color:#94A3B8;font-size:10px">Se estiver com 0, verifique se está abrindo ambas páginas no MESMO endereço/porta (localhost).</span>
-</div>
-<script>
-  setInterval(() => {
-    const d = document.getElementById('debugPainelCount');
-    if(!d) return;
-    const raw = localStorage.getItem('sf_operadores_estado');
-    if(raw) {
-      try {
-        const arr = JSON.parse(raw);
-        d.textContent = arr.length + ' operadores lidos (Sincronizado!)';
-        d.style.color = '#4ADE80';
-      } catch(e) {
-        d.textContent = 'Erro de leitura';
-        d.style.color = '#F87171';
-      }
-    } else {
-      d.textContent = '0 ops (Painel isolado ou vazio)';
-      d.style.color = '#F87171';
-    }
-  }, 2000);
-</script>
-<!-- LEGEND -->
-<div class="legend-bar">
-  <div class="leg"><div class="leg-dot" style="background:#A78BFA"></div>Férias</div>
-  <div class="leg"><div class="leg-dot" style="background:#38BDF8"></div>BH</div>
-  <div class="leg"><div class="leg-dot" style="background:#FB923C"></div>Afastamento</div>
-  <div class="leg"><div class="leg-dot" style="background:#DC2626"></div>Falta</div>
-  <div class="leg"><div class="leg-dot" style="background:#14B8A6"></div>Enfermaria</div>  <div class="leg"><div class="leg-dot" style="background:#94A3B8"></div>Outros</div>  <div class="leg"><div class="leg-dot" style="background:var(--resultado)"></div>Resultado</div>
-  <div class="leg"><div class="leg-dot" style="background:var(--sabprod);border-radius:50%"></div>Sáb. produção</div>
-  <div class="leg"><div class="leg-dot" style="background:var(--sabnao);border-radius:50%"></div>Sáb. sem prod.</div>
-  <div class="leg"><div class="leg-dot" style="background:var(--monitor);border-radius:50%"></div>Monitor cobrindo (+1 resultado)</div>
-</div>
-
 <!-- TURNO BAR (TELEMETRIA DE TURNO VW SMARTFLOW) -->
 <div id="turnoBar" style="display:flex;background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);border-bottom:3px solid var(--accent);padding:10px 18px;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;box-shadow:0 4px 14px rgba(0,0,0,.25)">
   <!-- Left: clock + status -->
