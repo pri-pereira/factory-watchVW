@@ -1007,6 +1007,9 @@ textarea.obs-inp:focus{outline:none;border-color:var(--accent)}
     </div>
   </div>
   <div class="hdr-right">
+    <div id="hdrUsuarioBadge" style="display:flex;align-items:center;margin-right:6px">
+      <span id="hdrUsuarioNome" style="font-size:13px;font-weight:700;color:#F1F5F9;font-family:var(--font-display);letter-spacing:0.5px">Bom trabalho!</span>
+    </div>
     <div class="date-pill">
       <label>Data</label>
       <input type="date" id="dataAtual">
@@ -1500,20 +1503,7 @@ textarea.obs-inp:focus{outline:none;border-color:var(--accent)}
   </div>
 </div>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <span class="footer-ts" id="footerTs">—</span>
-  <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-    <button class="btn btn-wa btn-sm" onclick="compartilharWA()">WA</button>
-    <button class="btn btn-sm" onclick="gerarResumoImagemWA()" style="background:#4F46E5;border-color:#4F46E5;color:#fff;gap:4px" title="Gerar imagem-resumo do dia para WhatsApp">📸 Resumo</button>
-    <button class="btn btn-pdf btn-sm" onclick="exportarPDF()">PDF</button>
-    <button class="btn btn-accent btn-sm" onclick="salvar()">Salvar</button>
-    <span style="width:1px;height:20px;background:var(--border);display:inline-block;margin:0 2px"></span>
-    <button class="btn btn-sm" onclick="exportarDados()" title="Exportar todos os dados para backup">⬇ Backup</button>
-    <button class="btn btn-sm" onclick="document.getElementById('importFileInput').click()" title="Importar dados de um backup">⬆ Restaurar</button>
-    <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importarDados(this)">
-  </div>
-</footer>
+<input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importarDados(this)">
 
 </div><!-- /app-shell -->
 
@@ -4612,7 +4602,8 @@ function salvar(){
   localStorage.setItem('vw_emp',JSON.stringify(emprestados));
   localStorage.setItem('vw_obs_'+k,document.getElementById('obsGeral').value||'');
   if(typeof _dataAnterior!=='undefined') _dataAnterior=k;
-  document.getElementById('footerTs').textContent='Salvo em '+new Date().toLocaleTimeString('pt-BR');
+  const _fts = document.getElementById('footerTs');
+  if(_fts) _fts.textContent='Salvo em '+new Date().toLocaleTimeString('pt-BR');
 }
 function carregar(k){
   try{
@@ -4806,7 +4797,8 @@ function exportarDados(){
   const dt=today().replace(/-/g,'');
   a.download=`vw_ausencias_backup_${dt}.json`;
   a.click();
-  document.getElementById('footerTs').textContent=`Backup exportado em ${new Date().toLocaleTimeString('pt-BR')}`;
+  const _ftsExp = document.getElementById('footerTs');
+  if(_ftsExp) _ftsExp.textContent=`Backup exportado em ${new Date().toLocaleTimeString('pt-BR')}`;
 }
 
 function importarDados(input){
@@ -4844,7 +4836,8 @@ function importarDados(input){
       quadros={}; agenda={}; monitores={}; monBase={}; sabados={}; emprestados={};
       carregarSetores(); carregarEmp(); initDados(); initTL();
       carregar(getDate()); renderSetores(); renderSetoresCfg();
-      document.getElementById('footerTs').textContent=`Backup restaurado em ${new Date().toLocaleTimeString('pt-BR')}`;
+      const _ftsRes = document.getElementById('footerTs');
+      if(_ftsRes) _ftsRes.textContent=`Backup restaurado em ${new Date().toLocaleTimeString('pt-BR')}`;
       alert(`✓ Backup restaurado com sucesso!\n${total} registros carregados.`);
     }catch(err){
       alert('Erro ao ler o arquivo de backup.\n'+err.message);
@@ -4940,7 +4933,8 @@ initDados(); initTL(); carregar(today()); renderSetores();
 renderSetoresCfg();
 setTimeout(_verificarLembreteBackup, 900);
 _verificarHashImport();
-document.getElementById('footerTs').textContent='Atualizado em '+new Date().toLocaleTimeString('pt-BR');
+const _ftsInit = document.getElementById('footerTs');
+if(_ftsInit) _ftsInit.textContent='Atualizado em '+new Date().toLocaleTimeString('pt-BR');
 
 /* ---- AUTOSAVE ---- */
 // Salva automaticamente 1,5s após qualquer alteração detectada
@@ -4949,7 +4943,8 @@ function autoSave(){
   clearTimeout(_autoSaveTimer);
   _autoSaveTimer=setTimeout(()=>{
     salvar();
-    document.getElementById('footerTs').textContent='Salvo automaticamente em '+new Date().toLocaleTimeString('pt-BR');
+    const _ftsAuto = document.getElementById('footerTs');
+    if(_ftsAuto) _ftsAuto.textContent='Salvo automaticamente em '+new Date().toLocaleTimeString('pt-BR');
   },1500);
 }
 // Observar mudanças em inputs, selects e textareas fora do date picker
@@ -6488,6 +6483,8 @@ function _obterUsuarioLogado() {
     const cargo = usuario.cargo || 'Operador';
     const label = `${usuario.nome} (${cargo})`;
     localStorage.setItem('sf_papel', label);
+    const nomeEl = document.getElementById('hdrUsuarioNome');
+    if (nomeEl) nomeEl.textContent = `Bom trabalho, ${usuario.nome}!`;
     if (!PAPEIS_SMARTFLOW.includes(label)) {
       PAPEIS_SMARTFLOW = [...PAPEIS_SMARTFLOW, label];
       _salvarPapeis(PAPEIS_SMARTFLOW);
