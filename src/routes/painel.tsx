@@ -312,29 +312,31 @@ function Painel() {
   return (
     <div className="min-h-screen bg-background font-sans">
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-border bg-primary text-primary-foreground">
-        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="grid size-12 shrink-0 place-items-center rounded-lg bg-primary-foreground/10 overflow-hidden">
-              <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
-            </div>
-            <div className="min-w-0">
-              <h1 className="truncate font-display text-2xl font-bold uppercase tracking-wide sm:text-3xl">Gestao Operacional</h1>
-              <div className="flex items-center gap-2">
-                <select value={selectedTurno?.id}
-                  onChange={(e) => { const t = TURNOS.find((tx) => tx.id === e.target.value); if (t) setSelectedTurno(t); }}
-                  className="bg-transparent text-sm font-bold uppercase tracking-wider text-primary-foreground focus:outline-none cursor-pointer border border-primary-foreground/20 rounded px-1">
-                  {TURNOS.map((t) => <option key={t.id} value={t.id} className="text-foreground">{t.nome}</option>)}
-                </select>
-                <span className="text-sm text-primary-foreground/70">
-                  &middot; {selectedTurno?.inicio} as {selectedTurno?.fim} &middot;{" "}
-                  {minutesLeft > 0 ? `inicio em ${minutesLeft} min` : "turno em andamento"}
-                </span>
+      <header className="sticky top-0 z-20 border-b border-border bg-primary text-primary-foreground shadow-md">
+        <div className="mx-auto flex flex-col gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <div className="flex min-w-0 items-center justify-between gap-3 w-full sm:w-auto">
+            <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+              <div className="grid size-10 sm:size-12 shrink-0 place-items-center rounded-lg bg-primary-foreground/10 overflow-hidden">
+                <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="truncate font-display text-xl sm:text-2xl lg:text-3xl font-bold uppercase tracking-wide">Gestao Operacional</h1>
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                  <select value={selectedTurno?.id}
+                    onChange={(e) => { const t = TURNOS.find((tx) => tx.id === e.target.value); if (t) setSelectedTurno(t); }}
+                    className="bg-transparent text-xs sm:text-sm font-bold uppercase tracking-wider text-primary-foreground focus:outline-none cursor-pointer border border-primary-foreground/20 rounded px-1">
+                    {TURNOS.map((t) => <option key={t.id} value={t.id} className="text-foreground">{t.nome}</option>)}
+                  </select>
+                  <span className="text-[0.7rem] sm:text-xs text-primary-foreground/75 truncate">
+                    &middot; {selectedTurno?.inicio}-{selectedTurno?.fim} &middot;{" "}
+                    {minutesLeft > 0 ? `${minutesLeft} min` : "em andamento"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap justify-end">
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 max-w-full scrollbar-none w-full sm:w-auto justify-start sm:justify-end flex-nowrap">
             <div className="hidden sm:flex flex-col text-right mr-2">
               <p className="font-mono text-lg font-bold tabular-nums text-primary-foreground/90">
                 {new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(now)}
@@ -410,22 +412,22 @@ function Painel() {
         </div>
       )}
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
         {/* Celulas + Exportar */}
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <nav className="flex flex-wrap gap-2">
+        <div className="mb-6 sm:mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <nav className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-none max-w-full -mx-3 px-3 sm:mx-0 sm:px-0 sm:flex-wrap">
             {CELULAS.map((c) => (
               <button key={c} onClick={() => setSelectedCelula(c)}
-                className={`rounded-lg border px-4 py-2 text-sm font-bold uppercase tracking-wider transition-all ${
+                className={`rounded-lg border px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold uppercase tracking-wider transition-all shrink-0 ${
                   selectedCelula === c ? "border-primary bg-primary text-primary-foreground shadow-md" : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-primary"
                 }`}>
                 {c}
               </button>
             ))}
           </nav>
-          <div className="flex gap-2">
+          <div className="flex gap-2 self-end sm:self-auto">
             <div className="relative group">
-              <button className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:border-primary/50 hover:text-primary">
+              <button className="flex items-center gap-2 rounded-lg border border-border bg-card px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:border-primary/50 hover:text-primary">
                 <Download className="size-4" /> Exportar
               </button>
               <div className="absolute right-0 top-full mt-1 hidden group-hover:flex group-focus-within:flex flex-col min-w-[140px] rounded-lg border border-border bg-card shadow-lg z-30 py-1 overflow-hidden">
@@ -440,12 +442,14 @@ function Painel() {
           </div>
         </div>
 
-        <section className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
+        <section className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-3 lg:grid-cols-5">
           <MetricCard label="Total da celula" value={counts.total} icon={Users} accent="bg-primary" textColor="text-primary" />
           <MetricCard label="Presentes" value={counts.presentes} icon={CheckCircle2} accent="bg-status-present" textColor="text-status-present" />
           <MetricCard label="Ausentes" value={counts.ausentes} icon={AlertTriangle} accent="bg-status-absent" textColor="text-status-absent" />
           <MetricCard label="Enfermaria" value={counts.enfermaria} icon={Stethoscope} accent="bg-status-enfermaria" textColor="text-status-enfermaria" />
-          <MetricCard label="Programadas" value={counts.programadas} icon={CalendarOff} accent="bg-status-leave" textColor="text-status-leave" />
+          <div className="col-span-2 sm:col-span-1">
+            <MetricCard label="Programadas" value={counts.programadas} icon={CalendarOff} accent="bg-status-leave" textColor="text-status-leave" />
+          </div>
         </section>
 
         {/* Equipes */}

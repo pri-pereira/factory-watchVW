@@ -780,55 +780,158 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
 .fw6 { font-weight: 700; } .mono { font-family: var(--mono); }
 
 /* ============================================================
-   RESPONSIVIDADE (MOBILE & DESKTOP)
+   RESPONSIVIDADE INDUSTRIAL ULTRA POLIDA (MOBILE & DESKTOP)
 ============================================================ */
+/* Estilos base dos cartões de ação rápida */
+.qa-card {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 14px; border-radius: var(--r-sm); transition: all .2s;
+}
+.qa-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.qa-badge {
+  font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; letter-spacing: 0.5px;
+}
+.qa-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.qa-title { font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; }
+.qa-desc { font-size: 11px; color: #334155; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qa-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.qa-count { font-size: 20px; font-weight: 800; font-family: var(--mono); min-width: 28px; text-align: center; }
+.qa-btn-ret {
+  height: 28px; padding: 0 10px; border-radius: 14px; border: 1.5px solid rgba(239,68,68,.4);
+  background: #FFFFFF; color: #DC2626; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; white-space: nowrap; transition: all .15s;
+}
+.qa-btn-round {
+  width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid rgba(239,68,68,.4);
+  background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all .15s;
+}
+.qa-btn-ret:hover, .qa-btn-round:hover { transform: scale(1.05); filter: brightness(0.95); }
+
+/* Breakpoint 860px: Tablets e Telas Médias */
 @media (max-width: 860px) {
-  .cells-layout-container, .dash-layout-container { flex-direction: column; }
-  .cells-nav-sidebar, .dash-nav-sidebar { width: 100%; position: static; box-shadow: none; }
+  .cells-layout-container, .dash-layout-container { flex-direction: column; gap: 12px; }
+  .cells-nav-sidebar, .dash-nav-sidebar {
+    width: 100%; position: static; box-shadow: 0 4px 16px rgba(0, 30, 80, 0.12);
+    background: linear-gradient(180deg, #001E50 0%, #00163E 100%);
+    border-radius: var(--r-sm); margin-bottom: 6px;
+  }
+  .cells-nav-header, .dash-nav-header { padding: 10px 14px; }
   .cells-menu-list, .dash-menu-list {
-    flex-direction: row; overflow-x: auto; max-height: none; padding: 8px 6px; gap: 8px;
+    flex-direction: row; overflow-x: auto; max-height: none; padding: 8px 10px; gap: 8px;
     -webkit-overflow-scrolling: touch; white-space: nowrap; scrollbar-width: none;
   }
   .cells-menu-list::-webkit-scrollbar, .dash-menu-list::-webkit-scrollbar { display: none; }
   .cell-nav-item, .dash-nav-item {
-    width: auto; flex-shrink: 0; border-left: none; border-bottom: 3px solid transparent;
-    border-radius: 8px; padding: 8px 12px; background: #F1F5F9;
+    width: auto; flex-shrink: 0; min-width: 140px;
+    border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 12px;
+    padding: 8px 14px; background: rgba(255, 255, 255, 0.08); color: #FFFFFF !important;
+    display: inline-flex; align-items: center; gap: 10px;
   }
+  .cell-nav-item:hover, .dash-nav-item:hover { background: rgba(255, 255, 255, 0.15); }
   .cell-nav-item.active, .dash-nav-item.active {
-    border-left: none; border-bottom-color: #3B82F6; background: #EFF6FF;
+    background: linear-gradient(90deg, #0050B3 0%, #0284C7 100%);
+    border-color: #38BDF8; color: #FFFFFF !important;
+    box-shadow: 0 3px 14px rgba(2, 132, 199, 0.45); transform: none;
   }
 }
 
-@media(max-width:640px) {
-  .hdr { padding: 8px 12px; min-height: auto; gap: 8px; flex-direction: column; align-items: stretch; }
+/* Breakpoint 640px: Smartphones */
+@media (max-width: 640px) {
+  .hdr {
+    padding: 10px 12px; min-height: auto; gap: 10px; flex-direction: column; align-items: stretch;
+  }
   .hdr-brand { justify-content: space-between; width: 100%; }
-  .hdr-smartflow { font-size: 18px; letter-spacing: 1px; }
+  .hdr-logo-badge { width: 36px; height: 36px; }
+  .hdr-smartflow { font-size: 17px; letter-spacing: 1px; }
   .hdr-subtitle { font-size: 9px; letter-spacing: 0.8px; }
   .hdr-right { width: 100%; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
-  .btn-painel-link { padding: 4px 8px; font-size: 11px; }
-  .date-pill { padding: 4px 8px; flex: 1; min-width: 100px; }
+  .btn-painel-link { padding: 5px 10px; font-size: 11.5px; font-weight: 700; flex-shrink: 0; }
+  .date-pill { padding: 5px 8px; flex: 1; min-width: 120px; }
   .date-pill label { font-size: 10px; }
   input[type=date] { font-size: 11px; }
-  .hdr-actions { gap: 4px; display: flex; align-items: center; }
-  .hdr-actions .btn { padding: 5px 8px; font-size: 11px; }
 
-  #turnoBar { padding: 8px 12px; gap: 8px; flex-direction: column; align-items: stretch; }
-  #turnoRelogio { font-size: 20px; }
-
-  .page { padding: 8px; }
-  .tabs-bar { padding: 0 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .page { padding: 10px 8px; gap: 12px; }
+  .tabs-bar {
+    margin: 8px 8px 0 8px; padding: 4px 6px; border-radius: 14px; gap: 4px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
   .tabs-bar::-webkit-scrollbar { display: none; }
-  .tab-btn { padding: 8px 10px; font-size: 12px; white-space: nowrap; }
+  .tab-btn { padding: 7px 12px; font-size: 11.5px; white-space: nowrap; }
 
-  .summary-strip { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-  .kpi { padding: 8px 10px; }
-  .kpi-val { font-size: 18px; }
+  /* Hero KPI cards */
+  .summary-strip { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
+  .kpi { padding: 10px 12px; border-radius: 14px; min-height: 70px; }
+  .kpi-label { font-size: 10.5px; letter-spacing: 0.8px; }
+  .kpi-val { font-size: 22px; }
 
-  .sc-grid { grid-template-columns: 1fr; }
-  .dash-grid-2 { grid-template-columns: 1fr; }
-  .rem-grid { grid-template-columns: 1fr; }
+  /* Faixa de ícones com scroll horizontal macio */
+  #ausIconStrip {
+    padding: 10px 12px !important; gap: 12px !important; justify-content: flex-start !important;
+    overflow-x: auto !important; -webkit-overflow-scrolling: touch; border-radius: 14px !important;
+    scrollbar-width: none;
+  }
+  #ausIconStrip::-webkit-scrollbar { display: none; }
+
+  /* Cartão operacional */
+  .sc-grid { grid-template-columns: 1fr; gap: 12px; }
+  .sc-card { border-radius: 16px; overflow: hidden; }
+  .sc-card-head { padding: 12px 14px; gap: 8px; }
+  .sc-card-name { font-size: 16px; }
+  .sc-card-body { padding: 12px; gap: 12px; }
+
+  /* Quadro do dia em 3 colunas perfeitamente encaixadas */
+  .ni-group {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%;
+  }
+  .ni-wrap {
+    width: 100%; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 10px;
+    padding: 6px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .ni-wrap input[type=number].ni {
+    width: 100%; max-width: 65px; font-size: 17px; font-weight: 800;
+  }
+
+  /* Ausências organizadas em grade de 4 colunas */
+  .aus-display {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 100%;
+  }
+  .aus-display > div[style*="width:1px"] { display: none !important; }
+  .aus-item {
+    width: 100%; min-width: 0; background: #F8FAFC; border: 1px solid #E2E8F0;
+    border-radius: 10px; padding: 6px 2px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .aus-num { font-size: 18px; line-height: 1.1; margin-bottom: 2px; }
+  .aus-lbl2 { font-size: 9px; letter-spacing: 0.2px; }
+
+  /* Saldo e semáforo no mobile */
+  .saldo-row { padding: 8px 12px; border-radius: 10px; }
+  .saldo-lbl { font-size: 11.5px; }
+  .saldo-num { font-size: 17px; }
+
+  /* Dashboard grids */
+  .dash-grid-2 { grid-template-columns: 1fr; gap: 12px; }
+  .rem-grid { grid-template-columns: 1fr; gap: 10px; }
 }
-@media(min-width:1200px) {
+
+/* Telas muito pequenas (<= 520px): Ajuste refinado dos botões de ação rápida */
+@media (max-width: 520px) {
+  .qa-card {
+    flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 12px;
+  }
+  .qa-desc { white-space: normal; }
+  .qa-actions {
+    justify-content: flex-end; width: 100%; border-top: 1px dashed rgba(0, 30, 80, 0.1);
+    padding-top: 8px; gap: 10px;
+  }
+  .qa-btn-ret { height: 32px; font-size: 12px; padding: 0 12px; }
+  .qa-btn-round { width: 32px; height: 32px; font-size: 18px; }
+}
+
+@media (min-width: 1200px) {
   .sc-grid { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
   .prev-grid { grid-template-columns: repeat(10, 1fr); }
 }
@@ -2132,52 +2235,60 @@ function renderCards(ds){
           <span style="color:var(--text3)">|</span>
           <span style="font-weight:600;color:${emp.saldo>=0?'#22C55E':'#EF4444'}">${emp.saldo>=0?'+':''}${emp.saldo} no resultado</span>
         </div>`:''}
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:var(--r-sm)">
-          <span style="font-size:11px;font-weight:700;color:#14B8A6">ENF</span>
-          <div style="display:flex;flex-direction:column;gap:1px;flex:1">
-            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#EF4444">Enfermaria</span>
-            <span style="font-size:11px;color:#334155;font-weight:600">+ foi agora · − retornou</span>
+        <div class="qa-card" style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.25);border-radius:var(--r-sm)">
+          <div class="qa-info">
+            <span class="qa-badge" style="color:#DC2626;background:#FEE2E2">ENF</span>
+            <div class="qa-text">
+              <span class="qa-title" style="color:#DC2626">Enfermaria</span>
+              <span class="qa-desc">+ foi agora · − retornou</span>
+            </div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <button onclick="setEnfVoltou('${setor}','${ds}',Math.max(0,(enfVoltouQtd('${setor}','${ds}')||0)-1))" style="height:28px;padding:0 10px;border-radius:14px;border:1px solid rgba(239,68,68,.4);background:#FFFFFF;color:#DC2626;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap">↩ Retornou</button>
-            <span id="enfv-${key}" style="font-size:20px;font-weight:700;font-family:var(--mono);color:#EF4444;min-width:28px;text-align:center">${enfVoltouQtd(setor,ds)}</span>
-            <button onclick="incrementarFoiEnfermaria('${setor}','${ds}')" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(239,68,68,.4);background:#FFFFFF;color:#DC2626;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:var(--r-sm)">
-          <span style="font-size:11px;font-weight:700;color:#7C3AED">SAÍDA</span>
-          <div style="display:flex;flex-direction:column;gap:1px;flex:1">
-            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7C3AED">Saída temporária</span>
-            <span style="font-size:11px;color:#334155;font-weight:600">saída temporária, ainda não voltou</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <button onclick="setSaiuVoltou('${setor}','${ds}',Math.max(0,(saiuVoltouQtd('${setor}','${ds}')||0)-1))" style="height:28px;padding:0 10px;border-radius:14px;border:1px solid rgba(139,92,246,.4);background:#FFFFFF;color:#6D28D9;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap">↩ Retornou</button>
-            <span id="saiu-${key}" style="font-size:20px;font-weight:700;font-family:var(--mono);color:#7C3AED;min-width:28px;text-align:center">${saiuVoltouQtd(setor,ds)}</span>
-            <button onclick="setSaiuVoltou('${setor}','${ds}',(saiuVoltouQtd('${setor}','${ds}')||0)+1)" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(139,92,246,.4);background:#FFFFFF;color:#6D28D9;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
+          <div class="qa-actions">
+            <button onclick="setEnfVoltou('${setor}','${ds}',Math.max(0,(enfVoltouQtd('${setor}','${ds}')||0)-1))" class="qa-btn-ret">↩ Retornou</button>
+            <span id="enfv-${key}" class="qa-count" style="color:#DC2626">${enfVoltouQtd(setor,ds)}</span>
+            <button onclick="incrementarFoiEnfermaria('${setor}','${ds}')" class="qa-btn-round" style="color:#DC2626;border-color:rgba(239,68,68,.4)">+</button>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(13,148,136,.06);border:1px solid rgba(13,148,136,.22);border-radius:var(--r-sm)">
-          <span style="font-size:11px;font-weight:700;color:#0D9488">LIB</span>
-          <div style="display:flex;flex-direction:column;gap:1px;flex:1">
-            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#0D9488">Liberação programada</span>
-            <span style="font-size:11px;color:#334155;font-weight:600">curso, evento, palestra — retorna depois</span>
+        <div class="qa-card" style="background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.25);border-radius:var(--r-sm)">
+          <div class="qa-info">
+            <span class="qa-badge" style="color:#6D28D9;background:#EDE9FE">SAÍDA</span>
+            <div class="qa-text">
+              <span class="qa-title" style="color:#6D28D9">Saída temporária</span>
+              <span class="qa-desc">saída temporária, ainda não voltou</span>
+            </div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <button onclick="setLiberado('${setor}','${ds}',Math.max(0,(liberadoQtd('${setor}','${ds}')||0)-1))" style="height:28px;padding:0 10px;border-radius:14px;border:1px solid rgba(13,148,136,.4);background:#FFFFFF;color:#0F766E;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;white-space:nowrap">↩ Retornou</button>
-            <span id="lib-${key}" style="font-size:20px;font-weight:700;font-family:var(--mono);color:#0D9488;min-width:28px;text-align:center">${liberadoQtd(setor,ds)}</span>
-            <button onclick="setLiberado('${setor}','${ds}',(liberadoQtd('${setor}','${ds}')||0)+1)" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(13,148,136,.4);background:#FFFFFF;color:#0F766E;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
+          <div class="qa-actions">
+            <button onclick="setSaiuVoltou('${setor}','${ds}',Math.max(0,(saiuVoltouQtd('${setor}','${ds}')||0)-1))" class="qa-btn-ret" style="color:#6D28D9;border-color:rgba(139,92,246,.4)">↩ Retornou</button>
+            <span id="saiu-${key}" class="qa-count" style="color:#6D28D9">${saiuVoltouQtd(setor,ds)}</span>
+            <button onclick="setSaiuVoltou('${setor}','${ds}',(saiuVoltouQtd('${setor}','${ds}')||0)+1)" class="qa-btn-round" style="color:#6D28D9;border-color:rgba(139,92,246,.4)">+</button>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(219,39,119,.06);border:1px solid rgba(219,39,119,.22);border-radius:var(--r-sm)">
-          <span style="font-size:11px;font-weight:700;color:#DB2777">ATEST</span>
-          <div style="display:flex;flex-direction:column;gap:1px;flex:1">
-            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#DB2777">Atestado</span>
-            <span style="font-size:11px;color:#334155;font-weight:600">chegou com atestado médico, não estava agendado</span>
+        <div class="qa-card" style="background:rgba(13,148,136,.06);border:1px solid rgba(13,148,136,.25);border-radius:var(--r-sm)">
+          <div class="qa-info">
+            <span class="qa-badge" style="color:#0F766E;background:#CCFBF1">LIB</span>
+            <div class="qa-text">
+              <span class="qa-title" style="color:#0F766E">Liberação programada</span>
+              <span class="qa-desc">curso, evento, palestra — retorna depois</span>
+            </div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <button onclick="setAtestado('${setor}','${ds}',Math.max(0,(atestadoQtd('${setor}','${ds}')||0)-1))" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(219,39,119,.4);background:#FFFFFF;color:#BE185D;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">−</button>
-            <span id="atst-${key}" style="font-size:20px;font-weight:700;font-family:var(--mono);color:#DB2777;min-width:28px;text-align:center">${atestadoQtd(setor,ds)}</span>
-            <button onclick="setAtestado('${setor}','${ds}',(atestadoQtd('${setor}','${ds}')||0)+1)" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(219,39,119,.4);background:#FFFFFF;color:#BE185D;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>
+          <div class="qa-actions">
+            <button onclick="setLiberado('${setor}','${ds}',Math.max(0,(liberadoQtd('${setor}','${ds}')||0)-1))" class="qa-btn-ret" style="color:#0F766E;border-color:rgba(13,148,136,.4)">↩ Retornou</button>
+            <span id="lib-${key}" class="qa-count" style="color:#0F766E">${liberadoQtd(setor,ds)}</span>
+            <button onclick="setLiberado('${setor}','${ds}',(liberadoQtd('${setor}','${ds}')||0)+1)" class="qa-btn-round" style="color:#0F766E;border-color:rgba(13,148,136,.4)">+</button>
+          </div>
+        </div>
+        <div class="qa-card" style="background:rgba(219,39,119,.06);border:1px solid rgba(219,39,119,.25);border-radius:var(--r-sm)">
+          <div class="qa-info">
+            <span class="qa-badge" style="color:#BE185D;background:#FCE7F3">ATEST</span>
+            <div class="qa-text">
+              <span class="qa-title" style="color:#BE185D">Atestado</span>
+              <span class="qa-desc">chegou com atestado médico, não estava agendado</span>
+            </div>
+          </div>
+          <div class="qa-actions">
+            <button onclick="setAtestado('${setor}','${ds}',Math.max(0,(atestadoQtd('${setor}','${ds}')||0)-1))" class="qa-btn-round" style="color:#BE185D;border-color:rgba(219,39,119,.4)">−</button>
+            <span id="atst-${key}" class="qa-count" style="color:#BE185D">${atestadoQtd(setor,ds)}</span>
+            <button onclick="setAtestado('${setor}','${ds}',(atestadoQtd('${setor}','${ds}')||0)+1)" class="qa-btn-round" style="color:#BE185D;border-color:rgba(219,39,119,.4)">+</button>
           </div>
         </div>
         </div>
