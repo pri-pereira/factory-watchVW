@@ -233,7 +233,7 @@ function HomePage() {
               margin: "4px 0 0",
             }}
           >
-            Fahrwerk — Gestão Operacional
+            Gestão Operacional
           </p>
         </div>
       </div>
