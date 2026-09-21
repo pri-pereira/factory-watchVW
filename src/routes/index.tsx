@@ -77,7 +77,7 @@ function HomePage() {
         setLoginErro("Registro ou senha inválidos. Verifique suas credenciais e tente novamente.");
         return;
       }
-      navigate({ to: "/painel" });
+      window.location.href = "/smartflow.html";
     } catch {
       setLoginErro("Erro inesperado ao realizar login. Tente novamente.");
     } finally {

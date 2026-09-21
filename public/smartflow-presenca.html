@@ -1383,11 +1383,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
         <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         Importar<input type="file" accept=".json" onchange="importarBackup(event)" style="display:none">
       </label>
-      <a href="/painel" class="btn btn-painel-link btn-sm" title="Painel de Presença">
-        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-        Painel
-      </a>
-    </div>
+      </div>
   </div>
 </header>
 
@@ -1468,7 +1464,116 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
   <button class="tab-btn" onclick="showTab('tab-obs',this)">Observações</button>
   <button class="tab-btn" onclick="showTab('tab-emprestados',this)">Emprestados</button>
   <button class="tab-btn" onclick="showTab('tab-setores-cfg',this)">Setores</button>
+  <button class="tab-btn" id="tab-presencas-btn" onclick="showTab('tab-presencas',this); renderPresencasOperadores()">Presenças</button>
 </nav>
+
+<!-- =================== GESTÃO OPERACIONAL / PRESENÇAS =================== -->
+<div id="tab-presencas" class="page">
+  <div class="presencas-container" style="padding:16px 20px;max-width:1400px;margin:0 auto">
+    
+    <!-- BARRA SUPERIOR DE TURNO E AÇÕES DA GESTÃO OPERACIONAL -->
+    <div class="go-topbar" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+      
+      <!-- Esquerda: Título, Turno e Relógio -->
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <h2 style="font-size:18px;font-weight:800;color:var(--text);font-family:var(--font-display);letter-spacing:.04em;text-transform:uppercase;margin:0">Gestão Operacional</h2>
+            <span id="presencas-status-badge" style="font-size:10.5px;padding:3px 8px;border-radius:20px;background:#F0FDF4;color:#15803D;border:1px solid #BBF7D0;font-weight:700;display:inline-flex;align-items:center;gap:4px">
+              <span style="width:6px;height:6px;border-radius:50%;background:#16A34A;display:inline-block"></span> Ao Vivo
+            </span>
+          </div>
+          <p style="font-size:11.5px;color:var(--text3);margin:2px 0 0">Controle de presença, distribuição de postos e alocação de operadores</p>
+        </div>
+
+        <!-- Seletor de Turno -->
+        <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:5px 10px">
+          <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3)">Turno:</label>
+          <select id="goSelectTurno" onchange="_trocarTurnoPresenca(this.value)" style="border:none;background:transparent;font-family:var(--font-display);font-size:12.5px;font-weight:800;color:var(--primary);cursor:pointer;outline:none">
+            <option value="1">1º Turno (06:00 - 15:00)</option>
+            <option value="2">2º Turno (15:00 - 23:45)</option>
+            <option value="3">3º Turno (00:00 - 06:00)</option>
+          </select>
+          <span id="goTurnoTempoRestante" style="font-size:11px;font-weight:700;color:#0284C7;background:rgba(2,132,199,.1);padding:2px 6px;border-radius:6px">em andamento</span>
+        </div>
+
+        <!-- Relógio Digital -->
+        <div style="display:flex;align-items:center;gap:6px;background:var(--primary);color:#FFFFFF;border-radius:10px;padding:6px 12px;font-family:var(--mono,monospace)">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#38BDF8" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+          <span id="goRelogioHora" style="font-size:13px;font-weight:800;letter-spacing:1px">--:--:--</span>
+        </div>
+      </div>
+
+      <!-- Direita: Ações (Simular, Auditoria, Exportar) -->
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <button onclick="_abrirModalAuditoriaPresenca()" class="btn btn-sm" style="background:var(--bg3);color:var(--text2);display:flex;align-items:center;gap:6px;position:relative" title="Histórico de alterações">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          Log Auditoria
+          <span id="goAuditBadge" style="display:none;background:#2563EB;color:#fff;font-size:9.5px;font-weight:900;border-radius:999px;padding:1px 5px;margin-left:2px">0</span>
+        </button>
+
+        <button onclick="_simularPresencasSmartflow()" class="btn btn-sm" style="background:#EEF2FF;border-color:#C7D2FE;color:#4F46E5;font-weight:700" title="Simular batidas aleatórias de crachá">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Teste: Simular
+        </button>
+
+        <div style="display:flex;gap:4px">
+          <button onclick="_exportarCSVPresenca()" class="btn btn-sm" style="background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.3);color:#059669;font-weight:700" title="Baixar CSV de Presença">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            CSV
+          </button>
+          <button onclick="_imprimirRelatorioPresenca()" class="btn btn-sm" style="background:rgba(2,132,199,.1);border-color:rgba(2,132,199,.3);color:#0284C7;font-weight:700" title="Imprimir ou Salvar PDF">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Imprimir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARDS DE METRICAS INDUSTRIAIS (KPIS) -->
+    <div id="presencas-totais" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px"></div>
+
+    <!-- NAVEGAÇÃO DE CÉLULAS INDUSTRIAIS (9 Células) -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Célula de Produção:</div>
+      <div id="presencas-celulas-nav" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin"></div>
+    </div>
+
+    <!-- CARDS DE EQUIPES DA CÉLULA (Equipe 1, Equipe 2, Equipe 3) -->
+    <div style="margin-bottom:16px">
+      <div style="font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Equipes da Célula:</div>
+      <div id="presencas-equipes-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px"></div>
+    </div>
+
+    <!-- BARRA DE PESQUISA, FILTROS DE STATUS E CONTAGEM -->
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:16px">
+      <!-- Campo de Busca -->
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 12px;flex:1;min-width:220px;max-width:380px">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--text3)" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="goBuscaOperador" oninput="_filtrarOperadoresPresencaTexto(this.value)" placeholder="Buscar por nome ou matrícula..." style="border:none;background:transparent;outline:none;font-size:12px;color:var(--text);width:100%;font-family:'DM Sans',sans-serif">
+      </div>
+
+      <!-- Filtros por Status -->
+      <div id="presencas-filtro-status" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
+
+      <!-- Contagem de exibição -->
+      <div id="presencas-contagem-badge" style="font-size:11.5px;font-weight:700;color:var(--text3);font-family:var(--mono,monospace)">
+        0 operadores
+      </div>
+    </div>
+
+    <!-- GRID DE OPERADORES -->
+    <div id="presencas-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px"></div>
+
+    <!-- ESTADO VAZIO -->
+    <div id="presencas-empty" style="display:none;text-align:center;padding:50px 20px;background:var(--bg2);border:1px dashed var(--border2);border-radius:16px;color:var(--text3)">
+      <div style="font-size:32px;margin-bottom:8px">👥</div>
+      <div style="font-size:15px;font-weight:700;color:var(--text)">Nenhum operador encontrado</div>
+      <p style="font-size:12.5px;margin-top:4px;color:var(--text3)">Ajuste a busca ou troque a equipe/célula selecionada.</p>
+    </div>
+
+  </div>
+</div>
 
 <!-- ===================== SETORES ===================== -->
 <div id="tab-setores" class="page active">
@@ -6940,36 +7045,730 @@ function restaurarConfigPadraoFirebase() {
 
 _inicializarBancoDeDados();
 
-function _carregarPapeis(){
-  try{
-    const raw = localStorage.getItem('vw_papeis_smartflow');
-    if(raw){ const arr = JSON.parse(raw); if(Array.isArray(arr)&&arr.length) return arr; }
-  }catch(e){}
-  return ['Fabio (Monitor)','Fernando (Monitor)','Marcelo (Líder)'];
+/* ================================================================
+   GESTÃO OPERACIONAL & PRESENÇAS — SUÍTE COMPLETA INTEGRADA
+   Persistência: localStorage + BroadcastChannel + Firebase Realtime Database
+================================================================ */
+const MOCK_CELULAS = ["DORLESS", "MEZANINO", "BANCOS", "CHICOTES", "VIDROS", "PARA-CHOQUE", "DRESS-UP", "FAHRWERK", "MQB"];
+const MOCK_TURNOS = [
+  { id: "1", nome: "1º Turno", inicio: "06:00", fim: "15:00" },
+  { id: "2", nome: "2º Turno", inicio: "15:00", fim: "23:45" },
+  { id: "3", nome: "3º Turno", inicio: "00:00", fim: "06:00" }
+];
+const MOCK_FIRST_NAMES = ["Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gabriel", "Helena", "Igor", "Juliana", "Kevin", "Larissa", "Mateus", "Nathalia", "Otávio", "Patrícia", "Ricardo", "Sandra", "Tiago", "Vanessa"];
+const MOCK_LAST_NAMES = ["Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira", "Alves", "Pereira", "Lima", "Gomes", "Costa", "Ribeiro", "Martins", "Carvalho", "Almeida", "Lopes", "Soares", "Fernandes", "Vieira", "Barbosa"];
+
+function _gerarOperadoresPadrao(){
+  const ops = [];
+  MOCK_CELULAS.forEach((celula, celulaIdx) => {
+    for(let eq = 1; eq <= 3; eq++){
+      const equipeName = `Equipe ${eq}`;
+      for(let p = 1; p <= 20; p++){
+        const id = `${celula}-${eq}-${p}`;
+        const globalIdx = celulaIdx * 60 + (eq - 1) * 20 + (p - 1);
+        const firstName = MOCK_FIRST_NAMES[globalIdx % MOCK_FIRST_NAMES.length];
+        const lastName = MOCK_LAST_NAMES[(globalIdx * 7 + celulaIdx * 3) % MOCK_LAST_NAMES.length];
+        ops.push({
+          id,
+          nome: `${firstName} ${lastName}`,
+          funcao: "Operador de Produção",
+          matricula: String(10000 + globalIdx),
+          status: "pendente",
+          batida: null,
+          observacao: null,
+          equipe: equipeName,
+        });
+      }
+    }
+  });
+  return ops;
 }
-function _salvarPapeis(lista){ localStorage.setItem('vw_papeis_smartflow', JSON.stringify(lista)); }
-let PAPEIS_SMARTFLOW = _carregarPapeis();
 
-function _configurarPresenca(){
-  const papel = localStorage.getItem('sf_papel');
-  if(!papel) return;
-  const meuRef = _db.ref('smartflow/presenca/'+papel);
-  meuRef.onDisconnect().set({online:false, ultimaVez: firebase.database.ServerValue.TIMESTAMP});
-  meuRef.set({online:true, ultimaVez: firebase.database.ServerValue.TIMESTAMP});
+let _ultimosOperadores = [];
+let _celulaFiltroPresencas = "VIDROS";
+let _equipeFiltroPresencas = null; // null = todas da célula
+let _statusFiltroPresencas = "todos";
+let _buscaFiltroPresencas = "";
+let _turnoSelecionadoId = "1";
+let _logsAuditoriaPresenca = [];
+
+// Carregar logs de auditoria
+try {
+  const rawAudit = localStorage.getItem('sf_auditoria_logs');
+  if(rawAudit) _logsAuditoriaPresenca = JSON.parse(rawAudit);
+} catch(e){}
+
+// Atualizar contador do badge de auditoria
+function _atualizarBadgeAuditoria(){
+  const badge = document.getElementById('goAuditBadge');
+  if(!badge) return;
+  if(_logsAuditoriaPresenca.length > 0){
+    badge.textContent = _logsAuditoriaPresenca.length > 9 ? '9+' : String(_logsAuditoriaPresenca.length);
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
 }
 
-_db.ref('.info/connected').on('value', snap=>{
-  const conectado = snap.val()===true;
-  _mostrarStatusConexao(conectado ? 'Online — sincronizando' : 'Offline (sem conexão)');
-  if(conectado) _configurarPresenca();
-});
+// Relógio em tempo real da Gestão Operacional e andamento do turno
+function _atualizarRelogioETurno(){
+  const relogioEl = document.getElementById('goRelogioHora');
+  const tempoRestanteEl = document.getElementById('goTurnoTempoRestante');
+  const now = new Date();
+  const horaStr = now.toLocaleTimeString('pt-BR');
+  if(relogioEl) relogioEl.textContent = horaStr;
 
-let _ultimaPresenca = {};
-_db.ref('smartflow/presenca').on('value', snap=>{
-  _ultimaPresenca = snap.val()||{};
-  _renderPainelPresenca(_ultimaPresenca);
+  const turnoAtual = MOCK_TURNOS.find(t => t.id === _turnoSelecionadoId) || MOCK_TURNOS[0];
+  if(tempoRestanteEl && turnoAtual){
+    const [hIni, mIni] = turnoAtual.inicio.split(':').map(Number);
+    const start = new Date(now);
+    start.setHours(hIni, mIni, 0, 0);
+    const diffMin = Math.ceil((start.getTime() - now.getTime()) / 60000);
+    if(diffMin > 0){
+      tempoRestanteEl.textContent = `inicia em ${diffMin} min`;
+      tempoRestanteEl.style.color = '#D97706';
+      tempoRestanteEl.style.background = 'rgba(217,119,6,.1)';
+    } else {
+      tempoRestanteEl.textContent = 'em andamento';
+      tempoRestanteEl.style.color = '#059669';
+      tempoRestanteEl.style.background = 'rgba(5,150,105,.1)';
+    }
+  }
+}
+setInterval(_atualizarRelogioETurno, 1000);
+_atualizarRelogioETurno();
+
+function _trocarTurnoPresenca(id){
+  _turnoSelecionadoId = id;
+  _atualizarRelogioETurno();
+  renderPresencasOperadores();
+}
+
+function _filtrarOperadoresPresencaTexto(val){
+  _buscaFiltroPresencas = (val || '').toLowerCase().trim();
+  renderPresencasOperadores();
+}
+
+function _filtrarOperadoresPresencaStatus(st){
+  _statusFiltroPresencas = st;
+  renderPresencasOperadores();
+}
+
+function _presencasFiltrarCelula(celula){
+  _celulaFiltroPresencas = celula;
+  _equipeFiltroPresencas = null; // reseta filtro de equipe ao mudar de célula
+  renderPresencasOperadores();
+}
+
+function _presencasFiltrarEquipe(eq){
+  _equipeFiltroPresencas = _equipeFiltroPresencas === eq ? null : eq;
+  renderPresencasOperadores();
+}
+
+// Sincroniza dados com o storage local e contadores da página principal
+function _aplicarOperadoresRemotos(arr, origem) {
+  if(!Array.isArray(arr) || arr.length === 0) return;
+  _ultimosOperadores = arr;
+  try { localStorage.setItem('sf_operadores_estado', JSON.stringify(arr)); } catch(e){}
+
+  const statusBadge = document.getElementById('presencas-status-badge');
+  if(statusBadge){
+    const ts = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    statusBadge.innerHTML = `<span style="width:6px;height:6px;border-radius:50%;background:#16A34A;display:inline-block"></span> Sincronizado ${ts}`;
+  }
+
+  // Atualiza os contadores de faltas, enfermaria e presentes dos setores do SmartFlow
+  if(typeof _syncPainelToCounters === 'function' && getDate() === today()){
+    _syncPainelToCounters();
+    if(typeof renderSetores === 'function') renderSetores();
+  }
+
+  if(document.getElementById('tab-presencas')?.classList.contains('active')){
+    renderPresencasOperadores();
+  }
+}
+
+// BroadcastChannel: sync instantâneo entre abas na mesma máquina
+if('BroadcastChannel' in window){
+  const _bcPresencas = new BroadcastChannel('vw_smartflow_operadores');
+  _bcPresencas.onmessage = function(event){
+    if(event.data?.tipo === 'operadores_atualizados'){
+      _aplicarOperadoresRemotos(event.data.payload, 'bc');
+    }
+  };
+}
+
+// Firebase: sync entre dispositivos diferentes
+if(typeof _db !== 'undefined' && _db){
+  try {
+    _db.ref('smartflow/dados/vw_sf_operadores_estado').on('value', snap => {
+      const raw = snap.val();
+      if(!raw) return;
+      try {
+        const arr = JSON.parse(raw);
+        _aplicarOperadoresRemotos(arr, 'firebase');
+      } catch(e){ console.error('[presencas] Erro ao parsear operadores:', e); }
+    });
+  } catch(e){}
+}
+
+// Registro de Auditoria
+function _registrarAuditoriaPresenca(opNome, statusAnterior, statusNovo){
+  const agora = new Date();
+  const horaStr = `${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}:${String(agora.getSeconds()).padStart(2,'0')}`;
+  
+  let responsavel = 'Gestor';
+  let cargo = 'Líder de Turno';
+  try {
+    const rawSessao = localStorage.getItem('sf_sessao');
+    if(rawSessao){
+      const sessao = JSON.parse(rawSessao);
+      if(sessao.nome) responsavel = sessao.nome;
+      if(sessao.cargo) cargo = sessao.cargo;
+    }
+  } catch(e){}
+
+  const entrada = {
+    id: `audit-${Date.now()}-${Math.random().toString(36).substring(2,6)}`,
+    responsavel,
+    cargo,
+    opNome,
+    statusAnterior,
+    statusNovo,
+    timestamp: horaStr,
+    data: agora.toLocaleDateString('pt-BR')
+  };
+
+  _logsAuditoriaPresenca.unshift(entrada);
+  if(_logsAuditoriaPresenca.length > 200) _logsAuditoriaPresenca.pop();
+  try { localStorage.setItem('sf_auditoria_logs', JSON.stringify(_logsAuditoriaPresenca)); } catch(e){}
+  _atualizarBadgeAuditoria();
+  return responsavel;
+}
+
+// Alteração de status direta
+function _alterarStatusOperadorSmartflow(id, novoStatus){
+  const agora = new Date();
+  const horaStr = `${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}`;
+  
+  const opAlvo = _ultimosOperadores.find(o => o.id === id);
+  if(!opAlvo || opAlvo.status === novoStatus) return;
+
+  const responsavel = _registrarAuditoriaPresenca(opAlvo.nome, opAlvo.status, novoStatus);
+
+  _ultimosOperadores = _ultimosOperadores.map(op => {
+    if(op.id !== id) return op;
+    const hasBatida = novoStatus === 'presente' || novoStatus === 'enfermaria';
+    return {
+      ...op,
+      status: novoStatus,
+      alteradoPor: responsavel,
+      alteradoAs: horaStr,
+      batida: hasBatida ? (op.batida || horaStr) : null
+    };
+  });
+
+  _salvarESincronizarOperadores();
+}
+
+// Ação rápida: Alternar Enfermaria
+function _toggleEnfermariaOperador(id){
+  const op = _ultimosOperadores.find(o => o.id === id);
+  if(!op) return;
+  if(op.status === 'enfermaria'){
+    _alterarStatusOperadorSmartflow(id, 'presente');
+  } else {
+    _alterarStatusOperadorSmartflow(id, 'enfermaria');
+  }
+}
+
+function _salvarESincronizarOperadores(){
+  try { localStorage.setItem('sf_operadores_estado', JSON.stringify(_ultimosOperadores)); } catch(e){}
+
+  if('BroadcastChannel' in window){
+    try {
+      const bc = new BroadcastChannel('vw_smartflow_operadores');
+      bc.postMessage({ tipo: 'operadores_atualizados', payload: _ultimosOperadores });
+      bc.close();
+    } catch(e){}
+  }
+
+  if(typeof _db !== 'undefined' && _db){
+    try {
+      _db.ref('smartflow/dados/vw_sf_operadores_estado').set(JSON.stringify(_ultimosOperadores));
+    } catch(e){}
+  }
+
+  if(typeof _syncPainelToCounters === 'function' && getDate() === today()){
+    _syncPainelToCounters();
+    if(typeof renderSetores === 'function') renderSetores();
+  }
+
+  renderPresencasOperadores();
+}
+
+// Simulação de teste aleatória
+function _simularPresencasSmartflow(){
+  if(!_ultimosOperadores || _ultimosOperadores.length === 0){
+    _ultimosOperadores = _gerarOperadoresPadrao();
+  }
+  const agora = new Date();
+  const horaStr = `${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}`;
+  
+  _ultimosOperadores = _ultimosOperadores.map(op => {
+    const rand = Math.random();
+    let st = 'presente';
+    if(rand > 0.94){
+      const outros = ['ausente', 'pendente', 'enfermaria', 'afastado'];
+      st = outros[Math.floor(Math.random() * outros.length)];
+    }
+    const hasBatida = st === 'presente' || st === 'enfermaria';
+    const randMin = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+    return {
+      ...op,
+      status: st,
+      batida: hasBatida ? `${String(agora.getHours()).padStart(2,'0')}:${randMin}` : null,
+      alteradoPor: 'Simulador Teste',
+      alteradoAs: horaStr
+    };
+  });
+
+  _registrarAuditoriaPresenca('Simulação em Lote', 'Misto', '94% Presentes');
+  _salvarESincronizarOperadores();
+}
+
+const STATUS_CORES = {
+  presente:   { bg: '#F0FDF4', text: '#15803D', border: '#86EFAC', dot: '#22C55E', badge: '#DCFCE7', label: 'Presente' },
+  ausente:    { bg: '#FEF2F2', text: '#DC2626', border: '#FCA5A5', dot: '#EF4444', badge: '#FEE2E2', label: 'Ausente' },
+  pendente:   { bg: '#FFFBEB', text: '#D97706', border: '#FCD34D', dot: '#F59E0B', badge: '#FEF3C7', label: 'Pendente' },
+  afastado:   { bg: '#F5F3FF', text: '#7C3AED', border: '#DDD6FE', dot: '#8B5CF6', badge: '#EDE9FE', label: 'Férias/Licença' },
+  enfermaria: { bg: '#F0F9FF', text: '#0284C7', border: '#7DD3FC', dot: '#0EA5E9', badge: '#E0F2FE', label: 'Enfermaria' },
+};
+
+// Renderizador Mestre da Gestão Operacional / Presenças
+function renderPresencasOperadores(){
+  const grid = document.getElementById('presencas-grid');
+  const totaisEl = document.getElementById('presencas-totais');
+  const navCelulasEl = document.getElementById('presencas-celulas-nav');
+  const cardsEquipesEl = document.getElementById('presencas-equipes-cards');
+  const filtroStatusEl = document.getElementById('presencas-filtro-status');
+  const contagemBadge = document.getElementById('presencas-contagem-badge');
+  const emptyEl = document.getElementById('presencas-empty');
+  if(!grid) return;
+
+  // Garante carregamento determinístico se não houver dados
+  if(!_ultimosOperadores || _ultimosOperadores.length === 0){
+    try {
+      const cache = localStorage.getItem('sf_operadores_estado');
+      if(cache) _ultimosOperadores = JSON.parse(cache);
+    } catch(e){}
+  }
+  if(!_ultimosOperadores || _ultimosOperadores.length === 0){
+    _ultimosOperadores = _gerarOperadoresPadrao();
+    try { localStorage.setItem('sf_operadores_estado', JSON.stringify(_ultimosOperadores)); } catch(e){}
+  }
+
+  const ops = _ultimosOperadores;
+
+  // Células únicas
+  const celulas = [...new Set(ops.map(o => o.id.split('-')[0]))].sort();
+  if(!_celulaFiltroPresencas || !celulas.includes(_celulaFiltroPresencas)){
+    _celulaFiltroPresencas = celulas[0] || 'VIDROS';
+  }
+
+  // Operadores da célula selecionada
+  const opsDaCelula = ops.filter(o => o.id.startsWith(_celulaFiltroPresencas));
+  
+  // Contadores globais da célula
+  const totalCelula = opsDaCelula.length;
+  const presentesCelula = opsDaCelula.filter(o => o.status === 'presente').length;
+  const ausentesCelula = opsDaCelula.filter(o => o.status === 'ausente').length;
+  const pendentesCelula = opsDaCelula.filter(o => o.status === 'pendente').length;
+  const enfermariaCelula = opsDaCelula.filter(o => o.status === 'enfermaria').length;
+  const afastadosCelula = opsDaCelula.filter(o => o.status === 'afastado').length;
+  const pctPresencaEfetiva = totalCelula > 0 ? Math.round((presentesCelula / totalCelula) * 100) : 0;
+
+  // 1. RENDERIZAR CARDS DE KPIS INDUSTRIAIS
+  if(totaisEl){
+    const kpis = [
+      { label: 'Presentes',       val: presentesCelula,   cor: '#15803D', bg: '#F0FDF4', border: '#86EFAC', icon: '✓', sub: `${pctPresencaEfetiva}% da célula` },
+      { label: 'Ausentes',        val: ausentesCelula,    cor: '#DC2626', bg: '#FEF2F2', border: '#FCA5A5', icon: '✕', sub: 'Faltas não justificadas' },
+      { label: 'Pendentes',       val: pendentesCelula,   cor: '#D97706', bg: '#FFFBEB', border: '#FCD34D', icon: '⏳', sub: 'Aguardando batida' },
+      { label: 'Enfermaria',      val: enfermariaCelula,  cor: '#0284C7', bg: '#F0F9FF', border: '#7DD3FC', icon: '⚕', sub: 'Atendimento médico' },
+      { label: 'Férias / Licença',val: afastadosCelula,   cor: '#7C3AED', bg: '#F5F3FF', border: '#DDD6FE', icon: '★', sub: 'Afastamento programado' },
+      { label: 'Total Operadores',val: totalCelula,       cor: '#001E50', bg: '#F1F5F9', border: '#CBD5E1', icon: '👥', sub: `${_celulaFiltroPresencas}` },
+      { label: 'Presença Efetiva',val: `${pctPresencaEfetiva}%`, cor: pctPresencaEfetiva >= 90 ? '#15803D' : pctPresencaEfetiva >= 80 ? '#D97706' : '#DC2626', bg: '#FFFFFF', border: '#E2E8F0', icon: '📈', sub: 'Taxa operacional' }
+    ];
+
+    totaisEl.innerHTML = kpis.map(k => `
+      <div style="background:${k.bg};border:1px solid ${k.border};border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.03);display:flex;flex-direction:column;justify-content:space-between">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:${k.cor};opacity:.85">${k.label}</span>
+          <span style="font-size:12px;font-weight:800;color:${k.cor}">${k.icon}</span>
+        </div>
+        <div style="font-size:24px;font-weight:800;color:${k.cor};font-family:var(--font-display);line-height:1">${k.val}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px;font-weight:500">${k.sub}</div>
+      </div>
+    `).join('');
+  }
+
+  // 2. RENDERIZAR NAVEGAÇÃO DE CÉLULAS (9 Células com contagem de presentes)
+  if(navCelulasEl){
+    navCelulasEl.innerHTML = celulas.map(c => {
+      const opsC = ops.filter(o => o.id.startsWith(c));
+      const presC = opsC.filter(o => o.status === 'presente').length;
+      const isAtiva = c === _celulaFiltroPresencas;
+      return `
+        <button onclick="_presencasFiltrarCelula('${c}')" style="
+          display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:10px;font-family:var(--font-display);
+          font-size:11.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:all .15s;
+          border:1px solid ${isAtiva ? '#001E50' : 'var(--border)'};
+          background:${isAtiva ? '#001E50' : 'var(--bg2)'};
+          color:${isAtiva ? '#FFFFFF' : 'var(--text2)'};
+          box-shadow:${isAtiva ? '0 2px 6px rgba(0,30,80,.25)' : 'none'};"
+        >
+          <span>${c}</span>
+          <span style="font-size:9.5px;padding:1px 5px;border-radius:999px;font-weight:700;background:${isAtiva ? 'rgba(255,255,255,.2)' : 'var(--bg3)'};color:${isAtiva ? '#fff' : 'var(--text3)'}">${presC}/${opsC.length}</span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  // 3. RENDERIZAR CARDS DE EQUIPES DA CÉLULA
+  if(cardsEquipesEl){
+    const equipes = ['Equipe 1', 'Equipe 2', 'Equipe 3'];
+    const cardsHtml = equipes.map(eq => {
+      const opsEq = opsDaCelula.filter(o => o.equipe === eq);
+      const presEq = opsEq.filter(o => o.status === 'presente').length;
+      const pctEq = opsEq.length > 0 ? Math.round((presEq / opsEq.length) * 100) : 0;
+      const isSelecionada = _equipeFiltroPresencas === eq;
+      return `
+        <div onclick="_presencasFiltrarEquipe('${eq}')" style="
+          background:${isSelecionada ? '#0284C7' : 'var(--bg2)'};
+          border:1px solid ${isSelecionada ? '#0284C7' : 'var(--border)'};
+          color:${isSelecionada ? '#FFFFFF' : 'var(--text)'};
+          border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.04);
+          transform:${isSelecionada ? 'scale(1.02)' : 'scale(1)'};"
+        >
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <span style="font-size:11.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:${isSelecionada ? '#fff' : 'var(--text)'}">${eq}</span>
+            <span style="font-size:10.5px;font-weight:700;color:${isSelecionada ? '#E0F2FE' : 'var(--text3)'}">${presEq}/${opsEq.length} pres.</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:4px">
+            <span style="font-size:26px;font-weight:800;font-family:var(--font-display);line-height:1;color:${isSelecionada ? '#fff' : 'var(--primary)'}">${pctEq}</span>
+            <span style="font-size:13px;font-weight:700;color:${isSelecionada ? '#BAE6FD' : 'var(--text3)'}">%</span>
+          </div>
+          <!-- Barra de Progresso -->
+          <div style="background:${isSelecionada ? 'rgba(255,255,255,.25)' : 'var(--bg3)'};border-radius:999px;height:5px;width:100%;margin-top:8px;overflow:hidden">
+            <div style="background:${isSelecionada ? '#FFFFFF' : pctEq >= 90 ? '#10B981' : pctEq >= 75 ? '#F59E0B' : '#EF4444'};height:100%;width:${pctEq}%;transition:width .4s ease"></div>
+          </div>
+        </div>
+      `;
+    });
+
+    // Botão "Ver Todas as Equipes"
+    const todasAtivo = _equipeFiltroPresencas === null;
+    cardsHtml.push(`
+      <div onclick="_presencasFiltrarEquipe(null)" style="
+        background:${todasAtivo ? '#001E50' : 'var(--bg2)'};
+        border:1px solid ${todasAtivo ? '#001E50' : 'var(--border)'};
+        color:${todasAtivo ? '#FFFFFF' : 'var(--text)'};
+        border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;justify-content:center;text-align:center"
+      >
+        <span style="font-size:11.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:${todasAtivo ? '#fff' : 'var(--text)'}">Todas as Equipes</span>
+        <span style="font-size:11px;color:${todasAtivo ? '#93C5FD' : 'var(--text3)'};margin-top:3px">${totalCelula} colaboradores</span>
+      </div>
+    `);
+
+    cardsEquipesEl.innerHTML = cardsHtml.join('');
+  }
+
+  // 4. RENDERIZAR BOTÕES DE FILTRO POR STATUS
+  if(filtroStatusEl){
+    const statusOptions = [
+      { id: 'todos', label: 'Todos', count: opsDaCelula.length },
+      { id: 'presente', label: 'Presente', count: presentesCelula },
+      { id: 'ausente', label: 'Ausente', count: ausentesCelula },
+      { id: 'pendente', label: 'Pendente', count: pendentesCelula },
+      { id: 'enfermaria', label: 'Enfermaria', count: enfermariaCelula },
+      { id: 'afastado', label: 'Férias/Licença', count: afastadosCelula },
+    ];
+
+    filtroStatusEl.innerHTML = statusOptions.map(opt => {
+      const isAtivo = _statusFiltroPresencas === opt.id;
+      return `
+        <button onclick="_filtrarOperadoresPresencaStatus('${opt.id}')" style="
+          padding:4px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;
+          border:1px solid ${isAtivo ? '#001E50' : 'var(--border)'};
+          background:${isAtivo ? '#001E50' : 'var(--bg3)'};
+          color:${isAtivo ? '#FFFFFF' : 'var(--text2)'};"
+        >
+          ${opt.label} (${opt.count})
+        </button>
+      `;
+    }).join('');
+  }
+
+  // 5. APLICAR FILTROS DE LISTAGEM DE OPERADORES
+  let filtrados = opsDaCelula;
+  if(_equipeFiltroPresencas){
+    filtrados = filtrados.filter(o => o.equipe === _equipeFiltroPresencas);
+  }
+  if(_statusFiltroPresencas !== 'todos'){
+    filtrados = filtrados.filter(o => o.status === _statusFiltroPresencas);
+  }
+  if(_buscaFiltroPresencas){
+    filtrados = filtrados.filter(o => 
+      o.nome.toLowerCase().includes(_buscaFiltroPresencas) || 
+      (o.matricula && o.matricula.includes(_buscaFiltroPresencas))
+    );
+  }
+
+  // Ordenação prioritária: Ausentes, Pendentes, Enfermaria, Presentes, Afastados
+  const ordem = ['ausente', 'pendente', 'enfermaria', 'presente', 'afastado'];
+  filtrados.sort((a, b) => ordem.indexOf(a.status) - ordem.indexOf(b.status) || a.nome.localeCompare(b.nome));
+
+  if(contagemBadge){
+    contagemBadge.textContent = `${filtrados.length} operador${filtrados.length === 1 ? '' : 'es'}`;
+  }
+
+  if(filtrados.length === 0){
+    grid.innerHTML = '';
+    if(emptyEl) emptyEl.style.display = 'block';
+    return;
+  }
+  if(emptyEl) emptyEl.style.display = 'none';
+
+  // 6. RENDERIZAR GRID DE CARDS DE OPERADORES
+  grid.innerHTML = filtrados.map(op => {
+    const c = STATUS_CORES[op.status] || STATUS_CORES.pendente;
+    const ini = op.nome.split(' ').slice(0, 2).map(p => p[0] || '').join('').toUpperCase();
+    const isEnfermaria = op.status === 'enfermaria';
+    return `
+      <div style="background:var(--bg2);border:1px solid ${c.border};border-left:4px solid ${c.dot};border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.03);display:flex;flex-direction:column;gap:8px">
+        
+        <!-- Linha Superior: Avatar, Nome, Matrícula e Badge de Status -->
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px;min-width:0">
+            <div style="width:38px;height:38px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--text);flex-shrink:0;position:relative">
+              ${ini}
+              <span style="position:absolute;bottom:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:${c.dot};border:2px solid var(--bg2)"></span>
+            </div>
+            <div style="min-width:0">
+              <div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${op.nome}">${op.nome}</div>
+              <div style="font-size:11px;color:var(--text3);display:flex;gap:6px;margin-top:1px">
+                <span>${op.equipe || 'Equipe 1'}</span>
+                <span>&bull;</span>
+                <span style="font-family:var(--mono,monospace);font-weight:600">Mat. ${op.matricula}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Badge do Status -->
+          <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;padding:3px 8px;border-radius:6px;background:${c.badge};color:${c.text};border:1px solid ${c.border};white-space:nowrap;flex-shrink:0">
+            ${c.label}
+          </span>
+        </div>
+
+        <!-- Linha Intermediária: Horário de Batida e Auditoria -->
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--text3);padding-top:4px;border-top:1px solid var(--border)">
+          <div>
+            ${op.batida ? `<strong>Crachá:</strong> <span style="font-family:var(--mono);color:#059669;font-weight:700">${op.batida}</span>` : `<span style="font-style:italic">Aguardando registro...</span>`}
+          </div>
+          ${op.alteradoPor ? `
+            <div style="font-size:9.5px;color:#D97706;font-weight:600" title="Alterado por ${op.alteradoPor} às ${op.alteradoAs || ''}">
+              ✎ ${op.alteradoPor.split(' ')[0]} ${op.alteradoAs ? `(${op.alteradoAs})` : ''}
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- Linha Inferior: Seletor Rápido e Ação Enfermaria -->
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:2px">
+          <div style="flex:1">
+            <select onchange="_alterarStatusOperadorSmartflow('${op.id}', this.value)" style="
+              width:100%;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+              padding:4px 6px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--text);cursor:pointer;outline:none"
+            >
+              <option value="presente" ${op.status === 'presente' ? 'selected' : ''}>Presente</option>
+              <option value="ausente" ${op.status === 'ausente' ? 'selected' : ''}>Ausente</option>
+              <option value="pendente" ${op.status === 'pendente' ? 'selected' : ''}>Pendente</option>
+              <option value="enfermaria" ${op.status === 'enfermaria' ? 'selected' : ''}>Enfermaria</option>
+              <option value="afastado" ${op.status === 'afastado' ? 'selected' : ''}>Férias/Licença</option>
+            </select>
+          </div>
+
+          <!-- Botão de Ação Rápida Enfermaria -->
+          <button onclick="_toggleEnfermariaOperador('${op.id}')" style="
+            padding:4px 8px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s;
+            background:${isEnfermaria ? 'rgba(5,150,105,.15)' : 'rgba(2,132,199,.12)'};
+            border:1px solid ${isEnfermaria ? '#059669' : '#0284C7'};
+            color:${isEnfermaria ? '#059669' : '#0284C7'};"
+            title="${isEnfermaria ? 'Retornar operador para Presente' : 'Mover operador para a Enfermaria'}"
+          >
+            ${isEnfermaria ? '✓ Voltar Presente' : '⚕ Enfermaria'}
+          </button>
+        </div>
+
+      </div>
+    `;
+  }).join('');
+
+  _atualizarBadgeAuditoria();
+}
+
+// Modal de Auditoria de Presença
+function _abrirModalAuditoriaPresenca(){
+  let modal = document.getElementById('modalAuditoriaPresenca');
+  if(!modal){
+    modal = document.createElement('div');
+    modal.id = 'modalAuditoriaPresenca';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,15,40,.7);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);';
+    document.body.appendChild(modal);
+  }
+
+  const logsHtml = _logsAuditoriaPresenca.length === 0 
+    ? `<div style="text-align:center;padding:30px 10px;color:var(--text3);font-size:12px">Nenhuma alteração registrada neste turno ainda.</div>`
+    : _logsAuditoriaPresenca.map(l => `
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <div style="min-width:0">
+          <div style="font-size:12px;font-weight:700;color:var(--text)">
+            <span style="color:#0284C7">${l.responsavel}</span> (${l.cargo}) alterou <span style="color:var(--text)">${l.opNome}</span>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">
+            <span style="font-weight:600;text-transform:uppercase">${l.statusAnterior}</span> &rarr; <strong style="color:#001E50;text-transform:uppercase">${l.statusNovo}</strong>
+          </div>
+        </div>
+        <div style="font-size:10px;font-family:var(--mono);color:var(--text3);white-space:nowrap">${l.timestamp}</div>
+      </div>
+    `).join('');
+
+  modal.innerHTML = `
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;max-width:560px;width:100%;box-shadow:0 15px 50px rgba(0,0,0,.3);overflow:hidden;font-family:'DM Sans',sans-serif">
+      <div style="padding:14px 18px;border-bottom:1px solid var(--border);background:var(--primary);color:#FFFFFF;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:13px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;display:flex;align-items:center;gap:8px">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          Log de Auditoria do Turno
+        </div>
+        <button onclick="_fecharModalAuditoriaPresenca()" style="background:none;border:none;color:#FFFFFF;font-size:20px;line-height:1;cursor:pointer">&times;</button>
+      </div>
+      <div style="padding:14px 18px;max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:8px">
+        ${logsHtml}
+      </div>
+      <div style="padding:10px 18px;background:var(--bg3);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        <button onclick="_limparAuditoriaPresenca()" style="background:none;border:none;color:#DC2626;font-size:11px;cursor:pointer;text-decoration:underline">Limpar Logs</button>
+        <button onclick="_fecharModalAuditoriaPresenca()" class="btn btn-accent btn-sm">Fechar</button>
+      </div>
+    </div>
+  `;
+  modal.style.display = 'flex';
+}
+
+function _fecharModalAuditoriaPresenca(){
+  const modal = document.getElementById('modalAuditoriaPresenca');
+  if(modal) modal.style.display = 'none';
+}
+
+function _limparAuditoriaPresenca(){
+  if(confirm('Deseja limpar todos os registros de auditoria deste turno?')){
+    _logsAuditoriaPresenca = [];
+    try { localStorage.removeItem('sf_auditoria_logs'); } catch(e){}
+    _atualizarBadgeAuditoria();
+    _fecharModalAuditoriaPresenca();
+  }
+}
+
+// Exportação CSV
+function _exportarCSVPresenca(){
+  const turno = MOCK_TURNOS.find(t => t.id === _turnoSelecionadoId)?.nome || '1º Turno';
+  const headers = ["Turno", "Celula", "Equipe", "Nome", "Matricula", "Funcao", "Status", "Batida", "Alterado_Por", "Horario_Alteracao"];
+  const rows = _ultimosOperadores.map(op => [
+    turno,
+    op.id.split('-')[0],
+    op.equipe || 'Equipe 1',
+    `"${op.nome}"`,
+    `"${op.matricula}"`,
+    `"${op.funcao}"`,
+    op.status,
+    op.batida || '',
+    `"${op.alteradoPor || ''}"`,
+    op.alteradoAs || ''
+  ]);
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `gestao_operacional_presenca_${new Date().toISOString().split('T')[0]}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// Impressão / PDF
+function _imprimirRelatorioPresenca(){
+  const turno = MOCK_TURNOS.find(t => t.id === _turnoSelecionadoId)?.nome || '1º Turno';
+  const agora = new Date().toLocaleString('pt-BR');
+  const opsDaCelula = _ultimosOperadores.filter(o => o.id.startsWith(_celulaFiltroPresencas));
+  
+  const printWindow = window.open('', '_blank');
+  if(!printWindow) return alert('Por favor, autorize pop-ups para imprimir o relatório.');
+  
+  const rows = opsDaCelula.map(o => `
+    <tr>
+      <td style="padding:6px;border:1px solid #ddd;">${o.equipe}</td>
+      <td style="padding:6px;border:1px solid #ddd;font-weight:bold;">${o.nome}</td>
+      <td style="padding:6px;border:1px solid #ddd;">${o.matricula}</td>
+      <td style="padding:6px;border:1px solid #ddd;text-transform:uppercase;">${o.status}</td>
+      <td style="padding:6px;border:1px solid #ddd;">${o.batida || '-'}</td>
+      <td style="padding:6px;border:1px solid #ddd;">${o.alteradoPor || '-'}</td>
+    </tr>
+  `).join('');
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Relatório de Presença - ${turno} - ${_celulaFiltroPresencas}</title>
+      <style>
+        body { font-family: sans-serif; font-size: 11px; padding: 20px; }
+        h1 { font-size: 16px; margin: 0; color: #001E50; }
+        p { margin: 4px 0 16px; color: #555; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #f0f4f8; padding: 6px; border: 1px solid #ddd; text-align: left; text-transform: uppercase; font-size: 10px; }
+      </style>
+    </head>
+    <body>
+      <h1>VW SmartFlow — Gestão Operacional & Presença</h1>
+      <p>Célula: <strong>${_celulaFiltroPresencas}</strong> &bull; Turno: <strong>${turno}</strong> &bull; Gerado em: ${agora}</p>
+      <table>
+        <thead>
+          <tr><th>Equipe</th><th>Nome</th><th>Matrícula</th><th>Status</th><th>Batida</th><th>Alterado Por</th></tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
+      <script>window.onload = function(){ window.print(); }<\/script>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
+// Suporte ao hash #presencas para abrir diretamente a aba
+window.addEventListener('DOMContentLoaded', () => {
+  if(window.location.hash === '#presencas'){
+    const btn = document.getElementById('tab-presencas-btn');
+    if(btn) showTab('tab-presencas', btn);
+  }
 });
-setInterval(()=>_renderPainelPresenca(_ultimaPresenca), 30000); // atualiza "há X min" mesmo sem mudança nova
+if(window.location.hash === '#presencas'){
+  setTimeout(() => {
+    const btn = document.getElementById('tab-presencas-btn');
+    if(btn) showTab('tab-presencas', btn);
+  }, 100);
+}
+
 
 function _tempoDecorrido(ts){
   if(!ts) return 'nunca entrou';

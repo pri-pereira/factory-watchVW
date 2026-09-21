@@ -25,10 +25,18 @@ function PainelGuarded() {
   const navigate = useNavigate();
   const usuario = getUsuarioLogado();
   useEffect(() => {
-    if (!usuario) navigate({ to: "/" });
+    if (!usuario) {
+      navigate({ to: "/" });
+    } else {
+      window.location.replace("/smartflow.html#presencas");
+    }
   }, [navigate, usuario]);
   if (!usuario) return null;
-  return <Painel />;
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#001E50] text-white">
+      <p className="font-semibold text-sm animate-pulse">Redirecionando para o SmartFlow &bull; Presenças...</p>
+    </div>
+  );
 }
 
 const statusMeta: Record<OperatorStatus, {
