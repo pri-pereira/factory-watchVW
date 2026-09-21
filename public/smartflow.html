@@ -1542,19 +1542,55 @@ function dowName(ds){ return ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][new Da
 function isSab(ds){ return new Date(ds+'T00:00:00').getDay()===6; }
 function _ehDomingo(ds){ return new Date(ds+'T00:00:00').getDay()===0; }
 function sabStatus(ds){ return sabados[ds]||null; }
+/* ============================================================
+   MAPEAMENTO UNIFICADO CÉLULAS <-> SETORES
+============================================================ */
+function _setorParaCelula(setor) {
+  if (!setor) return '';
+  const s = String(setor).toUpperCase().replace(/[\s\-_]/g, '');
+  if (s.includes('BORLESS') || s.includes('DORLESS') || s.includes('DOORLESS')) return 'DORLESS';
+  if (s.includes('MEZANINO')) return 'MEZANINO';
+  if (s.includes('BANCO')) return 'BANCOS';
+  if (s.includes('CHICOTE')) return 'CHICOTES';
+  if (s.includes('VIDRO')) return 'VIDROS';
+  if (s.includes('PARACHOQUE') || s.includes('PARA')) return 'PARA-CHOQUE';
+  if (s.includes('DRESS')) return 'DRESS-UP';
+  if (s.includes('FAHRWERK')) return 'FAHRWERK';
+  if (s.includes('MQB')) return 'MQB';
+  return s;
+}
+
+function _extrairCelulaDoOpId(id) {
+  if (!id) return '';
+  const celulas = ["DORLESS", "MEZANINO", "BANCOS", "CHICOTES", "VIDROS", "PARA-CHOQUE", "DRESS-UP", "FAHRWERK", "MQB"];
+  for (const c of celulas) {
+    if (id.startsWith(c + '-')) return c;
+  }
+  const lastHyphen = id.lastIndexOf('-');
+  const secondLast = id.lastIndexOf('-', lastHyphen - 1);
+  if (secondLast > 0) return id.substring(0, secondLast);
+  return id.split('-')[0];
+}
+
+function _celulaParaSetor(celula) {
+  if (!celula) return null;
+  const normC = _setorParaCelula(celula);
+  return (typeof SETORES !== 'undefined' ? SETORES : []).find(s => _setorParaCelula(s) === normC) || null;
+}
+
 function getPainelCount(s, statusArr, ds) {
   if (ds !== today()) return 0;
   try {
-    const raw = localStorage.getItem("sf_operadores_estado");
-    if (!raw) return 0;
-    const ops = JSON.parse(raw);
+    let ops = (typeof _ultimosOperadores !== 'undefined' && Array.isArray(_ultimosOperadores) && _ultimosOperadores.length > 0)
+      ? _ultimosOperadores
+      : JSON.parse(localStorage.getItem("sf_operadores_estado") || '[]');
+    if (!ops || ops.length === 0) return 0;
     
-    let prefix = s.toUpperCase();
-    if (prefix === "DOOR LESS") prefix = "DORLESS";
-    if (prefix === "PARA CHOQUE") prefix = "PARA-CHOQUE";
-    prefix = prefix + "-";
-    
-    return ops.filter(op => op.id.startsWith(prefix) && statusArr.includes(op.status)).length;
+    const celulaAlvo = _setorParaCelula(s);
+    return ops.filter(op => {
+      const celulaOp = _extrairCelulaDoOpId(op.id);
+      return celulaOp === celulaAlvo && statusArr.includes(op.status);
+    }).length;
   } catch(e) { return 0; }
 }
 
@@ -1641,46 +1677,70 @@ function renderSetores(){
 
 function _syncPainelToCounters() {
   try {
-    let ops = JSON.parse(localStorage.getItem('sf_operadores_estado') || '[]');
-    if(ops.length === 0) return;
+    let ops = (typeof _ultimosOperadores !== 'undefined' && Array.isArray(_ultimosOperadores) && _ultimosOperadores.length > 0)
+      ? _ultimosOperadores
+      : JSON.parse(localStorage.getItem('sf_operadores_estado') || '[]');
+    if(!ops || ops.length === 0) {
+      if (typeof _gerarOperadoresPadrao === 'function') {
+        ops = _gerarOperadoresPadrao();
+        _ultimosOperadores = ops;
+        try { localStorage.setItem('sf_operadores_estado', JSON.stringify(ops)); } catch(e){}
+      } else {
+        return;
+      }
+    }
     const ds = today();
     
-    // Zera contadores do dia atual antes de contar para não duplicar
+    // Zera e preenche contadores do dia atual
     SETORES.forEach(s => {
-      enfVoltou[s+'||'+ds] = 0;
-      atrasados[s+'||'+ds] = 0;
-      saiuVoltou[s+'||'+ds] = 0;
-      liberados[s+'||'+ds] = 0;
-      atestados[s+'||'+ds] = 0;
+      const k = s + '||' + ds;
+      enfVoltou[k] = 0;
+      atrasados[k] = 0;
+      saiuVoltou[k] = 0;
+      liberados[k] = 0;
+      atestados[k] = 0;
+
+      // Garante que o quadro de operadores seja preenchido automaticamente com o total da célula
+      if (!quadros[s]) quadros[s] = { operadores: 0, operacoes: 0 };
+      const celulaAlvo = _setorParaCelula(s);
+      const totalOpsCelula = ops.filter(o => _extrairCelulaDoOpId(o.id) === celulaAlvo).length;
+      if (totalOpsCelula > 0 && (!quadros[s].operadores || quadros[s].operadores === 0)) {
+        quadros[s].operadores = totalOpsCelula;
+      }
+      if (quadros[s].operadores > 0 && (!quadros[s].operacoes || quadros[s].operacoes === 0)) {
+        quadros[s].operacoes = Math.max(1, quadros[s].operadores - 5);
+      }
     });
 
     ops.forEach(o => {
-      const idx = o.id.indexOf('-');
-      if(idx < 0) return;
-      let rawSetor = o.id.substring(0, idx);
-      let setorStr = SETORES.find(s => {
-         let p = s.toUpperCase();
-         if(p === "DOOR LESS") p = "DORLESS";
-         if(p === "PARA CHOQUE") p = "PARA-CHOQUE";
-         return p === rawSetor;
-      });
+      const celula = _extrairCelulaDoOpId(o.id);
+      const setorStr = _celulaParaSetor(celula);
       if(!setorStr) return;
 
-      const k = setorStr+'||'+ds;
-      if (o.status === 'enfermaria' || o.observacao === 'Foi para enfermaria') enfVoltou[k] = (enfVoltou[k]||0)+1;
-      else if (o.status === 'ausente' && o.observacao === 'Atrasado') atrasados[k] = (atrasados[k]||0)+1;
-      else if (o.status === 'ausente' && o.observacao === 'Saída temporária') saiuVoltou[k] = (saiuVoltou[k]||0)+1;
-      else if (o.status === 'afastado' && o.observacao === 'Liberação programada') liberados[k] = (liberados[k]||0)+1;
-      else if (o.status === 'afastado' && o.observacao === 'Atestado') atestados[k] = (atestados[k]||0)+1;
+      const k = setorStr + '||' + ds;
+      if (o.status === 'enfermaria' || o.observacao === 'Foi para enfermaria') {
+        enfVoltou[k] = (enfVoltou[k] || 0) + 1;
+      } else if (o.status === 'ausente' && o.observacao === 'Atrasado') {
+        atrasados[k] = (atrasados[k] || 0) + 1;
+      } else if (o.status === 'ausente' && o.observacao === 'Saída temporária') {
+        saiuVoltou[k] = (saiuVoltou[k] || 0) + 1;
+      } else if (o.status === 'afastado' && o.observacao === 'Liberação programada') {
+        liberados[k] = (liberados[k] || 0) + 1;
+      } else if (o.status === 'afastado' && o.observacao === 'Atestado') {
+        atestados[k] = (atestados[k] || 0) + 1;
+      }
     });
 
-    // Força salvamento das variáveis atualizadas no localStorage antigo
-    localStorage.setItem('vw_enf_voltou',JSON.stringify(enfVoltou));
-    localStorage.setItem('vw_atrasados',JSON.stringify(atrasados));
-    localStorage.setItem('vw_saiu_voltou',JSON.stringify(saiuVoltou));
-    localStorage.setItem('vw_liberados',JSON.stringify(liberados));
-    localStorage.setItem('vw_atestados',JSON.stringify(atestados));
-  } catch(e) {}
+    // Salva quadro e contadores atualizados
+    localStorage.setItem('vw_q_' + ds, JSON.stringify(quadros));
+    localStorage.setItem('vw_enf_voltou', JSON.stringify(enfVoltou));
+    localStorage.setItem('vw_atrasados', JSON.stringify(atrasados));
+    localStorage.setItem('vw_saiu_voltou', JSON.stringify(saiuVoltou));
+    localStorage.setItem('vw_liberados', JSON.stringify(liberados));
+    localStorage.setItem('vw_atestados', JSON.stringify(atestados));
+  } catch(e) {
+    console.error('[sync] Erro em _syncPainelToCounters:', e);
+  }
 }
 
 // Sincronia em tempo real com o painel.tsx
@@ -2290,25 +2350,29 @@ function excluirCartaoPersonalizado(id){
 ============================================================ */
 function _changeOperatorStatus(setor, oldStatuses, newStatus, obsText) {
   try {
-    let ops = JSON.parse(localStorage.getItem('sf_operadores_estado') || '[]');
-    let prefix = setor.toUpperCase();
-    if (prefix === "DOOR LESS") prefix = "DORLESS";
-    if (prefix === "PARA CHOQUE") prefix = "PARA-CHOQUE";
-    prefix = prefix + "-";
+    let ops = (typeof _ultimosOperadores !== 'undefined' && Array.isArray(_ultimosOperadores) && _ultimosOperadores.length > 0)
+      ? _ultimosOperadores
+      : JSON.parse(localStorage.getItem('sf_operadores_estado') || '[]');
+    if (!ops || ops.length === 0) return;
 
-    // Encontra um operador elegível e prioriza quem não tem observação recente (para evitar sobrescrever outros status manuais)
-    let elegiveis = ops.filter(o => o.id.startsWith(prefix) && oldStatuses.includes(o.status));
-    if (elegiveis.length === 0) return; // Ninguém disponível
+    const celulaAlvo = _setorParaCelula(setor);
+
+    let elegiveis = ops.filter(o => _extrairCelulaDoOpId(o.id) === celulaAlvo && oldStatuses.includes(o.status));
+    if (elegiveis.length === 0) return;
     
     let targetOp = elegiveis.find(o => !o.observacao) || elegiveis[0];
     
     targetOp.status = newStatus;
-    targetOp.alteradoPor = 'SmartFlow Botões';
+    targetOp.alteradoPor = 'SmartFlow Setores';
     targetOp.alteradoAs = new Date().toLocaleTimeString('pt-BR');
-    if(obsText) targetOp.observacao = obsText;
-    else targetOp.observacao = "";
+    targetOp.observacao = obsText || "";
 
-    localStorage.setItem('sf_operadores_estado', JSON.stringify(ops));
+    _ultimosOperadores = ops;
+    if(typeof _salvarESincronizarOperadores === 'function'){
+      _salvarESincronizarOperadores();
+    } else {
+      localStorage.setItem('sf_operadores_estado', JSON.stringify(ops));
+    }
   } catch(e) {}
 }
 
@@ -5839,6 +5903,7 @@ function _salvarESincronizarOperadores(){
   if(typeof _syncPainelToCounters === 'function' && getDate() === today()){
     _syncPainelToCounters();
     if(typeof renderSetores === 'function') renderSetores();
+    if(typeof renderDashboard === 'function') renderDashboard();
   }
 
   renderPresencasOperadores();
@@ -5876,7 +5941,7 @@ function _simularPresencasSmartflow(){
 
 const STATUS_CORES = {
   presente:   { bg: '#F0FDF4', text: '#15803D', border: '#86EFAC', dot: '#22C55E', badge: '#DCFCE7', label: 'Presente' },
-  ausente:    { bg: '#FEF2F2', text: '#DC2626', border: '#FCA5A5', dot: '#EF4444', badge: '#FEE2E2', label: 'Ausente' },
+  ausente:    { bg: '#FEF2F2', text: '#DC2626', border: '#FCA5A5', dot: '#EF4444', badge: '#FEE2E2', label: 'Falta' },
   pendente:   { bg: '#FFFBEB', text: '#D97706', border: '#FCD34D', dot: '#F59E0B', badge: '#FEF3C7', label: 'Pendente' },
   afastado:   { bg: '#F5F3FF', text: '#7C3AED', border: '#DDD6FE', dot: '#8B5CF6', badge: '#EDE9FE', label: 'Férias/Licença' },
   enfermaria: { bg: '#F0F9FF', text: '#0284C7', border: '#7DD3FC', dot: '#0EA5E9', badge: '#E0F2FE', label: 'Enfermaria' },
@@ -5929,7 +5994,7 @@ function renderPresencasOperadores(){
   if(totaisEl){
     const kpis = [
       { label: 'Presentes',       val: presentesCelula,   cor: '#15803D', bg: '#F0FDF4', border: '#86EFAC', icon: '✓', sub: `${pctPresencaEfetiva}% da célula` },
-      { label: 'Ausentes',        val: ausentesCelula,    cor: '#DC2626', bg: '#FEF2F2', border: '#FCA5A5', icon: '✕', sub: 'Faltas não justificadas' },
+      { label: 'Faltas',          val: ausentesCelula,    cor: '#DC2626', bg: '#FEF2F2', border: '#FCA5A5', icon: '✕', sub: 'Faltas não justificadas' },
       { label: 'Pendentes',       val: pendentesCelula,   cor: '#D97706', bg: '#FFFBEB', border: '#FCD34D', icon: '⏳', sub: 'Aguardando batida' },
       { label: 'Enfermaria',      val: enfermariaCelula,  cor: '#0284C7', bg: '#F0F9FF', border: '#7DD3FC', icon: '⚕', sub: 'Atendimento médico' },
       { label: 'Férias / Licença',val: afastadosCelula,   cor: '#7C3AED', bg: '#F5F3FF', border: '#DDD6FE', icon: '★', sub: 'Afastamento programado' },
@@ -6025,7 +6090,7 @@ function renderPresencasOperadores(){
     const statusOptions = [
       { id: 'todos', label: 'Todos', count: opsDaCelula.length },
       { id: 'presente', label: 'Presente', count: presentesCelula },
-      { id: 'ausente', label: 'Ausente', count: ausentesCelula },
+      { id: 'ausente', label: 'Falta', count: ausentesCelula },
       { id: 'pendente', label: 'Pendente', count: pendentesCelula },
       { id: 'enfermaria', label: 'Enfermaria', count: enfermariaCelula },
       { id: 'afastado', label: 'Férias/Licença', count: afastadosCelula },
@@ -6292,19 +6357,37 @@ function _imprimirRelatorioPresenca(){
   printWindow.document.close();
 }
 
-// Suporte ao hash #presencas para abrir diretamente a aba
+// Sincronização e inicialização automática de todo o sistema
+function _inicializarSincroniaGeral() {
+  if (typeof _gerarOperadoresPadrao === 'function' && (!_ultimosOperadores || _ultimosOperadores.length === 0)) {
+    try {
+      const cache = localStorage.getItem('sf_operadores_estado');
+      _ultimosOperadores = cache ? JSON.parse(cache) : _gerarOperadoresPadrao();
+      if (!cache) localStorage.setItem('sf_operadores_estado', JSON.stringify(_ultimosOperadores));
+    } catch(e) {
+      _ultimosOperadores = _gerarOperadoresPadrao();
+    }
+  }
+  if (typeof _syncPainelToCounters === 'function') _syncPainelToCounters();
+  if (typeof renderPresencasOperadores === 'function') renderPresencasOperadores();
+  if (typeof renderSetores === 'function') renderSetores();
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-  if(window.location.hash === '#presencas'){
-    const btn = document.getElementById('tab-presencas-btn');
-    if(btn) showTab('tab-presencas', btn);
+  _inicializarSincroniaGeral();
+  const btn = document.getElementById('tab-presencas-btn');
+  if (window.location.hash === '#presencas' && btn) {
+    showTab('tab-presencas', btn);
   }
 });
-if(window.location.hash === '#presencas'){
-  setTimeout(() => {
-    const btn = document.getElementById('tab-presencas-btn');
-    if(btn) showTab('tab-presencas', btn);
-  }, 100);
-}
+
+setTimeout(() => {
+  _inicializarSincroniaGeral();
+  const btn = document.getElementById('tab-presencas-btn');
+  if (window.location.hash === '#presencas' && btn) {
+    showTab('tab-presencas', btn);
+  }
+}, 120);
 
 
 function _tempoDecorrido(ts){

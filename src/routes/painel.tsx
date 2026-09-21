@@ -48,7 +48,7 @@ const statusMeta: Record<OperatorStatus, {
   label: string; dot: string; badge: string; bar: string; icon: typeof CheckCircle2;
 }> = {
   presente:   { label: "Presente",       dot: "bg-status-present",     badge: "bg-status-present-soft text-status-present",       bar: "bg-status-present",     icon: CheckCircle2  },
-  ausente:    { label: "Ausente",        dot: "bg-status-absent",      badge: "bg-status-absent-soft text-status-absent",         bar: "bg-status-absent",      icon: AlertTriangle },
+  ausente:    { label: "Falta",          dot: "bg-status-absent",      badge: "bg-status-absent-soft text-status-absent",         bar: "bg-status-absent",      icon: AlertTriangle },
   pendente:   { label: "Pendente",       dot: "bg-status-pending",     badge: "bg-status-pending-soft text-status-pending",       bar: "bg-status-pending",     icon: Hourglass     },
   afastado:   { label: "Ferias/Licenca", dot: "bg-status-leave",       badge: "bg-status-leave-soft text-status-leave",           bar: "bg-status-leave",       icon: CalendarOff   },
   enfermaria: { label: "Enfermaria",     dot: "bg-status-enfermaria",  badge: "bg-status-enfermaria-soft text-status-enfermaria", bar: "bg-status-enfermaria",  icon: Stethoscope   },
@@ -458,7 +458,7 @@ function Painel() {
         <section className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-3 lg:grid-cols-5">
           <MetricCard label="Total da celula" value={counts.total} icon={Users} accent="bg-primary" textColor="text-primary" />
           <MetricCard label="Presentes" value={counts.presentes} icon={CheckCircle2} accent="bg-status-present" textColor="text-status-present" />
-          <MetricCard label="Ausentes" value={counts.ausentes} icon={AlertTriangle} accent="bg-status-absent" textColor="text-status-absent" />
+          <MetricCard label="Faltas" value={counts.ausentes} icon={AlertTriangle} accent="bg-status-absent" textColor="text-status-absent" />
           <MetricCard label="Enfermaria" value={counts.enfermaria} icon={Stethoscope} accent="bg-status-enfermaria" textColor="text-status-enfermaria" />
           <div className="col-span-2 sm:col-span-1">
             <MetricCard label="Programadas" value={counts.programadas} icon={CalendarOff} accent="bg-status-leave" textColor="text-status-leave" />
