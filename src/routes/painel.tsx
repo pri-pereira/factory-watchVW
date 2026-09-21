@@ -17,6 +17,11 @@ export const Route = createFileRoute("/painel")({
       { title: "Painel de Presenca - Gestao Operacional" },
       { name: "description", content: "Acompanhe em tempo real a presenca dos operadores." },
     ],
+    links: [
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/favicon.png" },
+    ],
   }),
   component: PainelGuarded,
 });

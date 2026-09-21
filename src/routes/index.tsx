@@ -9,6 +9,11 @@ export const Route = createFileRoute("/")({
       { title: "VW Gestao Operacional - Acesso" },
       { name: "description", content: "Plataforma de Controle de Presenca Operacional VW." },
     ],
+    links: [
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/favicon.png" },
+    ],
   }),
   component: HomePage,
 });

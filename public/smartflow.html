@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VW Smart Flow</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -228,6 +231,8 @@ input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.85); curs
 .btn-pdf { background: #EF4444; border-color: #EF4444; color: #fff; }
 .btn-wa { background: #25D366; border-color: #25D366; color: #fff; }
 .btn-resumo { background: #4F46E5; border-color: #4F46E5; color: #fff; }
+.btn-logout { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.35); color: #F87171; }
+.btn-logout:hover { background: rgba(239, 68, 68, 0.25); border-color: rgba(239, 68, 68, 0.55); color: #FCA5A5; }
 .btn-db { background: rgba(14, 165, 233, 0.15); border-color: rgba(14, 165, 233, 0.35); color: #7DD3FC; cursor: pointer; }
 .btn-db:hover { background: rgba(14, 165, 233, 0.25); color: #BAE6FD; }
 .db-status-dot {
@@ -974,24 +979,28 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
         <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         Importar<input type="file" accept=".json" onchange="importarBackup(event)" style="display:none">
       </label>
+      <button class="btn btn-logout btn-sm" onclick="fazerLogout()" title="Sair do sistema e voltar ao login">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair
+      </button>
     </div>
   </div>
 </header>
 
 <!-- TABS -->
 <nav class="tabs-bar">
-  <button class="tab-btn active" onclick="showTab('tab-setores',this)">Setores do dia</button>
+  <button class="tab-btn active" id="tab-presencas-btn" onclick="showTab('tab-presencas',this); renderPresencasOperadores()">Presenças</button>
+  <button class="tab-btn" id="tab-setores-btn" onclick="showTab('tab-setores',this)">Setores</button>
   <button class="tab-btn" onclick="showTab('tab-monitores',this)">Monitores</button>
   <button class="tab-btn" onclick="showTab('tab-agenda',this)">Agenda</button>
   <button class="tab-btn" onclick="showTab('tab-dashboard',this)">Dashboard</button>
   <button class="tab-btn" onclick="showTab('tab-obs',this)">Observações</button>
   <button class="tab-btn" onclick="showTab('tab-emprestados',this)">Emprestados</button>
-  <button class="tab-btn" onclick="showTab('tab-setores-cfg',this)">Setores</button>
-  <button class="tab-btn" id="tab-presencas-btn" onclick="showTab('tab-presencas',this); renderPresencasOperadores()">Presenças</button>
+  <button class="tab-btn" onclick="showTab('tab-setores-cfg',this)">Config. Setores</button>
 </nav>
 
 <!-- =================== GESTÃO OPERACIONAL / PRESENÇAS =================== -->
-<div id="tab-presencas" class="page">
+<div id="tab-presencas" class="page active">
   <div class="presencas-container" style="padding:16px 20px;max-width:1400px;margin:0 auto">
     
     <!-- BARRA SUPERIOR DE TURNO E AÇÕES DA GESTÃO OPERACIONAL -->
@@ -1099,7 +1108,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
 </div>
 
 <!-- ===================== SETORES ===================== -->
-<div id="tab-setores" class="page active">
+<div id="tab-setores" class="page">
   <div id="sabBanner"></div>
   <div class="summary-strip" id="summaryRow"></div>
   <div id="ausIconStrip" style="display:none;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;padding:14px 16px;background:#FFFFFF;border:1px solid #E8EBF2;border-radius:var(--r);margin-bottom:4px;box-shadow:0 1px 3px rgba(0,0,0,.04)"></div>
@@ -1145,7 +1154,7 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
   <div class="card" style="max-width:600px">
     <div class="card-head"><span class="card-title">Adicionar monitor ao cadastro</span></div>
     <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
-      <div style="font-size:12px;color:var(--text3)">O monitor é salvo no cadastro permanente e aparece automaticamente em Setores do dia para todos os dias.</div>
+      <div style="font-size:12px;color:var(--text3)">O monitor é salvo no cadastro permanente e aparece automaticamente em Setores para todos os dias.</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
         <div class="ff" style="flex:1;min-width:140px">
           <label>Setor</label>
@@ -2462,7 +2471,7 @@ function addMonFromAba(){
   document.getElementById('novoMonNome').value='';
   _showMonMsg(`"${nome}" adicionado ao setor ${setor}.`,'var(--ok)');
   renderMonitores();
-  renderSetores(); // atualiza Setores do dia imediatamente
+  renderSetores(); // atualiza Setores imediatamente
 }
 
 function delMonFromAba(setor,id){
@@ -4209,11 +4218,21 @@ function showTab(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active'); el.classList.add('active');
+  if(id==='tab-presencas' && typeof renderPresencasOperadores==='function') renderPresencasOperadores();
+  if(id==='tab-setores' && typeof renderSetores==='function') renderSetores();
   if(id==='tab-agenda') renderAgenda();
   if(id==='tab-monitores') renderMonitores();
   if(id==='tab-dashboard') renderDashboard();
   if(id==='tab-emprestados') renderEmprestados();
   if(id==='tab-setores-cfg') renderSetoresCfg();
+}
+
+function fazerLogout(){
+  try {
+    localStorage.removeItem('sf_sessao');
+    localStorage.removeItem('sf_papel');
+  } catch(e) {}
+  window.location.href = '/';
 }
 // Auto-save silently (no timestamp toast) — called on every data change
 function _autoSave(){

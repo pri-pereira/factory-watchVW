@@ -3,6 +3,17 @@ import { useState } from "react";
 import { Factory, Mail, Lock, ArrowRight, UserPlus } from "lucide-react";
 
 export const Route = createFileRoute("/auth/login")({
+  head: () => ({
+    meta: [
+      { title: "VW Gestao Operacional - Login" },
+      { name: "description", content: "Acesso ao Sistema de Controle de Presença VW." },
+    ],
+    links: [
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/favicon.png" },
+    ],
+  }),
   component: LoginPage,
 });
 
