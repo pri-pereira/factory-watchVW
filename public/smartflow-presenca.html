@@ -7569,14 +7569,14 @@ function renderPresencasOperadores(){
     const ini = op.nome.split(' ').slice(0, 2).map(p => p[0] || '').join('').toUpperCase();
     const isEnfermaria = op.status === 'enfermaria';
     return `
-      <div style="background:var(--bg2);border:1px solid ${c.border};border-left:4px solid ${c.dot};border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.03);display:flex;flex-direction:column;gap:8px">
+      <div style="background:${c.bg};border:1px solid ${c.border};border-left:4px solid ${c.dot};border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:8px;transition:all .2s ease">
         
         <!-- Linha Superior: Avatar, Nome, Matrícula e Badge de Status -->
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
           <div style="display:flex;align-items:center;gap:10px;min-width:0">
-            <div style="width:38px;height:38px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--text);flex-shrink:0;position:relative">
+            <div style="width:38px;height:38px;border-radius:10px;background:#FFFFFF;border:1px solid ${c.border};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--text);flex-shrink:0;position:relative;box-shadow:0 1px 2px rgba(0,0,0,.03)">
               ${ini}
-              <span style="position:absolute;bottom:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:${c.dot};border:2px solid var(--bg2)"></span>
+              <span style="position:absolute;bottom:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:${c.dot};border:2px solid ${c.bg}"></span>
             </div>
             <div style="min-width:0">
               <div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${op.nome}">${op.nome}</div>
@@ -7595,7 +7595,7 @@ function renderPresencasOperadores(){
         </div>
 
         <!-- Linha Intermediária: Horário de Batida e Auditoria -->
-        <div style="display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--text3);padding-top:4px;border-top:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--text3);padding-top:4px;border-top:1px solid rgba(0,0,0,.06)">
           <div>
             ${op.batida ? `<strong>Crachá:</strong> <span style="font-family:var(--mono);color:#059669;font-weight:700">${op.batida}</span>` : `<span style="font-style:italic">Aguardando registro...</span>`}
           </div>
@@ -7606,31 +7606,18 @@ function renderPresencasOperadores(){
           ` : ''}
         </div>
 
-        <!-- Linha Inferior: Seletor Rápido e Ação Enfermaria -->
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:2px">
-          <div style="flex:1">
-            <select onchange="_alterarStatusOperadorSmartflow('${op.id}', this.value)" style="
-              width:100%;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
-              padding:4px 6px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--text);cursor:pointer;outline:none"
-            >
-              <option value="presente" ${op.status === 'presente' ? 'selected' : ''}>Presente</option>
-              <option value="ausente" ${op.status === 'ausente' ? 'selected' : ''}>Ausente</option>
-              <option value="pendente" ${op.status === 'pendente' ? 'selected' : ''}>Pendente</option>
-              <option value="enfermaria" ${op.status === 'enfermaria' ? 'selected' : ''}>Enfermaria</option>
-              <option value="afastado" ${op.status === 'afastado' ? 'selected' : ''}>Férias/Licença</option>
-            </select>
-          </div>
-
-          <!-- Botão de Ação Rápida Enfermaria -->
-          <button onclick="_toggleEnfermariaOperador('${op.id}')" style="
-            padding:4px 8px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s;
-            background:${isEnfermaria ? 'rgba(5,150,105,.15)' : 'rgba(2,132,199,.12)'};
-            border:1px solid ${isEnfermaria ? '#059669' : '#0284C7'};
-            color:${isEnfermaria ? '#059669' : '#0284C7'};"
-            title="${isEnfermaria ? 'Retornar operador para Presente' : 'Mover operador para a Enfermaria'}"
+        <!-- Linha Inferior: Seletor Rápido de Status -->
+        <div style="margin-top:2px">
+          <select onchange="_alterarStatusOperadorSmartflow('${op.id}', this.value)" style="
+            width:100%;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+            padding:5px 8px;border-radius:7px;border:1px solid ${c.border};background:#FFFFFF;color:var(--text);cursor:pointer;outline:none;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:all .15s"
           >
-            ${isEnfermaria ? '✓ Voltar Presente' : '⚕ Enfermaria'}
-          </button>
+            <option value="presente" ${op.status === 'presente' ? 'selected' : ''}>Presente</option>
+            <option value="ausente" ${op.status === 'ausente' ? 'selected' : ''}>Falta</option>
+            <option value="pendente" ${op.status === 'pendente' ? 'selected' : ''}>Pendente</option>
+            <option value="enfermaria" ${op.status === 'enfermaria' ? 'selected' : ''}>Enfermaria</option>
+            <option value="afastado" ${op.status === 'afastado' ? 'selected' : ''}>Férias/Licença</option>
+          </select>
         </div>
 
       </div>
