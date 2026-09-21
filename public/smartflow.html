@@ -819,117 +819,312 @@ textarea.obs-inp:focus { outline: none; border-color: var(--accent); box-shadow:
   .cells-nav-sidebar { top: 112px; }
 }
 
-/* Mobile (≤ 640px) */
-@media (max-width: 640px) {
-  /* Header compacto de linha única */
-  .hdr {
-    padding: 8px 14px;
-    min-height: 52px;
-    flex-wrap: nowrap;
-    gap: 8px;
-  }
-  .hdr-logo-badge { width: 32px; height: 32px; }
-  .hdr-smartflow { font-size: 16px; letter-spacing: 1.5px; }
-  .hdr-subtitle { display: none; }
-  .hdr-right { gap: 6px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
-  .hdr-right::-webkit-scrollbar { display: none; }
-  .hdr-user { padding: 4px 8px; }
-  .hdr-user-name { font-size: 11.5px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .date-pill { padding: 4px 8px; }
-  .date-pill label { display: none; }
-  input[type=date] { font-size: 11px; }
-  .hdr-actions { gap: 5px; }
-  .btn-sm { padding: 4px 9px; font-size: 11px; }
+/* ============================================================
+   RESPONSIVIDADE PREMIUM — TABLETS E CELULARES
+============================================================ */
 
-
-
-  /* Tabs ultra compactas fixas */
-  .tabs-bar {
-    padding: 0 8px;
-    top: 52px;
-  }
-  .tab-btn { padding: 10px 12px; font-size: 11.5px; }
-
-  /* Conteúdo da página */
-  .page { padding: 12px 10px; gap: 12px; }
-
-  /* KPI cards: 2 por linha, compactos */
-  .summary-strip {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px; margin-bottom: 6px;
-  }
-  .kpi { padding: 11px 13px; border-radius: 14px; min-height: 72px; }
-  .kpi-label { font-size: 10px; letter-spacing: 0.7px; }
-  .kpi-val { font-size: 24px; }
-
-  /* Faixa de ícones */
-  #ausIconStrip {
-    padding: 10px 12px !important; gap: 12px !important;
-    overflow-x: auto !important; -webkit-overflow-scrolling: touch;
-    border-radius: 14px !important; scrollbar-width: none; flex-wrap: nowrap !important;
-  }
-  #ausIconStrip::-webkit-scrollbar { display: none; }
-
-  /* Cartões operacionais: 1 coluna */
-  .sc-grid { grid-template-columns: 1fr; gap: 12px; }
-  .sc-card { border-radius: 16px; }
-  .sc-card-head { padding: 12px 14px; }
-  .sc-card-name { font-size: 16px; }
-  .sc-card-body { padding: 12px; gap: 12px; }
-
-  /* Quadro do dia: 3 colunas */
-  .ni-group {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; width: 100%;
-  }
-  .ni-wrap {
-    width: 100%; background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 10px;
-    padding: 7px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  }
-  .ni-wrap input[type=number].ni {
-    width: 100%; max-width: 62px; font-size: 18px; font-weight: 800;
-  }
-
-  /* Ausências: 4 por linha */
-  .aus-display {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; width: 100%;
-  }
-  .aus-display > div[style*="width:1px"] { display: none !important; }
-  .aus-item {
-    width: 100%; min-width: 0; background: #F8FAFC; border: 1px solid #E2E8F0;
-    border-radius: 9px; padding: 7px 2px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-  }
-  .aus-num { font-size: 17px; line-height: 1.1; margin-bottom: 2px; }
-  .aus-lbl2 { font-size: 9.5px; letter-spacing: 0.1px; }
-
-  /* Saldo */
-  .saldo-row { padding: 9px 12px; border-radius: 10px; }
-  .saldo-lbl { font-size: 11.5px; }
-  .saldo-num { font-size: 17px; }
-
-  /* Dashboard grids */
-  .dash-grid-2 { grid-template-columns: 1fr; gap: 12px; }
-  .rem-grid { grid-template-columns: 1fr; gap: 10px; }
-  .ag-grid { grid-template-columns: 1fr; }
-  .mon-ov-grid { grid-template-columns: 1fr; }
+/* Proteção global anti-overflow horizontal */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+  position: relative;
+}
+.app-shell {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
 }
 
-/* Telas muito pequenas (≤ 480px) */
-@media (max-width: 480px) {
-  .qa-card { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 12px; }
-  .qa-desc { white-space: normal; }
-  .qa-actions {
-    justify-content: flex-end; width: 100%;
-    border-top: 1px dashed rgba(0,30,80,0.1); padding-top: 8px; gap: 10px;
+/* Tablet e Telas Médias (≤ 900px) */
+@media (max-width: 900px) {
+  .cells-layout-container, .dash-layout-container {
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: stretch !important;
   }
-  .qa-btn-ret { height: 32px; font-size: 12px; padding: 0 12px; }
-  .qa-btn-round { width: 32px; height: 32px; font-size: 18px; }
+  .cells-nav-sidebar, .dash-nav-sidebar {
+    width: 100% !important;
+    position: static !important;
+    top: auto !important;
+    border-radius: 14px !important;
+  }
+  .cells-nav-header, .dash-nav-header { padding: 10px 14px !important; }
+  .cells-menu-list, .dash-menu-list {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    max-height: none !important;
+    padding: 8px 10px !important;
+    gap: 6px !important;
+    -webkit-overflow-scrolling: touch !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+  }
+  .cells-menu-list::-webkit-scrollbar, .dash-menu-list::-webkit-scrollbar { display: none !important; }
+  .cell-nav-item, .dash-nav-item {
+    width: auto !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+    padding: 8px 14px !important;
+    font-size: 11.5px !important;
+  }
+  .cells-content-area, .dash-content-area {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
 
-  /* KPI em 3 cols no mais pequeno */
-  .summary-strip { grid-template-columns: repeat(3, 1fr); gap: 5px; }
-  .kpi { padding: 8px 8px; border-radius: 11px; min-height: 60px; }
-  .kpi-label { font-size: 9px; letter-spacing: 0.5px; }
-  .kpi-val { font-size: 20px; }
+/* Tablets menores e Celulares (≤ 768px) */
+@media (max-width: 768px) {
+  .page {
+    padding: 10px 8px !important;
+    gap: 10px !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Header Responsivo */
+  .hdr {
+    padding: 8px 10px !important;
+    min-height: auto !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+  .hdr-brand {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+  .hdr-smartflow {
+    font-size: 17px !important;
+    letter-spacing: 1.2px !important;
+  }
+  .hdr-subtitle {
+    font-size: 9px !important;
+  }
+  .hdr-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 2px !important;
+  }
+  .hdr-right::-webkit-scrollbar { display: none !important; }
+  .hdr-user { padding: 4px 8px !important; flex-shrink: 0 !important; }
+  .hdr-user-name { font-size: 11px !important; max-width: 110px !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap !important; }
+  .date-pill { padding: 4px 8px !important; flex-shrink: 0 !important; }
+  .date-pill label { display: none !important; }
+  input[type=date] { font-size: 11px !important; }
+  .hdr-actions { display: flex !important; align-items: center !important; gap: 4px !important; flex-shrink: 0 !important; }
+  .btn-sm { padding: 4px 8px !important; font-size: 10.5px !important; }
+
+  /* Tabs de Navegação */
+  .tabs-bar {
+    padding: 0 6px !important;
+    top: auto !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .tabs-bar::-webkit-scrollbar { display: none !important; }
+  .tab-btn {
+    padding: 9px 12px !important;
+    font-size: 11.5px !important;
+    min-height: 40px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Gestão Operacional / Presenças */
+  .presencas-container {
+    padding: 4px 2px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .go-topbar {
+    padding: 10px 12px !important;
+    border-radius: 14px !important;
+    gap: 10px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .go-topbar > div:first-child {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .go-topbar > div:first-child > div:first-child h2 {
+    font-size: 16px !important;
+  }
+  .go-topbar > div:first-child > div:first-child p {
+    font-size: 10.5px !important;
+  }
+  
+  /* Linha de Turno e Relógio */
+  .go-topbar > div:first-child > div:nth-child(2),
+  .go-topbar > div:first-child > div:nth-child(3) {
+    display: inline-flex !important;
+  }
+  
+  /* Ações da Gestão Operacional */
+  .go-topbar > div:last-child {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+  .go-topbar > div:last-child button,
+  .go-topbar > div:last-child > div {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .go-topbar > div:last-child > div {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 4px !important;
+  }
+
+  /* KPIs de Presença */
+  #presencas-totais {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+  }
+  #presencas-totais > div {
+    padding: 9px 11px !important;
+    border-radius: 11px !important;
+  }
+  #presencas-totais > div div:nth-child(2) {
+    font-size: 20px !important;
+  }
+
+  /* Navegação de Células */
+  #presencas-celulas-nav {
+    display: flex !important;
+    gap: 6px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 4px !important;
+    white-space: nowrap !important;
+  }
+  #presencas-celulas-nav::-webkit-scrollbar { display: none !important; }
+  #presencas-celulas-nav button {
+    flex-shrink: 0 !important;
+    padding: 5px 10px !important;
+    font-size: 11px !important;
+  }
+
+  /* Cards de Equipes da Célula */
+  #presencas-equipes-cards {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+    margin-bottom: 12px !important;
+  }
+  #presencas-equipes-cards > div {
+    padding: 8px 10px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Barra de Busca e Filtros */
+  .presencas-container > div:nth-child(5) {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding: 10px 10px !important;
+    margin-bottom: 12px !important;
+  }
+  .presencas-container > div:nth-child(5) > div:first-child {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  #presencas-filtro-status {
+    display: flex !important;
+    gap: 5px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 4px !important;
+    width: 100% !important;
+    flex-wrap: nowrap !important;
+  }
+  #presencas-filtro-status::-webkit-scrollbar { display: none !important; }
+  #presencas-filtro-status button {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    padding: 4px 8px !important;
+    font-size: 10.5px !important;
+  }
+  #presencas-contagem-badge {
+    text-align: right !important;
+    font-size: 10.5px !important;
+  }
+
+  /* Grid de Operadores: 1 coluna no celular */
+  #presencas-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  #presencas-grid > div {
+    padding: 11px 12px !important;
+    border-radius: 12px !important;
+  }
+
+  /* Aba Setores no Mobile */
+  .sc-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .sc-card { border-radius: 14px !important; }
+  .sc-card-head { padding: 11px 13px !important; }
+  .sc-card-name { font-size: 15px !important; }
+  .sc-card-body { padding: 11px !important; gap: 10px !important; }
+  
+  .summary-strip {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+  .kpi { padding: 9px 11px !important; border-radius: 12px !important; min-height: 64px !important; }
+  .kpi-label { font-size: 9.5px !important; }
+  .kpi-val { font-size: 20px !important; }
+  
+  .rem-grid { grid-template-columns: 1fr !important; gap: 8px !important; }
+}
+
+/* Telas ultra pequenas (≤ 480px) */
+@media (max-width: 480px) {
+  .hdr-smartflow { font-size: 15px !important; }
+  .go-topbar > div:first-child > div:nth-child(2) {
+    font-size: 11px !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  .go-topbar > div:first-child > div:nth-child(3) {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  #presencas-totais {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+  #presencas-totais > div {
+    padding: 8px 9px !important;
+  }
+  #presencas-totais > div div:nth-child(2) {
+    font-size: 18px !important;
+  }
+  #presencas-equipes-cards {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 5px !important;
+  }
 }
 
 /* Desktop grande (≥ 1200px) */
