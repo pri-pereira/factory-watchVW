@@ -192,17 +192,23 @@ function HomePage() {
         <div
           className="flex items-center justify-center rounded-2xl overflow-hidden shadow-xl"
           style={{
-            width: "80px",
-            height: "80px",
-            background: "radial-gradient(circle at 35% 35%, #1E3A8A 0%, #0F172A 70%, #020617 100%)",
-            border: "1.5px solid rgba(59, 130, 246, 0.45)",
-            boxShadow: "0 0 28px rgba(37, 99, 235, 0.35), inset 0 1px 2px rgba(255,255,255,0.15)",
+            width: "84px",
+            height: "84px",
+            borderRadius: "20px",
+            background: "#001E50",
+            border: "1.5px solid rgba(59, 130, 246, 0.5)",
+            boxShadow: "0 0 30px rgba(37, 99, 235, 0.45), inset 0 1px 2px rgba(255,255,255,0.15)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            overflow: "hidden",
           }}
         >
-          <VwLogoSvg size={54} color="#FFFFFF" />
+          <img
+            src="/logo.png"
+            alt="VW Logo"
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          />
         </div>
         <div style={{ textAlign: "center" }}>
           <h1

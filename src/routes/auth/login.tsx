@@ -33,8 +33,8 @@ function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4 font-sans">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-grid size-16 place-items-center rounded-2xl bg-primary text-primary-foreground mb-4 shadow-lg shadow-primary/20">
-            <Factory className="size-8" strokeWidth={1.75} />
+          <div className="inline-flex size-16 items-center justify-center rounded-2xl overflow-hidden mb-4 shadow-lg shadow-primary/20 border border-border">
+            <img src="/logo.png" alt="VW Logo" className="size-full object-cover" />
           </div>
           <h1 className="font-display text-3xl font-bold uppercase tracking-wide text-foreground">
             Acesso ao Sistema
