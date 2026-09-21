@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -1579,7 +1579,7 @@ function _celulaParaSetor(celula) {
 }
 
 function getPainelCount(s, statusArr, ds) {
-  if (ds !== today()) return 0;
+  if (ds && ds !== getDate() && ds !== today()) return 0;
   try {
     let ops = (typeof _ultimosOperadores !== 'undefined' && Array.isArray(_ultimosOperadores) && _ultimosOperadores.length > 0)
       ? _ultimosOperadores
@@ -1598,7 +1598,8 @@ function countOnDate(s,tipo,ds){ return (agenda[s]||[]).filter(e=>e.tipo===tipo&
 function ausF(s,ds){ return countOnDate(s,'feria',ds); }
 function ausB(s,ds){ return countOnDate(s,'bh',ds); }
 function ausA(s,ds){ return countOnDate(s,'afastamento',ds) + getPainelCount(s, ['afastado'], ds); }
-function ausFalt(s,ds){ return countOnDate(s,'falta',ds) + getPainelCount(s, ['ausente', 'pendente'], ds); }
+function ausFalt(s,ds){ return countOnDate(s,'falta',ds) + getPainelCount(s, ['ausente'], ds); }
+function ausPend(s,ds){ return getPainelCount(s, ['pendente'], ds); }
 function ausEnf(s,ds){ return countOnDate(s,'enfermaria',ds) + getPainelCount(s, ['enfermaria'], ds); }
 function ausOut(s,ds){ return countOnDate(s,'outros',ds); }
 function ausLic(s,ds){ return LICENCA_TIPOS.reduce((tot,t)=>tot+countOnDate(s,t,ds),0); }
@@ -1629,7 +1630,7 @@ function customTotalQtd(s,ds){ return (customCards||[]).reduce((tot,cc)=>tot+cus
 
 function resultado(s,ds){
   const emp=empSaldoSetor(s,ds);
-  return saldo(s,ds)-(quadros[s]?.operacoes||0)+monCob(s)+emp.saldo-enfVoltouQtd(s,ds)-atrasadoQtd(s,ds)-saiuVoltouQtd(s,ds)-liberadoQtd(s,ds)-atestadoQtd(s,ds)-customTotalQtd(s,ds);
+  return saldo(s,ds)-(quadros[s]?.operacoes||0)+monCob(s)+emp.saldo-atrasadoQtd(s,ds)-saiuVoltouQtd(s,ds)-liberadoQtd(s,ds)-atestadoQtd(s,ds)-customTotalQtd(s,ds);
 }
 
 function initDados(){
@@ -1834,7 +1835,7 @@ function renderAusIconStrip(ds){
   const el=document.getElementById('ausIconStrip'); if(!el) return;
   let tF=0,tB=0,tA=0,tFalt=0,tEnf=0,tOut=0,tVoltou=0,tAtrd=0,tSaiu=0,tLib=0,tAtst=0,tLic=0;
   SETORES.forEach(s=>{tF+=ausF(s,ds);tB+=ausB(s,ds);tA+=ausA(s,ds);tFalt+=ausFalt(s,ds);tEnf+=ausEnf(s,ds);tOut+=ausOut(s,ds);tVoltou+=enfVoltouQtd(s,ds);tAtrd+=atrasadoQtd(s,ds);tSaiu+=saiuVoltouQtd(s,ds);tLib+=liberadoQtd(s,ds);tAtst+=atestadoQtd(s,ds);tLic+=ausLic(s,ds);});
-  tEnf=tEnf+tVoltou; // enfVoltou agora é 'foi para enfermaria', soma ao total de enfer.
+  // tEnf ja contem ausEnf(s,ds) em tempo real, sem duplicar com tVoltou
   const rawItems=[
     {label:'férias',   val:tF,    color:'#3B82F6', bg:'rgba(59,130,246,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(59,130,246,.12)" stroke="#3B82F6" stroke-width="1.5"/><path d="M12 6.5C10.62 6.5 9.5 7.62 9.5 9s1.12 2.5 2.5 2.5S14.5 10.38 14.5 9 13.38 6.5 12 6.5zM12 13.5c-2.33 0-7 1.17-7 3.5V18h14v-1c0-2.33-4.67-3.5-7-3.5z" fill="#3B82F6"/></svg>`},
     {label:'bh',       val:tB,    color:'#06B6D4', bg:'rgba(6,182,212,.12)', icon:`<svg viewBox="0 0 24 24" width="36" height="36" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(6,182,212,.12)" stroke="#06B6D4" stroke-width="1.5"/><path d="M12 7v5l4 2.5-.75 1.2L11 13V7h1z" fill="#06B6D4"/><path d="M12 4a8 8 0 100 16A8 8 0 0012 4zm0 14.5a6.5 6.5 0 110-13 6.5 6.5 0 010 13z" fill="#06B6D4"/></svg>`},
@@ -1872,7 +1873,7 @@ function renderSummary(ds){
   const el = document.getElementById('summaryRow');
   if(!el) return;
   let tOp=0,tOps=0,tAus=0,tRes=0;
-  SETORES.forEach(s=>{ tOp+=quadros[s]?.operadores||0; tOps+=quadros[s]?.operacoes||0; tAus+=totalAus(s,ds)+enfVoltouQtd(s,ds)+atrasadoQtd(s,ds)+saiuVoltouQtd(s,ds)+liberadoQtd(s,ds)+atestadoQtd(s,ds)+customTotalQtd(s,ds); tRes+=resultado(s,ds); });
+  SETORES.forEach(s=>{ tOp+=quadros[s]?.operadores||0; tOps+=quadros[s]?.operacoes||0; tAus+=totalAus(s,ds)+atrasadoQtd(s,ds)+saiuVoltouQtd(s,ds)+liberadoQtd(s,ds)+atestadoQtd(s,ds)+customTotalQtd(s,ds); tRes+=resultado(s,ds); });
   const sal=tOp-tAus, cob=totalMonCob(), fora=totalMonFora();
   const sabSt=isSab(ds)?sabStatus(ds):null;
   const empDia=emprestados[ds]||[];
@@ -1985,10 +1986,10 @@ function renderCards(ds){
 
   setoresParaRenderizar.forEach(setor=>{
     const op=quadros[setor]?.operadores||0,ops=quadros[setor]?.operacoes||0;
-    const f=ausF(setor,ds),b=ausB(setor,ds),a=ausA(setor,ds),falt=ausFalt(setor,ds),enf=ausEnf(setor,ds),out=ausOut(setor,ds),lic=ausLic(setor,ds);
+    const f=ausF(setor,ds),b=ausB(setor,ds),a=ausA(setor,ds),falt=ausFalt(setor,ds),pend=(typeof ausPend==='function'?ausPend(setor,ds):0),enf=ausEnf(setor,ds),out=ausOut(setor,ds),lic=ausLic(setor,ds);
     const pres=getPainelCount(setor,['presente'],ds);
     const aus=f+b+a+falt+enf+out+lic,sal=saldo(setor,ds),cob=monCob(setor),fora=monFora(setor),res=resultado(setor,ds);
-    const ausTotal=aus+enfVoltouQtd(setor,ds)+atrasadoQtd(setor,ds)+saiuVoltouQtd(setor,ds)+liberadoQtd(setor,ds)+atestadoQtd(setor,ds)+customTotalQtd(setor,ds); // inclui enf, atrasados, saídas, liberações, atestados e cartões personalizados
+    const ausTotal=aus+atrasadoQtd(setor,ds)+saiuVoltouQtd(setor,ds)+liberadoQtd(setor,ds)+atestadoQtd(setor,ds)+customTotalQtd(setor,ds); // inclui enf, atrasados, saídas, liberações, atestados e cartões personalizados
     const ausReal=a+falt+enf+out; // sem férias e BH
     const emp=empSaldoSetor(setor,ds);
     const mons=monitores[setor]||[];
@@ -2036,7 +2037,8 @@ function renderCards(ds){
             <div class="aus-item"><span class="aus-num c-bh">${b}</span><span class="aus-lbl2">bh</span></div>
             <div class="aus-item"><span class="aus-num c-afas">${a}</span><span class="aus-lbl2">afas.</span></div>
             <div class="aus-item"><span class="aus-num c-falta">${falt}</span><span class="aus-lbl2">falta</span></div>
-            <div class="aus-item"><span class="aus-num" style="color:#14B8A6">${enf+enfVoltouQtd(setor,ds)}</span><span class="aus-lbl2">enfer.</span></div>
+            ${pend > 0 ? `<div class="aus-item"><span class="aus-num" style="color:#D97706">${pend}</span><span class="aus-lbl2">pend.</span></div>` : ''}
+            <div class="aus-item"><span class="aus-num" style="color:#14B8A6">${enf}</span><span class="aus-lbl2">enfer.</span></div>
             <div class="aus-item"><span class="aus-num" style="color:#94A3B8">${out}</span><span class="aus-lbl2">outros</span></div>
             <div class="aus-item"><span class="aus-num" style="color:#C084FC">${ausLic(setor,ds)}</span><span class="aus-lbl2">licenças</span></div>
             <div style="width:1px;height:32px;background:#E2E6EE;flex-shrink:0;align-self:center"></div>
@@ -2066,7 +2068,7 @@ function renderCards(ds){
           </div>
           <div class="qa-actions">
             <button onclick="setEnfVoltou('${setor}','${ds}',Math.max(0,(enfVoltouQtd('${setor}','${ds}')||0)-1))" class="qa-btn-ret">↩ Retornou</button>
-            <span id="enfv-${key}" class="qa-count" style="color:#DC2626">${enfVoltouQtd(setor,ds)}</span>
+            <span id="enfv-${key}" class="qa-count" style="color:#DC2626">${enf}</span>
             <button onclick="incrementarFoiEnfermaria('${setor}','${ds}')" class="qa-btn-round" style="color:#DC2626;border-color:rgba(239,68,68,.4)">+</button>
           </div>
         </div>
@@ -5900,7 +5902,7 @@ function _salvarESincronizarOperadores(){
     } catch(e){}
   }
 
-  if(typeof _syncPainelToCounters === 'function' && getDate() === today()){
+  if(typeof _syncPainelToCounters === 'function'){
     _syncPainelToCounters();
     if(typeof renderSetores === 'function') renderSetores();
     if(typeof renderDashboard === 'function') renderDashboard();
