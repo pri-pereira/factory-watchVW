@@ -1898,12 +1898,12 @@ button, select, input {
 <nav class="tabs-bar">
   <button class="tab-btn active" id="tab-presencas-btn" onclick="showTab('tab-presencas',this); renderPresencasOperadores()">Presenças</button>
   <button class="tab-btn" id="tab-setores-btn" onclick="showTab('tab-setores',this)">Setores</button>
-  <button class="tab-btn" onclick="showTab('tab-monitores',this)">Monitores</button>
+  
   <button class="tab-btn" onclick="showTab('tab-agenda',this)">Agenda</button>
   <button class="tab-btn" onclick="showTab('tab-dashboard',this)">Dashboard</button>
   <button class="tab-btn" onclick="showTab('tab-obs',this)">Observações</button>
   <button class="tab-btn" onclick="showTab('tab-emprestados',this)">Emprestados</button>
-  <button class="tab-btn" onclick="showTab('tab-setores-cfg',this)">Config. Setores</button>
+  <button class="tab-btn" id="tab-setores-cfg-btn" onclick="showTab('tab-setores-cfg',this)">Conf. Setores</button>
 </nav>
 
 <!-- =================== GESTÃO OPERACIONAL / PRESENÇAS =================== -->
@@ -2041,42 +2041,6 @@ button, select, input {
       </div>
     </div>
   </div>
-</div>
-
-<!-- ===================== MONITORES ===================== -->
-<div id="tab-monitores" class="page">
-  <div class="summary-strip" id="monSummaryRow"></div>
-
-  <!-- LÍDERES POR SETOR -->
-  <div class="card" style="max-width:700px">
-    <div class="card-head"><span class="card-title"> Líderes por setor</span></div>
-    <div class="card-body" style="display:flex;flex-direction:column;gap:12px">
-      <div style="font-size:12px;color:var(--text3)">O líder cadastrado aparece no Quadro do Dia de cada setor.</div>
-      <div id="lideresGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px"></div>
-    </div>
-  </div>
-
-  <!-- FORM GLOBAL: adicionar monitor a qualquer setor -->
-  <div class="card" style="max-width:600px">
-    <div class="card-head"><span class="card-title">Adicionar monitor ao cadastro</span></div>
-    <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
-      <div style="font-size:12px;color:var(--text3)">O monitor é salvo no cadastro permanente e aparece automaticamente em Setores para todos os dias.</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
-        <div class="ff" style="flex:1;min-width:140px">
-          <label>Setor</label>
-          <select id="novoMonSetor" class="fi-inp" style="width:100%"></select>
-        </div>
-        <div class="ff" style="flex:2;min-width:160px">
-          <label>Nome / Matrícula</label>
-          <input type="text" id="novoMonNome" class="fi-inp" placeholder="Ex: João Silva / 12345" style="width:100%" onkeydown="if(event.key==='Enter') addMonFromAba()">
-        </div>
-        <button class="btn btn-accent" onclick="addMonFromAba()" style="align-self:flex-end;padding:8px 18px;font-size:13px">+ Adicionar</button>
-      </div>
-      <div id="novoMonMsg" style="font-size:12px;display:none"></div>
-    </div>
-  </div>
-
-  <div class="mon-ov-grid" id="monOverview"></div>
 </div>
 
 <!-- ===================== AGENDA ===================== -->
@@ -2364,36 +2328,130 @@ button, select, input {
   </div>
 </div>
 
-<!-- ===================== SETORES CONFIG ===================== -->
+<!-- ===================== CONF. SETORES (SETORES, LÍDERES & MONITORES UNIFICADOS) ===================== -->
 <div id="tab-setores-cfg" class="page">
-  <div class="card" style="max-width:540px">
-    <div class="card-head">
-      <span class="card-title">Gerenciar setores</span>
-      <span style="font-size:11px;color:var(--text3)" id="setores-count"></span>
+  <div style="max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:16px;width:100%">
+    
+    <!-- Topo da Aba com Título e Sub-navegação / Filtros -->
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <h2 style="font-size:18px;font-weight:800;color:var(--text);font-family:var(--font-display);letter-spacing:.03em;text-transform:uppercase;margin:0">Conf. Setores & Monitores</h2>
+          <span style="font-size:11px;padding:3px 8px;border-radius:20px;background:rgba(30,58,138,.12);color:var(--accent);border:1px solid rgba(30,58,138,.2);font-weight:700">Gestão Integrada</span>
+        </div>
+        <p style="font-size:12.5px;color:var(--text3);margin:4px 0 0 0">Estrutura de células industriais, designação de líderes e cadastro de monitores da fábrica.</p>
+      </div>
+      <!-- Filtros/Pills internos -->
+      <div class="cfg-pills" style="display:flex;gap:6px;background:var(--bg3);padding:4px;border-radius:var(--r-sm);border:1px solid var(--border)">
+        <button type="button" class="btn btn-sm cfg-pill-btn active" id="pill-cfg-tudo" onclick="filtrarCfgView('tudo', this)">Todos</button>
+        <button type="button" class="btn btn-sm cfg-pill-btn" id="pill-cfg-setores" onclick="filtrarCfgView('setores', this)">🏢 Setores</button>
+        <button type="button" class="btn btn-sm cfg-pill-btn" id="pill-cfg-lideres" onclick="filtrarCfgView('lideres', this)">👔 Líderes</button>
+        <button type="button" class="btn btn-sm cfg-pill-btn" id="pill-cfg-monitores" onclick="filtrarCfgView('monitores', this)">👥 Monitores</button>
+      </div>
     </div>
-    <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
-      <!-- ADD FORM -->
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:12px;font-weight:600;color:var(--text2)">Adicionar novo setor</div>
-        <div style="display:flex;gap:8px;align-items:flex-end">
-          <div class="ff" style="flex:1">
-            <label>Nome do setor</label>
-            <input type="text" id="novoSetorInp" class="fi-inp" placeholder="Ex: Montagem Final" style="width:100%" onkeydown="if(event.key==='Enter') addSetor()">
+
+    <!-- Faixa de Resumo Unificada (KPIs de Setores e Monitores) -->
+    <div class="summary-strip" id="monSummaryRow" style="margin:0"></div>
+
+    <!-- Grid de Gestão em 2 Colunas -->
+    <div class="cfg-grid-container" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(360px, 1fr));gap:16px;align-items:start">
+      
+      <!-- BLOCO 1: GERENCIAR SETORES INDUSTRIAIS -->
+      <div class="card cfg-section-block" id="cfg-block-setores">
+        <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
+          <span class="card-title" style="display:flex;align-items:center;gap:6px">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Estrutura de Setores Ativos
+          </span>
+          <span style="font-size:11px;font-weight:700;color:var(--text2);background:var(--bg3);padding:2px 8px;border-radius:12px;border:1px solid var(--border)" id="setores-count"></span>
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+          <!-- FORM ADICIONAR SETOR -->
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:12px;font-weight:600;color:var(--text2)">Adicionar novo setor industrial</div>
+            <div style="display:flex;gap:8px;align-items:flex-end">
+              <div class="ff" style="flex:1">
+                <label>Nome do setor</label>
+                <input type="text" id="novoSetorInp" class="fi-inp" placeholder="Ex: Montagem Final" style="width:100%" onkeydown="if(event.key==='Enter') addSetor()">
+              </div>
+              <button class="btn btn-accent" onclick="addSetor()">Adicionar</button>
+            </div>
           </div>
-          <button class="btn btn-accent" onclick="addSetor()">Adicionar</button>
+
+          <!-- LISTA DE SETORES ATIVOS -->
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">Ordem das Células no Sistema</div>
+            <div id="setoresCfgList" style="display:flex;flex-direction:column;gap:6px"></div>
+          </div>
+
+          <div style="font-size:11px;color:var(--text3);padding:8px 10px;background:var(--bg3);border-radius:var(--r-sm);border:1px solid var(--border)">
+            ⚠️ <strong>Atenção:</strong> Ao remover um setor, os dados de agenda, quadro e monitores associados a ele serão perdidos. Esta ação não pode ser desfeita.
+          </div>
         </div>
       </div>
-      <!-- LIST -->
-      <div>
-        <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px">Setores ativos</div>
-        <div id="setoresCfgList" style="display:flex;flex-direction:column;gap:5px"></div>
-      </div>
-      <div style="font-size:11px;color:var(--text3);padding:8px;background:var(--bg3);border-radius:var(--r-sm);border:1px solid var(--border)">
-        Atenção: Ao remover um setor, os dados de agenda, quadro e monitores associados a ele serão perdidos. Esta ação não pode ser desfeita.
+
+      <!-- BLOCO 2: LÍDERES POR SETOR & CADASTRO DE MONITORES -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+        
+        <!-- LÍDERES POR SETOR -->
+        <div class="card cfg-section-block" id="cfg-block-lideres">
+          <div class="card-head">
+            <span class="card-title" style="display:flex;align-items:center;gap:6px">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Líderes por Setor
+            </span>
+          </div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:12px;color:var(--text3)">O líder cadastrado aparece automaticamente no Quadro do Dia de cada setor.</div>
+            <div id="lideresGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px"></div>
+          </div>
+        </div>
+
+        <!-- FORM ADICIONAR MONITOR -->
+        <div class="card cfg-section-block" id="cfg-block-novomonitor">
+          <div class="card-head">
+            <span class="card-title" style="display:flex;align-items:center;gap:6px">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              Adicionar Monitor ao Cadastro
+            </span>
+          </div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:12px;color:var(--text3)">O monitor é salvo no cadastro permanente e fica disponível para cobrir operações ou linhas.</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+              <div class="ff" style="flex:1;min-width:140px">
+                <label>Setor</label>
+                <select id="novoMonSetor" class="fi-inp" style="width:100%"></select>
+              </div>
+              <div class="ff" style="flex:2;min-width:160px">
+                <label>Nome / Matrícula</label>
+                <input type="text" id="novoMonNome" class="fi-inp" placeholder="Ex: João Silva / 12345" style="width:100%" onkeydown="if(event.key==='Enter') addMonFromAba()">
+              </div>
+              <button class="btn btn-accent" onclick="addMonFromAba()" style="align-self:flex-end;padding:8px 18px;font-size:13px">+ Adicionar</button>
+            </div>
+            <div id="novoMonMsg" style="font-size:12px;display:none"></div>
+          </div>
+        </div>
+
       </div>
     </div>
+
+    <!-- BLOCO 3: QUADRO GERAL DE MONITORES POR SETOR -->
+    <div class="card cfg-section-block" id="cfg-block-monitores">
+      <div class="card-head">
+        <span class="card-title" style="display:flex;align-items:center;gap:6px">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Monitores Cadastrados por Setor
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="mon-ov-grid" id="monOverview"></div>
+      </div>
+    </div>
+
   </div>
 </div>
+<!-- Fallback invisível para compatibilidade com seletores legados -->
+<div id="tab-monitores" style="display:none"></div>
 <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importarDados(this)">
 
 </div><!-- /app-shell -->
@@ -5645,6 +5703,47 @@ function renderEmprestados(){
 /* ============================================================
    PERSIST
 ============================================================ */
+
+function filtrarCfgView(tipo, btn) {
+  document.querySelectorAll('.cfg-pill-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = '';
+    b.style.color = 'var(--text2)';
+  });
+  if (btn) {
+    btn.classList.add('active');
+    btn.style.background = 'var(--accent)';
+    btn.style.color = '#ffffff';
+  }
+  
+  const bSetores = document.getElementById('cfg-block-setores');
+  const bLideres = document.getElementById('cfg-block-lideres');
+  const bNovoMon = document.getElementById('cfg-block-novomonitor');
+  const bMonitores = document.getElementById('cfg-block-monitores');
+  
+  if (tipo === 'tudo') {
+    if(bSetores) bSetores.style.display = '';
+    if(bLideres) bLideres.style.display = '';
+    if(bNovoMon) bNovoMon.style.display = '';
+    if(bMonitores) bMonitores.style.display = '';
+  } else if (tipo === 'setores') {
+    if(bSetores) bSetores.style.display = '';
+    if(bLideres) bLideres.style.display = 'none';
+    if(bNovoMon) bNovoMon.style.display = 'none';
+    if(bMonitores) bMonitores.style.display = 'none';
+  } else if (tipo === 'lideres') {
+    if(bSetores) bSetores.style.display = 'none';
+    if(bLideres) bLideres.style.display = '';
+    if(bNovoMon) bNovoMon.style.display = 'none';
+    if(bMonitores) bMonitores.style.display = 'none';
+  } else if (tipo === 'monitores') {
+    if(bSetores) bSetores.style.display = 'none';
+    if(bLideres) bLideres.style.display = 'none';
+    if(bNovoMon) bNovoMon.style.display = '';
+    if(bMonitores) bMonitores.style.display = '';
+  }
+}
+
 function showTab(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
@@ -5655,7 +5754,7 @@ function showTab(id,el){
   if(id==='tab-monitores') renderMonitores();
   if(id==='tab-dashboard') renderDashboard();
   if(id==='tab-emprestados') renderEmprestados();
-  if(id==='tab-setores-cfg') renderSetoresCfg();
+  if(id==='tab-setores-cfg') { renderSetoresCfg(); renderMonitores(); renderLideres(); }
 }
 
 function fazerLogout(){
