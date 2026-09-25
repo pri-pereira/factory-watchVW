@@ -3390,17 +3390,12 @@ function renderRem(ds){
 let _upCampoRenderTimer=null;
 let _renderSetoresTimer=null;
 
-function _debouncedRenderSetores(){
+function _debouncedRenderSetores(delay){
   clearTimeout(_renderSetoresTimer);
-  _renderSetoresTimer=setTimeout(()=>{
-    const activeEl=document.activeElement;
-    const isTyping=activeEl&&(activeEl.tagName==='INPUT'||activeEl.tagName==='TEXTAREA'||activeEl.tagName==='SELECT');
-    if(!isTyping){
-      renderSetores(); renderDashboard();
-    } else {
-      _renderSetoresTimer=setTimeout(()=>{ renderSetores(); renderDashboard(); },1200);
-    }
-  }, 900);
+  var ms = typeof delay === 'number' ? delay : 300;
+  _renderSetoresTimer=setTimeout(function(){
+    try { renderSetores(); renderDashboard(); } catch(e){ console.error('[debounced] render error:', e); }
+  }, ms);
 }
 
 function upCampo(setor,campo,val){
@@ -3546,7 +3541,7 @@ function abrirNovoCartao(){
     localStorage.setItem('vw_custom_cards',JSON.stringify(customCards));
     _autoSave();
     overlay.remove();
-    renderSetores();
+    _debouncedRenderSetores(100);
   };
 }
 function excluirCartaoPersonalizado(id){
@@ -3556,7 +3551,7 @@ function excluirCartaoPersonalizado(id){
   customCards=customCards.filter(c=>c.id!==id);
   localStorage.setItem('vw_custom_cards',JSON.stringify(customCards));
   _autoSave();
-  renderSetores();
+  _debouncedRenderSetores(100);
 }
 
 /* ============================================================
@@ -3609,7 +3604,7 @@ function setEnfVoltou(setor, ds, val){
 
   enfVoltou[setor+'||'+ds] = v;
   _autoSave();
-  renderSetores();
+  _debouncedRenderSetores(150);
 }
 function incrementarFoiEnfermaria(setor, ds){
   _changeOperatorStatus(setor, ['presente'], 'enfermaria', 'Foi para enfermaria');
@@ -3617,7 +3612,7 @@ function incrementarFoiEnfermaria(setor, ds){
   enfTotalFoi[setor+'||'+ds] = (enfTotalFoiQtd(setor,ds)||0)+1;
   localStorage.setItem('vw_enf_total_foi',JSON.stringify(enfTotalFoi));
   _autoSave();
-  renderSetores();
+  _debouncedRenderSetores(150);
 }
 
 /* ============================================================
@@ -3626,7 +3621,7 @@ function incrementarFoiEnfermaria(setor, ds){
 function setLider(setor, val){
   lideres[setor] = val.trim();
   _autoSave();
-  renderSetores(); // atualiza cards
+  _debouncedRenderSetores(600);
 }
 
 function renderLideres(){
@@ -3642,7 +3637,7 @@ function renderLideres(){
           style="flex:1;font-family:var(--font);font-size:12px;padding:6px 9px;border-radius:var(--r-sm);border:1px solid var(--border2);background:var(--bg);color:var(--text);outline:none"
           oninput="setLider('${s}', this.value)"
           onkeydown="if(event.key==='Enter') this.blur()">
-        ${lider ? `<span style="font-size:14px;cursor:pointer" title="Limpar" onclick="lideres['${s}']='';document.getElementById('lider-${key}').value='';_autoSave();renderSetores();">×</span>` : ''}
+        ${lider ? `<span style="font-size:14px;cursor:pointer" title="Limpar" onclick="lideres['${s}']='';document.getElementById('lider-${key}').value='';_autoSave();_debouncedRenderSetores(100);">×</span>` : ''}
       </div>
       ${lider ? `<div style="font-size:11px;color:#F59E0B;font-weight:600">Líder: ${lider}</div>` : ''}
     </div>`;
@@ -3671,16 +3666,16 @@ function addMon(setor){
   monitores[setor].push({id,nome,status,obs});
   document.getElementById('mn-'+key).value=''; document.getElementById('mo-'+key).value='';
   salvarMon();
-  toggleMF('mf-'+key); renderSetores(); renderMonitores(); renderDashboard();
+  toggleMF('mf-'+key); _debouncedRenderSetores(100); renderMonitores();
 }
 
 function delMon(setor,id){
   // Remove from both daily status and permanent base
   monitores[setor]=(monitores[setor]||[]).filter(m=>m.id!==id);
   monBase[setor]=(monBase[setor]||[]).filter(m=>m.id!==id);
-  salvarMon(); renderSetores(); renderMonitores(); renderDashboard();
+  salvarMon(); _debouncedRenderSetores(100); renderMonitores();
 }
-function chMonSt(setor,id,val){ const m=(monitores[setor]||[]).find(x=>x.id===id); if(m){ const stAnt = m.status; m.status=val; registrarAuditoria('Monitores', `Monitor ${m.nome} (${setor})`, stAnt, val); salvarMon(); renderSetores(); renderMonitores(); renderDashboard();} }
+function chMonSt(setor,id,val){ const m=(monitores[setor]||[]).find(x=>x.id===id); if(m){ const stAnt = m.status; m.status=val; registrarAuditoria('Monitores', `Monitor ${m.nome} (${setor})`, stAnt, val); salvarMon(); _debouncedRenderSetores(200); renderMonitores();} }
 function chMonObs(setor,id,val){ const m=(monitores[setor]||[]).find(x=>x.id===id); if(m){ m.obs=val; salvarMon(); } }
 
 function renderMonitores(){
@@ -3757,7 +3752,7 @@ function addMonFromAba(){
   document.getElementById('novoMonNome').value='';
   _showMonMsg(`"${nome}" adicionado ao setor ${setor}.`,'var(--ok)');
   renderMonitores();
-  renderSetores(); // atualiza Setores imediatamente
+  _debouncedRenderSetores(100); // atualiza Setores
 }
 
 function delMonFromAba(setor,id){
@@ -3768,7 +3763,7 @@ function delMonFromAba(setor,id){
   monitores[setor]=(monitores[setor]||[]).filter(m=>m.id!==id);
   salvarMon();
   renderMonitores();
-  renderSetores();
+  _debouncedRenderSetores(100);
 }
 
 function _showMonMsg(txt, cor){
@@ -7160,8 +7155,7 @@ function _salvarESincronizarOperadores(){
 
   if(typeof _syncPainelToCounters === 'function'){
     _syncPainelToCounters();
-    if(typeof renderSetores === 'function') renderSetores();
-    if(typeof renderDashboard === 'function') renderDashboard();
+    if(typeof _debouncedRenderSetores === 'function') _debouncedRenderSetores(200);
   }
 
   renderPresencasOperadores();
