@@ -1745,6 +1745,11 @@ button, select, input {
       <input type="date" id="dataAtual">
     </div>
     <div class="hdr-actions">
+      <button class="btn btn-sm" onclick="_abrirModalAuditoriaPresenca()" style="background:rgba(30,58,138,0.2);border-color:rgba(56,189,248,0.35);color:#7DD3FC;font-weight:700;display:inline-flex;align-items:center;gap:6px" title="Histórico de Auditoria Geral (Todas as Abas)">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+        Auditoria
+        <span id="hdrAuditBadge" style="display:none;background:#2563EB;color:#fff;font-size:9.5px;font-weight:900;border-radius:999px;padding:1px 5px">0</span>
+      </button>
       <button class="btn btn-db btn-sm" id="btnStatusBanco" onclick="abrirModalBanco()" title="Banco de Dados & Sincronização">
         <span class="db-status-dot offline" id="dbStatusDot"></span>
         <span id="dbStatusText">Banco</span>
@@ -2588,7 +2593,7 @@ let _buscaFiltroPresencas = "";
 let _turnoSelecionadoId = "1";
 let _logsAuditoriaPresenca = [];
 
-let quadros={}, agenda={}, monitores={}, monBase={}, sabados={}, emprestados={}, lideres={}, enfVoltou={}, atrasados={}, saiuVoltou={}, liberados={}, atestados={}, feriasDia={}, customCards=[], customCounts={}, enfTotalFoi={}; // saiuVoltou, liberados, atestados, customCounts, enfTotalFoi: {'SETOR||YYYY-MM-DD': n}
+let quadros={}, agenda={}, monitores={}, monBase={}, sabados={}, emprestados={}, lideres={}, enfVoltou={}, atrasados={}, saiuVoltou={}, liberados={}, atestados={}, feriasDia={}, apoioCopa={}, customCards=[], customCounts={}, enfTotalFoi={}; // saiuVoltou, liberados, atestados, customCounts, enfTotalFoi: {'SETOR||YYYY-MM-DD': n}
 // monitores  = {setor:[{id,nome,status,obs}]} — status per day (loaded/saved per date)
 // monBase    = {setor:[{id,nome}]}             — permanent roster (names never wiped)
 let pieInst=null,saldoInst=null,monInst=null,prevInst=null,histInst=null;
@@ -2679,6 +2684,74 @@ function getPainelFaltasAvulsas(s, ds) {
   } catch(e) { return 0; }
 }
 
+
+/* ============================================================
+   SISTEMA DE AUDITORIA UNIFICADO — TODAS AS ABAS
+============================================================ */
+function registrarAuditoria(aba, elemento, statusAnterior, statusNovo){
+  const agora = new Date();
+  const horaStr = `${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}:${String(agora.getSeconds()).padStart(2,'0')}`;
+  
+  let responsavel = 'Gestor';
+  let cargo = 'Líder / Supervisor';
+  try {
+    const rawSessao = localStorage.getItem('sf_sessao');
+    if(rawSessao){
+      const sessao = JSON.parse(rawSessao);
+      if(sessao.nome) responsavel = sessao.nome;
+      if(sessao.cargo) cargo = sessao.cargo;
+    }
+  } catch(e){}
+
+  const entrada = {
+    id: `audit-${Date.now()}-${Math.random().toString(36).substring(2,6)}`,
+    aba: aba || 'Geral',
+    responsavel,
+    cargo,
+    opNome: elemento,
+    statusAnterior: String(statusAnterior ?? '—'),
+    statusNovo: String(statusNovo ?? '—'),
+    timestamp: horaStr,
+    timestampFull: Date.now(),
+    data: agora.toLocaleDateString('pt-BR')
+  };
+
+  _logsAuditoriaPresenca.unshift(entrada);
+  if(_logsAuditoriaPresenca.length > 250) _logsAuditoriaPresenca.pop();
+  try { 
+    localStorage.setItem('sf_auditoria_logs', JSON.stringify(_logsAuditoriaPresenca));
+    localStorage.setItem('vw_auditoria', JSON.stringify(_logsAuditoriaPresenca));
+    localStorage.setItem('sf_auditoria', JSON.stringify(_logsAuditoriaPresenca));
+  } catch(e){}
+
+  if(typeof _db !== 'undefined' && _db){
+    try {
+      _db.ref('smartflow/dados/vw_auditoria').set(JSON.stringify(_logsAuditoriaPresenca.slice(0, 50)));
+    } catch(e){}
+  }
+
+  _atualizarBadgeAuditoria();
+  return responsavel;
+}
+
+function apoioCopaQtd(s, ds){ return (apoioCopa && apoioCopa[s+'||'+ds]) || 0; }
+
+function setApoioCopa(setor, ds, val){
+  const v = Math.max(0, parseInt(val)||0);
+  const oldV = apoioCopaQtd(setor, ds)||0;
+  if(v > oldV) {
+    if(typeof _changeOperatorStatus === 'function') _changeOperatorStatus(setor, ['presente'], 'ausente', 'Apoio Operacional / Copa');
+  } else if (v < oldV) {
+    if(typeof _changeOperatorStatus === 'function') _changeOperatorStatus(setor, ['ausente'], 'presente', '', 'Apoio Operacional / Copa');
+  }
+  apoioCopa[setor+'||'+ds] = v;
+  localStorage.setItem('vw_apoio_copa', JSON.stringify(apoioCopa));
+  registrarAuditoria('Setores do dia', `Apoio Operacional / Copa em ${setor}`, `${oldV}`, `${v}`);
+  _autoSave();
+  if(typeof _debouncedRenderSetores === 'function') _debouncedRenderSetores();
+  else if(typeof renderSetores === 'function') renderSetores();
+}
+
 function feriasDiaQtd(s, ds){ return feriasDia[s+'||'+ds] || 0; }
 function enfVoltouQtd(s,ds){ return enfVoltou[s+'||'+ds]||0; }
 function enfTotalFoiQtd(s,ds){ return enfTotalFoi[s+'||'+ds]||0; }
@@ -2717,13 +2790,13 @@ function ausLic(s,ds){ return LICENCA_TIPOS.reduce((tot,t)=>tot+countOnDate(s,t,
 // Total consolidado de ausências do setor no dia (sem duplicações)
 function totalAus(s,ds){
   return ausF(s,ds) + ausB(s,ds) + ausA(s,ds) + ausFalt(s,ds) + ausPend(s,ds) + ausEnf(s,ds) + ausOut(s,ds) + ausLic(s,ds)
-    + atestadoQtd(s,ds) + liberadoQtd(s,ds) + saiuVoltouQtd(s,ds) + atrasadoQtd(s,ds) + _customOutrosQtd(s,ds);
+    + atestadoQtd(s,ds) + liberadoQtd(s,ds) + saiuVoltouQtd(s,ds) + atrasadoQtd(s,ds) + apoioCopaQtd(s,ds) + _customOutrosQtd(s,ds);
 }
 
 // Absenteísmo / ausências reais sem Férias e sem BH (para semáforo)
 function ausRealQtd(s,ds){
   return ausA(s,ds) + ausFalt(s,ds) + ausPend(s,ds) + ausEnf(s,ds) + ausOut(s,ds) + ausLic(s,ds)
-    + atestadoQtd(s,ds) + liberadoQtd(s,ds) + saiuVoltouQtd(s,ds) + atrasadoQtd(s,ds) + _customOutrosQtd(s,ds);
+    + atestadoQtd(s,ds) + liberadoQtd(s,ds) + saiuVoltouQtd(s,ds) + atrasadoQtd(s,ds) + apoioCopaQtd(s,ds) + _customOutrosQtd(s,ds);
 }
 
 function monCob(s){ return (monitores[s]||[]).filter(m=>m.status==='cobrindo').length; }
@@ -3361,6 +3434,7 @@ function setSaiuVoltou(setor, ds, val){
   else if (v < oldV) _changeOperatorStatus(setor, ['ausente'], 'presente', '', 'Saída temporária');
   saiuVoltou[setor+'||'+ds] = v;
   localStorage.setItem('vw_saiu_voltou',JSON.stringify(saiuVoltou));
+  localStorage.setItem('vw_apoio_copa',JSON.stringify(apoioCopa));
   _autoSave();
   _debouncedRenderSetores();
 }
@@ -3606,7 +3680,7 @@ function delMon(setor,id){
   monBase[setor]=(monBase[setor]||[]).filter(m=>m.id!==id);
   salvarMon(); renderSetores(); renderMonitores(); renderDashboard();
 }
-function chMonSt(setor,id,val){ const m=(monitores[setor]||[]).find(x=>x.id===id); if(m){m.status=val; salvarMon(); renderSetores(); renderMonitores(); renderDashboard();} }
+function chMonSt(setor,id,val){ const m=(monitores[setor]||[]).find(x=>x.id===id); if(m){ const stAnt = m.status; m.status=val; registrarAuditoria('Monitores', `Monitor ${m.nome} (${setor})`, stAnt, val); salvarMon(); renderSetores(); renderMonitores(); renderDashboard();} }
 function chMonObs(setor,id,val){ const m=(monitores[setor]||[]).find(x=>x.id===id); if(m){ m.obs=val; salvarMon(); } }
 
 function renderMonitores(){
@@ -3760,7 +3834,22 @@ function renderAgenda(){
         </div>
       </div>
       <div class="entry-list">${entries.length?entries.map(e=>`
-        <div class="ag-entry"><div class="ag-entry-left"><div class="tipo-dot" style="background:${TIPO_COLOR[e.tipo]}"></div><span class="fw6" style="font-size:12px">${TIPO_LABEL[e.tipo]}</span><span class="ag-dates">${fmtDate(e.inicio)} → ${fmtDate(e.fim)}</span></div><div style="display:flex;gap:4px"><button class="btn-x" onclick="editEntry('${setor}','${e.id}')" title="Editar" style="color:var(--text3);font-size:11px;font-weight:700">EDIT</button><button class="btn-x" onclick="delEntry('${setor}','${e.id}')" title="Excluir">×</button></div></div>`).join('')
+        <div class="ag-entry" style="padding:8px 10px;gap:8px">
+          <div class="ag-entry-left" style="gap:9px;min-width:0;flex:1">
+            <div class="tipo-dot" style="background:${TIPO_COLOR[e.tipo]||'#6B7280'};margin-top:2px"></div>
+            <div style="min-width:0;flex:1">
+              <div style="font-weight:700;font-size:12.5px;color:var(--text);display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                <span>${e.nome || 'Colaborador não identificado'}</span>
+                ${e.registro ? `<span style="font-size:10.5px;font-family:var(--mono);color:#0284C7;background:rgba(2,132,199,.1);padding:1px 6px;border-radius:4px;font-weight:700">RE: ${e.registro}</span>` : ''}
+              </div>
+              <div style="font-size:11px;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                <span class="fw6" style="color:${TIPO_COLOR[e.tipo]||'#374151'}">${TIPO_LABEL[e.tipo]||e.tipo}</span>
+                <span>&bull;</span>
+                <span class="ag-dates">${fmtDate(e.inicio)} → ${fmtDate(e.fim)}</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:4px;flex-shrink:0"><button class="btn-x" onclick="editEntry('${setor}','${e.id}')" title="Editar" style="color:var(--text3);font-size:11px;font-weight:700">EDIT</button><button class="btn-x" onclick="delEntry('${setor}','${e.id}')" title="Excluir">×</button></div></div>`).join('')
       :`<div class="empty-msg">Nenhuma ausência registrada</div>`}
       </div>`;
     g.appendChild(div);
@@ -3820,7 +3909,18 @@ function addEntry(setor){
   _autoSave();
   renderAgenda(); renderSetores(); renderDashboard();
 }
-function delEntry(setor,id){ agenda[setor]=(agenda[setor]||[]).filter(e=>e.id!==id); localStorage.setItem('vw_agenda_global',JSON.stringify(agenda)); _autoSave(); renderAgenda(); renderSetores(); renderDashboard(); }
+function delEntry(setor,id){
+  const item = (agenda[setor]||[]).find(e=>e.id===id);
+  if(item){
+    const descFunc = (item.nome ? item.nome : 'Colaborador') + (item.registro ? ' (RE: ' + item.registro + ')' : '');
+    const rotuloTipo = TIPO_LABEL[item.tipo] || item.tipo;
+    registrarAuditoria('Agenda', `Ausência Excluída: ${rotuloTipo} - ${descFunc} [${setor}]`, `${fmtDate(item.inicio)} a ${fmtDate(item.fim)}`, 'Excluído');
+  }
+  agenda[setor]=(agenda[setor]||[]).filter(e=>e.id!==id);
+  localStorage.setItem('vw_agenda_global',JSON.stringify(agenda));
+  _autoSave();
+  renderAgenda(); renderSetores(); renderDashboard();
+}
 
 /* ============================================================
    SÁBADOS
@@ -5502,6 +5602,7 @@ function _autoSave(){
   localStorage.setItem('vw_mon_base',JSON.stringify(monBase));
   localStorage.setItem('vw_lideres',JSON.stringify(lideres));
   localStorage.setItem('vw_enf_voltou',JSON.stringify(enfVoltou));
+  localStorage.setItem('vw_apoio_copa',JSON.stringify(apoioCopa));
   localStorage.setItem('vw_atrasados',JSON.stringify(atrasados));
   localStorage.setItem('vw_saiu_voltou',JSON.stringify(saiuVoltou));
   localStorage.setItem('vw_liberados',JSON.stringify(liberados));
