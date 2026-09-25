@@ -1368,6 +1368,357 @@ button, select, input {
   .aus-display { grid-template-columns: repeat(3, 1fr) !important; gap: 4px !important; }
   .ni-group { grid-template-columns: repeat(3, 1fr) !important; gap: 4px !important; }
 }
+
+/* ============================================================
+   ABA GERÊNCIA — DESIGN CORPORATIVO VW SMARTFLOW
+============================================================ */
+.ger-hero {
+  --hc: #9CA3AF;
+  background: linear-gradient(135deg, #001233 0%, #001E50 55%, #002B7F 100%);
+  border-radius: var(--r, 20px);
+  color: #FFFFFF;
+  padding: 22px 24px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px 24px;
+  align-items: center;
+  border-bottom: 5px solid var(--hc);
+  box-shadow: 0 10px 28px -4px rgba(0, 30, 80, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+.ger-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; width: 300px; height: 100%;
+  background: radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.12), transparent 70%);
+  pointer-events: none;
+}
+.ger-sem {
+  background: #000B1A;
+  border-radius: 16px;
+  padding: 10px 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.08), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.ger-lamp {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #0F172A;
+  transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ger-lamp.on-r { background: #EF4444; box-shadow: 0 0 16px #EF4444, inset 0 2px 4px rgba(255,255,255,0.4); }
+.ger-lamp.on-y { background: #FACC15; box-shadow: 0 0 16px #FACC15, inset 0 2px 4px rgba(255,255,255,0.4); }
+.ger-lamp.on-g { background: #22C55E; box-shadow: 0 0 16px #22C55E, inset 0 2px 4px rgba(255,255,255,0.4); }
+
+.ger-status {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 28px; font-weight: 800; line-height: 1.15;
+  color: var(--hc); text-transform: uppercase; letter-spacing: 0.8px;
+}
+.ger-frase {
+  font-family: var(--font, 'Barlow');
+  font-size: 14.5px; color: #E2E8F0; margin-top: 6px;
+  max-width: 65ch; line-height: 1.5;
+}
+.ger-meta {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 12.5px; font-weight: 600; color: #94A3B8; margin-top: 8px;
+  text-transform: uppercase; letter-spacing: 0.6px;
+}
+.ger-res { text-align: right; }
+.ger-res-lbl {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 12px; color: #94A3B8; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.8px;
+}
+.ger-res-num {
+  font-size: 58px; font-weight: 800; font-family: var(--mono, monospace);
+  line-height: 1; color: var(--hc);
+}
+.ger-res-sub {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 13px; font-weight: 600; color: #CBD5E1; margin-top: 2px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.ger-actions {
+  grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap;
+  border-top: 1px solid rgba(255, 255, 255, 0.12); padding-top: 14px;
+}
+.ger-actions .btn {
+  background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF; font-size: 12px;
+}
+.ger-actions .btn:hover { background: rgba(255, 255, 255, 0.18); color: #FFFFFF; }
+.ger-actions .btn-wa { background: #25D366; border-color: #25D366; color: #FFFFFF; }
+.ger-actions .btn-wa:hover { filter: brightness(1.1); }
+
+.ger-kpis {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+.ger-kpi {
+  background: #FFFFFF;
+  border: 1px solid var(--border, rgba(0, 30, 80, 0.09));
+  border-radius: var(--r-sm, 14px);
+  padding: 16px 18px;
+  border-top: 4px solid var(--k);
+  box-shadow: 0 4px 14px -2px rgba(0, 30, 80, 0.05);
+  display: flex; flex-direction: column; justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ger-kpi:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -3px rgba(0, 30, 80, 0.09);
+}
+.ger-kpi-lbl {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 12.5px; font-weight: 700; color: #001E50;
+  text-transform: uppercase; letter-spacing: 0.7px;
+}
+.ger-kpi-val {
+  font-size: 44px; font-weight: 800; font-family: var(--font-display, 'Barlow Condensed');
+  color: var(--k); line-height: 1.05; margin: 6px 0 4px;
+  font-variant-numeric: tabular-nums;
+}
+.ger-kpi-sub {
+  font-size: 12px; color: #64748B; font-family: var(--font, 'Barlow');
+}
+
+.ger-eq { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; }
+.ger-eq-item {
+  flex: 1; min-width: 100px; border-radius: 12px; padding: 12px 14px;
+  background: var(--bg3, #F6F9FD); border: 1px solid var(--border, rgba(0, 30, 80, 0.09));
+}
+.ger-eq-item b {
+  display: block; font-size: 28px; font-family: var(--font-display, 'Barlow Condensed');
+  font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums;
+}
+.ger-eq-item span {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 11px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
+}
+.ger-eq-op { align-self: center; font-size: 22px; font-weight: 800; color: #94A3B8; padding: 0 4px; }
+.ger-eq-item.fim { background: var(--ec-bg); border-color: var(--ec); }
+.ger-eq-item.fim b { color: var(--ec); }
+
+.ger-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; margin-right: 6px; }
+.ger-pills { display: flex; gap: 6px; }
+.ger-pills button {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 999px;
+  border: 1px solid rgba(0, 30, 80, 0.15); background: transparent; color: #475569;
+  cursor: pointer; transition: all 0.15s; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.ger-pills button.on {
+  background: #001E50; border-color: #001E50; color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 30, 80, 0.25);
+}
+.ger-mini { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; }
+.ger-mini div {
+  background: var(--bg3, #F6F9FD); border: 1px solid var(--border, rgba(0, 30, 80, 0.09));
+  border-radius: 12px; padding: 10px 12px;
+}
+.ger-mini b {
+  display: block; font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 22px; font-weight: 800; color: #001E50; font-variant-numeric: tabular-nums;
+}
+.ger-mini span {
+  font-size: 11px; color: #64748B; font-weight: 500; font-family: var(--font, 'Barlow');
+}
+.ger-alertas { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.ger-alertas li {
+  display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px;
+  border-radius: 10px; background: var(--bg3, #F6F9FD);
+  border-left: 4px solid var(--ac); font-size: 13.5px; line-height: 1.5; color: #1E293B;
+  border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+.ger-alertas li i { font-style: normal; font-size: 18px; line-height: 1.2; flex-shrink: 0; }
+.ger-empty { font-size: 13px; color: #94A3B8; padding: 8px 0; font-style: italic; }
+.ger-tag {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+  white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+@media(max-width: 1000px) {
+  .ger-kpis { grid-template-columns: repeat(3, 1fr); }
+  .ger-mini { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width: 640px) {
+  .ger-hero { grid-template-columns: auto 1fr; padding: 16px; }
+  .ger-res { grid-column: 1 / -1; text-align: left; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .ger-res-num { font-size: 44px; }
+  .ger-status { font-size: 22px; }
+  .ger-kpi-val { font-size: 36px; }
+  .ger-kpis { grid-template-columns: repeat(2, 1fr); }
+  .ger-eq-op { display: none; }
+}
+
+/* ============================================================
+   ABA SUPERVISÃO — DESIGN CORPORATIVO VW SMARTFLOW
+============================================================ */
+.sup-top {
+  background: #FFFFFF; border: 1px solid var(--border, rgba(0, 30, 80, 0.09));
+  border-left: 6px solid #001E50; border-radius: var(--r, 20px);
+  padding: 18px 20px; display: flex; flex-direction: column; gap: 14px;
+  box-shadow: 0 4px 16px -2px rgba(0, 30, 80, 0.06);
+}
+.sup-top-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.sup-title {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 24px; font-weight: 800; color: #001E50; line-height: 1.2;
+  text-transform: uppercase; letter-spacing: 0.8px;
+}
+.sup-sub { font-size: 13px; color: #64748B; margin-top: 2px; }
+.sup-acts { display: flex; gap: 6px; flex-wrap: wrap; }
+.sup-filtro { display: flex; flex-wrap: wrap; gap: 6px; }
+.sup-filtro button {
+  flex: 1 1 auto; min-width: 96px; max-width: 260px; white-space: nowrap;
+  background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px;
+  padding: 8px 12px; font-weight: 700; font-size: 12px; color: #334155;
+  cursor: pointer; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-family: var(--font-display, 'Barlow Condensed'); text-transform: uppercase; letter-spacing: 0.5px;
+  transition: all 0.15s ease;
+}
+.sup-filtro button:hover { border-color: #001E50; color: #001E50; }
+.sup-filtro button.on {
+  background: #001E50; border-color: #001E50; color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 30, 80, 0.3);
+}
+.sup-fn { display: block; }
+.sup-fb {
+  font-size: 10.5px; font-weight: 700; padding: 1px 8px; border-radius: 999px;
+  background: #F1F5F9; color: #64748B; font-family: var(--font, 'Barlow');
+}
+.sup-fb.tem { background: #FEE2E2; color: #DC2626; }
+.sup-filtro button.on .sup-fb { background: rgba(255, 255, 255, 0.15); color: #E2E8F0; }
+.sup-filtro button.on .sup-fb.tem { background: #DC2626; color: #FFFFFF; }
+.sup-chips { display: flex; flex-direction: column; gap: 3px; align-items: center; }
+.sup-fb.mon.tem { background: #FEF3C7; color: #B45309; }
+.sup-filtro button.on .sup-fb.mon.tem { background: #D97706; color: #FFFFFF; }
+.sup-filtro button .d { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+
+.sup-kpis { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+.sup-kpi {
+  background: #FFFFFF; border: 1px solid var(--border, rgba(0, 30, 80, 0.09));
+  border-radius: var(--r-sm, 14px); padding: 12px 14px;
+  box-shadow: 0 2px 8px -2px rgba(0, 30, 80, 0.04);
+}
+.sup-kpi-lbl {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 12px; font-weight: 700; color: #475569;
+  text-transform: uppercase; letter-spacing: 0.6px;
+}
+.sup-kpi-val {
+  font-size: 32px; font-weight: 800; font-family: var(--font-display, 'Barlow Condensed');
+  line-height: 1.1; margin-top: 4px; font-variant-numeric: tabular-nums;
+}
+.sup-kpi-sub { font-size: 11px; color: #64748B; margin-top: 2px; }
+
+.sup-tipos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.sup-tipo {
+  border-radius: 12px; padding: 12px; background: var(--bg3, #F6F9FD);
+  border: 1px solid var(--border, rgba(0, 30, 80, 0.09)); border-left: 5px solid var(--t);
+}
+.sup-tipo.zero { opacity: 0.6; }
+.sup-tipo-top { display: flex; justify-content: space-between; align-items: baseline; }
+.sup-tipo-val {
+  font-size: 30px; font-weight: 800; font-family: var(--font-display, 'Barlow Condensed');
+  color: var(--t); line-height: 1; font-variant-numeric: tabular-nums;
+}
+.sup-tipo-pct { font-size: 11px; color: #64748B; font-weight: 600; }
+.sup-tipo-lbl {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 13px; font-weight: 700; color: #001E50; margin-top: 6px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.sup-tipo-bar { height: 5px; border-radius: 3px; background: #E2E8F0; margin-top: 8px; overflow: hidden; }
+.sup-tipo-bar i { display: block; height: 100%; background: var(--t); }
+.sup-tipo-tag { font-size: 10.5px; color: #64748B; margin-top: 4px; }
+
+.sup-table td, .sup-table th { padding: 9px 8px !important; font-size: 12.5px; }
+.sup-table td:first-child { white-space: nowrap; }
+#supRanking td:nth-child(2), #supRanking th:nth-child(2) { text-align: left; white-space: nowrap; }
+@media(min-width: 1200px) {
+  .sup-tipos { grid-template-columns: repeat(9, 1fr); }
+  .sup-tipo { padding: 10px; }
+  .sup-tipo-val { font-size: 26px; }
+}
+.sup-table tr.sel td { background: #FFFBEB !important; }
+.sup-cell { display: inline-block; min-width: 26px; padding: 2px 6px; border-radius: 6px; font-weight: 700; font-family: var(--mono); }
+.sup-table th.grp { border-bottom: 2px solid var(--gc) !important; color: var(--gc) !important; }
+
+.sup-mon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.sup-mon { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #FFFFFF; box-shadow: 0 1px 4px rgba(0,0,0,0.03); }
+.sup-mon-h {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; background: #F8FAFD; border-bottom: 1px solid rgba(0, 30, 80, 0.06);
+  font-weight: 700; font-size: 13px; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.5px;
+}
+.sup-mon-b { display: grid; grid-template-columns: 1fr 1fr; }
+.sup-mon-col { padding: 10px 12px; display: flex; flex-direction: column; gap: 5px; }
+.sup-mon-col + .sup-mon-col { border-left: 1px solid rgba(0, 30, 80, 0.06); }
+.sup-mon-col h5 {
+  font-size: 11px; font-weight: 700; margin-bottom: 2px;
+  font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.5px;
+}
+.sup-mon-n { font-size: 12.5px; color: #1E293B; line-height: 1.3; font-weight: 500; }
+.sup-mon-n small { display: block; color: #64748B; font-size: 11px; }
+.sup-mon-v { font-size: 12px; color: #94A3B8; font-style: italic; }
+
+.sup-heat { border-collapse: separate; border-spacing: 4px; width: 100%; }
+.sup-heat th {
+  font-family: var(--font-display, 'Barlow Condensed');
+  font-size: 11px; font-weight: 700; color: #475569; padding: 6px 4px;
+  text-align: center; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.sup-heat th:first-child { text-align: left; }
+.sup-heat td {
+  text-align: center; font-family: var(--mono); font-size: 13px; font-weight: 700;
+  border-radius: 8px; padding: 8px 4px; min-width: 40px;
+}
+.sup-heat td:first-child { text-align: left; font-family: var(--font); font-weight: 600; font-size: 12.5px; white-space: nowrap; }
+
+.sup-list { display: flex; flex-direction: column; gap: 6px; max-height: 340px; overflow-y: auto; }
+.sup-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border-radius: 10px; background: var(--bg3, #F6F9FD); border: 1px solid var(--border); font-size: 12.5px;
+}
+.sup-item .tp {
+  font-family: var(--font-display); font-weight: 700; padding: 2px 8px;
+  border-radius: 999px; font-size: 11px; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.sup-item .per { color: #64748B; flex: 1; font-family: var(--mono); font-size: 12px; }
+.sup-item .st { font-weight: 700; white-space: nowrap; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.5px; }
+
+@media(max-width: 1200px) { .sup-kpis { grid-template-columns: repeat(4, 1fr); } }
+@media(max-width: 640px) {
+  .sup-kpis { grid-template-columns: repeat(2, 1fr); }
+  .sup-kpi-val { font-size: 26px; }
+  .sup-mon-b { grid-template-columns: 1fr; }
+  .sup-mon-col + .sup-mon-col { border-left: none; border-top: 1px solid rgba(0, 30, 80, 0.06); }
+  .sup-filtro button { flex: 1 1 calc(33% - 6px); min-width: 0; padding: 8px 6px; white-space: normal; }
+}
+
+@media print {
+  body.ger-print .hdr, body.ger-print .tabs-bar, body.ger-print .footer, body.ger-print #turnoBar,
+  body.ger-print .legend-bar, body.ger-print .page:not(#tab-ger), body.ger-print .ger-actions { display: none !important; }
+  body.ger-print #tab-ger { display: flex !important; padding: 0 !important; }
+  body.ger-print .card, body.ger-print .ger-kpi { break-inside: avoid; }
+  body.ger-print .ger-hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body.ger-print * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body.sup-print .hdr, body.sup-print .tabs-bar, body.sup-print .footer, body.sup-print #turnoBar,
+  body.sup-print .legend-bar, body.sup-print .page:not(#tab-sup), body.sup-print .sup-acts, body.sup-print .sup-filtro { display: none !important; }
+  body.sup-print #tab-sup { display: flex !important; padding: 0 !important; }
+  body.sup-print .card { break-inside: avoid; }
+  body.sup-print .sup-list { max-height: none; overflow: visible; }
+  body.sup-print * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
 </style>
 </head>
 <body>
@@ -1422,6 +1773,8 @@ button, select, input {
 <nav class="tabs-bar">
   <button class="tab-btn active" id="tab-presencas-btn" onclick="showTab('tab-presencas',this); renderPresencasOperadores()">Presenças</button>
   <button class="tab-btn" id="tab-setores-btn" onclick="showTab('tab-setores',this)">Setores</button>
+  <button class="tab-btn" id="tab-ger-btn" onclick="showTab('tab-ger',this)"><span style="margin-right:4px">🏢</span>Gerência</button>
+  <button class="tab-btn" id="tab-sup-btn" onclick="showTab('tab-sup',this)"><span style="margin-right:4px">🧭</span>Supervisão</button>
   
   <button class="tab-btn" onclick="showTab('tab-agenda',this)">Agenda</button>
   <button class="tab-btn" onclick="showTab('tab-dashboard',this)">Dashboard</button>
@@ -1974,6 +2327,192 @@ button, select, input {
 
   </div>
 </div>
+<!-- ===================== GERÊNCIA ===================== -->
+<div id="tab-ger" class="page">
+  <div style="max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:16px;width:100%">
+    <section class="ger-hero" id="gerHero"></section>
+    <div class="ger-kpis" id="gerKpis"></div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Como a mão de obra fecha no dia</span></div>
+      <div class="card-body"><div class="ger-eq" id="gerEq"></div></div>
+    </div>
+
+    <div class="dash-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="card">
+        <div class="card-head"><span class="card-title">Composição das ausências</span></div>
+        <div class="card-body"><div class="chart-wrap" style="height:230px"><canvas id="gerPie" role="img" aria-label="Composição das ausências"></canvas></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Presentes x necessário por setor</span></div>
+        <div class="card-body"><div class="chart-wrap" style="height:230px"><canvas id="gerSetBar" role="img" aria-label="Presentes por setor"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Situação por setor</span></div>
+      <div class="sector-table-wrap">
+        <table class="sector-table">
+          <thead><tr>
+            <th>Setor</th><th>Quadro</th><th>Presentes</th><th>Necessário</th><th>Ausências</th><th>Faltas</th><th>Férias</th><th>Mon. na linha</th><th>Resultado</th>
+          </tr></thead>
+          <tbody id="gerTabela"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Tendência</span>
+        <div class="ger-pills" id="gerPeriodo">
+          <button type="button" data-p="7">7 dias</button>
+          <button type="button" data-p="15" class="on">15 dias</button>
+          <button type="button" data-p="30">30 dias</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="ger-mini" id="gerTrendKpis"></div>
+        <div class="dash-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;font-family:var(--font-display);text-transform:uppercase;letter-spacing:0.5px">Mão de obra presente x necessária</div>
+            <div class="chart-wrap" style="height:220px"><canvas id="gerTrendMO" role="img" aria-label="Tendência de mão de obra"></canvas></div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;font-family:var(--font-display);text-transform:uppercase;letter-spacing:0.5px">Ausências por dia</div>
+            <div class="chart-wrap" style="height:220px"><canvas id="gerTrendAus" role="img" aria-label="Ausências por dia"></canvas></div>
+          </div>
+        </div>
+        <div id="gerTrendNota" style="font-size:11px;color:var(--text3);margin-top:8px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Próximos dias úteis — previsão pela agenda</span></div>
+      <div class="sector-table-wrap">
+        <table class="sector-table">
+          <thead><tr>
+            <th>Dia</th><th>Férias</th><th>Faltas agendadas</th><th>Outras ausências</th><th>Presença prevista</th><th>Necessário</th><th>Saldo sem monitores</th><th>Situação</th>
+          </tr></thead>
+          <tbody id="gerPrevisao"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Pontos de atenção</span></div>
+      <div class="card-body"><ul class="ger-alertas" id="gerAlertas"></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SUPERVISÃO ===================== -->
+<div id="tab-sup" class="page">
+  <div style="max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:16px;width:100%">
+    <section class="sup-top">
+      <div class="sup-top-row">
+        <div>
+          <div class="sup-title" id="supTitulo">Supervisão</div>
+          <div class="sup-sub" id="supSub"></div>
+        </div>
+        <div class="sup-acts">
+          <button type="button" class="btn btn-wa" id="supBtnWA">📲 Enviar detalhado no WhatsApp</button>
+          <button type="button" class="btn" id="supBtnPrint">🖨 Imprimir / salvar PDF</button>
+          <button type="button" class="btn" id="supBtnFull">⛶ Tela cheia (reunião)</button>
+        </div>
+      </div>
+      <div class="sup-filtro" id="supFiltro"></div>
+    </section>
+
+    <section class="ger-hero" id="supHero"></section>
+    <div class="sup-kpis" id="supKpis"></div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Ausências detalhadas por tipo</span><span id="supTiposTotal" style="font-size:12px;color:var(--text3)"></span></div>
+      <div class="card-body"><div class="sup-tipos" id="supTipos"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Quadro detalhado por setor</span></div>
+      <div class="sector-table-wrap">
+        <table class="sector-table sup-table" id="supTabela"></table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Monitores — dentro e fora da linha</span><span id="supMonResumo" style="font-size:12px;color:var(--text3)"></span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+        <div class="dash-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="chart-wrap" style="height:200px"><canvas id="supMonPie" role="img" aria-label="Monitores dentro e fora"></canvas></div>
+          <div class="chart-wrap" style="height:200px"><canvas id="supMonBar" role="img" aria-label="Monitores por setor"></canvas></div>
+        </div>
+        <div class="sup-mon-grid" id="supMonGrid"></div>
+        <div style="font-size:11px;color:var(--text3)">Para mudar o status de um monitor, use a aba Conf. Setores ou Setores do dia.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Mapa de calor — setor × tipo de ausência</span></div>
+      <div class="card-body sector-table-wrap"><table class="sup-heat" id="supHeat"></table></div>
+    </div>
+
+    <div class="dash-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="card">
+        <div class="card-head"><span class="card-title">Ausências por setor e tipo</span></div>
+        <div class="card-body"><div class="chart-wrap" style="height:260px"><canvas id="supStack" role="img" aria-label="Ausências por setor"></canvas></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Absenteísmo real por setor (sem férias/BH)</span></div>
+        <div class="card-body"><div class="chart-wrap" style="height:260px"><canvas id="supAbsBar" role="img" aria-label="Absenteísmo por setor"></canvas></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Tendência do período</span>
+        <div class="ger-pills" id="supPeriodo">
+          <button type="button" data-p="7">7 dias</button>
+          <button type="button" data-p="15" class="on">15 dias</button>
+          <button type="button" data-p="30">30 dias</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="dash-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;font-family:var(--font-display);text-transform:uppercase;letter-spacing:0.5px">Ausências por tipo e absenteísmo real</div>
+            <div class="chart-wrap" style="height:240px"><canvas id="supTrendTipos" role="img" aria-label="Tendência por tipo"></canvas></div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;font-family:var(--font-display);text-transform:uppercase;letter-spacing:0.5px">Resultado × monitores dentro da linha</div>
+            <div class="chart-wrap" style="height:240px"><canvas id="supTrendRes" role="img" aria-label="Resultado e monitores"></canvas></div>
+          </div>
+        </div>
+        <div id="supTrendNota" style="font-size:11px;color:var(--text3);margin-top:8px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Ranking de setores no período</span><span style="font-size:11px;color:var(--text3)">ordenado por ausências reais</span></div>
+      <div class="sector-table-wrap"><table class="sector-table sup-table" id="supRanking"></table></div>
+    </div>
+
+    <div class="dash-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="card">
+        <div class="card-head"><span class="card-title">Ausências em andamento e retornos</span></div>
+        <div class="card-body"><div class="sup-list" id="supAndamento"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Começam nos próximos 7 dias</span></div>
+        <div class="card-body"><div class="sup-list" id="supProximas"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-title">Pontos de atenção da supervisão</span></div>
+      <div class="card-body"><ul class="ger-alertas" id="supAlertas"></ul></div>
+    </div>
+  </div>
+</div>
+
 <!-- Fallback invisível para compatibilidade com seletores legados -->
 <div id="tab-monitores" style="display:none"></div>
 <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importarDados(this)">
@@ -4934,6 +5473,8 @@ function showTab(id,el){
   document.getElementById(id).classList.add('active'); el.classList.add('active');
   if(id==='tab-presencas' && typeof renderPresencasOperadores==='function') renderPresencasOperadores();
   if(id==='tab-setores' && typeof renderSetores==='function') renderSetores();
+  if(id==='tab-ger' && typeof renderGerencia==='function') renderGerencia();
+  if(id==='tab-sup' && typeof renderSupervisao==='function') renderSupervisao();
   if(id==='tab-agenda') renderAgenda();
   if(id==='tab-monitores') renderMonitores();
   if(id==='tab-dashboard') renderDashboard();
@@ -5279,6 +5820,8 @@ dataInput.addEventListener('change',function(){
   }
   _dataAnterior=this.value;
   carregar(this.value); initTL(); renderTimeline();
+  if(document.getElementById('tab-ger')?.classList.contains('active') && typeof renderGerencia==='function') renderGerencia();
+  if(document.getElementById('tab-sup')?.classList.contains('active') && typeof renderSupervisao==='function') renderSupervisao();
 });
 
 /* ---- Virada de dia automática ----
@@ -7123,5 +7666,948 @@ function _obterUsuarioLogado() {
   if (typeof _configurarPresenca === 'function') _configurarPresenca();
 })();
 </script>
+
+<script id="ger-script">
+/* ============================================================
+   ABA GERÊNCIA — visão simplificada + dashboard completo
+============================================================ */
+(function(){
+  const GER = { periodo: 15, inst: {}, t: null, ultimo: null };
+  const DIAS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+  function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function sg(n){ return (n > 0 ? '+' : '') + n; }
+  function pct(a, b){ return b > 0 ? Math.round((a / b) * 1000) / 10 : 0; }
+  function diaSem(ds){ return DIAS[new Date(ds + 'T00:00:00').getDay()]; }
+  function ddmm(ds){ const p = ds.split('-'); return p[2] + '/' + p[1]; }
+
+  // Dia útil: seg-sex, ou sábado cadastrado como produção
+  function diaUtil(ds){
+    const d = new Date(ds + 'T00:00:00').getDay();
+    if (d === 0) return false;
+    if (d === 6) return (typeof sabados !== 'undefined' && sabados[ds] === 'prod');
+    return true;
+  }
+
+  function corRes(r){
+    if (r < 0) return { c:'#DC2626', bg:'rgba(220,38,38,.08)', lamp:'r', txt:'Em déficit' };
+    if (r === 0) return { c:'#D97706', bg:'rgba(217,119,6,.08)', lamp:'y', txt:'No limite' };
+    return { c:'#059669', bg:'rgba(5,150,105,.08)', lamp:'g', txt:'Coberto' };
+  }
+
+  // ---- Métricas de um dia ----
+  function metricas(ds){
+    const live = ds === getDate();
+    let q = null, temDados = true, monDia = null;
+    if (live) {
+      q = quadros;
+    } else {
+      try { const raw = localStorage.getItem('vw_q_' + ds); if (raw) q = JSON.parse(raw); } catch(e){}
+      if (!q) { temDados = false; q = (typeof _ultimoQuadroSalvo === 'function' ? _ultimoQuadroSalvo(ds) : null) || quadros; }
+      try { const mn = localStorage.getItem('vw_m_' + ds); if (mn) monDia = JSON.parse(mn); } catch(e){}
+    }
+    const m = { ds, live, temDados, quadro:0, necessario:0, ferias:0, bh:0, afast:0, faltas:0, enf:0,
+                outros:0, atrasado:0, saiu:0, monCob:0, empSaldo:0, setores:[] };
+    SETORES.forEach(s => {
+      const op = q[s]?.operadores || 0, ops = q[s]?.operacoes || 0;
+      const f = ausF(s,ds), b = ausB(s,ds), a = ausA(s,ds), fa = ausFalt(s,ds);
+      const en = ausEnf(s,ds) + (typeof enfVoltouQtd === 'function' ? enfVoltouQtd(s,ds) : 0);
+      const ou = ausOut(s,ds);
+      const at = (typeof atrasadoQtd === 'function' ? atrasadoQtd(s,ds) : 0);
+      const sa = (typeof saiuVoltouQtd === 'function' ? saiuVoltouQtd(s,ds) : 0);
+      const cob = live ? monCob(s) : ((monDia && monDia[s]) || []).filter(x => x.status === 'cobrindo').length;
+      const emp = (typeof empSaldoSetor === 'function' ? empSaldoSetor(s, ds).saldo : 0);
+      const aus = f + b + a + fa + en + ou + at + sa;
+      const pres = op - aus;
+      const res = pres - ops + cob + emp;
+      m.quadro += op; m.necessario += ops; m.ferias += f; m.bh += b; m.afast += a; m.faltas += fa;
+      m.enf += en; m.outros += ou; m.atrasado += at; m.saiu += sa; m.monCob += cob; m.empSaldo += emp;
+      m.setores.push({ nome:s, quadro:op, necessario:ops, presentes:pres, aus, faltas:fa, ferias:f, monCob:cob, emp, res, resSemMon:res - cob });
+    });
+    m.aus = m.ferias + m.bh + m.afast + m.faltas + m.enf + m.outros + m.atrasado + m.saiu;
+    m.outrasAus = m.aus - m.ferias - m.faltas;
+    m.ausReais = m.afast + m.faltas + m.enf + m.outros + m.atrasado + m.saiu;
+    m.presentes = m.quadro - m.aus;
+    m.disponivel = m.presentes + m.monCob + m.empSaldo;
+    m.resultado = m.disponivel - m.necessario;
+    m.resSemMon = m.resultado - m.monCob;
+    m.pctAus = pct(m.aus, m.quadro);
+    m.pctReal = pct(m.ausReais, m.quadro);
+    m.pctFaltas = pct(m.faltas, m.quadro);
+    m.monTotal = live ? totalMon() : SETORES.reduce((t,s) => t + ((typeof monBase !== 'undefined' && monBase[s]) ? monBase[s].length : 0), 0);
+    return m;
+  }
+
+  function chart(key, id, cfg){
+    if (GER.inst[key]) { GER.inst[key].destroy(); GER.inst[key] = null; }
+    const c = document.getElementById(id);
+    if (!c || typeof Chart === 'undefined') return;
+    GER.inst[key] = new Chart(c, cfg);
+  }
+  const eixo = { grid:{ color:'rgba(0,0,0,.06)' }, ticks:{ color:'#64748B', font:{ size:11 } } };
+  const legenda = { position:'bottom', labels:{ color:'#001E50', font:{ size:11 }, padding:12, boxWidth:10 } };
+
+  // ---- HERO ----
+  function renderHero(m){
+    const el = document.getElementById('gerHero');
+    if(!el) return;
+    const ds = m.ds;
+    let cor, titulo, frase;
+    const sabNao = isSab(ds) && (typeof sabStatus === 'function' ? sabStatus(ds) === 'nao' : false);
+    if (m.quadro === 0) {
+      cor = { c:'#94A3B8', lamp:'' }; titulo = 'Quadro não cadastrado';
+      frase = 'Preencha o número de operadores e operações de cada setor na aba Setores para gerar o painel.';
+    } else {
+      cor = corRes(m.resultado);
+      if (m.resultado < 0) { titulo = 'Linha em déficit'; frase = `Faltam ${-m.resultado} pessoa${m.resultado === -1 ? '' : 's'} para cobrir todas as operações.`; }
+      else if (m.resultado === 0) { titulo = 'Linha no limite'; frase = 'Todas as operações estão cobertas, sem nenhuma pessoa de reserva.'; }
+      else { titulo = 'Linha coberta'; frase = `Todas as operações cobertas, com sobra de ${m.resultado} pessoa${m.resultado === 1 ? '' : 's'}.`; }
+      if (m.monCob > 0) {
+        frase += ` ${m.monCob} monitor${m.monCob === 1 ? ' está' : 'es estão'} operando na linha para cobrir ausências`;
+        frase += (m.resSemMon < 0 && m.resultado >= 0) ? ` — sem ${m.monCob === 1 ? 'ele' : 'eles'}, ${-m.resSemMon === 1 ? 'faltaria 1 pessoa' : 'faltariam ' + (-m.resSemMon) + ' pessoas'}.` : '.';
+      }
+    }
+    if (sabNao) frase = 'Sábado sem produção — números exibidos apenas como referência. ' + frase;
+    const agora = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+    el.style.setProperty('--hc', cor.c);
+    el.innerHTML = `
+      <div class="ger-sem" aria-hidden="true">
+        <div class="ger-lamp ${cor.lamp === 'r' ? 'on-r' : ''}"></div>
+        <div class="ger-lamp ${cor.lamp === 'y' ? 'on-y' : ''}"></div>
+        <div class="ger-lamp ${cor.lamp === 'g' ? 'on-g' : ''}"></div>
+      </div>
+      <div>
+        <div class="ger-status">${titulo}</div>
+        <div class="ger-frase">${frase}</div>
+        <div class="ger-meta">${diaSem(ds)}, ${fmtDate(ds)} · ${SETORES.length} setores · atualizado às ${agora}</div>
+      </div>
+      <div class="ger-res">
+        <div class="ger-res-lbl">Resultado do dia</div>
+        <div class="ger-res-num">${m.quadro ? sg(m.resultado) : '—'}</div>
+        <div class="ger-res-sub">${m.quadro ? 'cobertura ' + (m.necessario ? Math.round(m.disponivel / m.necessario * 100) : 0) + '% das operações' : ''}</div>
+      </div>
+      <div class="ger-actions">
+        <button type="button" class="btn btn-wa" id="gerBtnWA">📲 Enviar resumo no WhatsApp</button>
+        <button type="button" class="btn" id="gerBtnPrint">🖨 Imprimir / salvar PDF</button>
+        <button type="button" class="btn" id="gerBtnFull">⛶ Tela cheia (reunião)</button>
+      </div>`;
+    document.getElementById('gerBtnWA')?.addEventListener('click', enviarWA);
+    document.getElementById('gerBtnPrint')?.addEventListener('click', imprimir);
+    document.getElementById('gerBtnFull')?.addEventListener('click', telaCheia);
+  }
+
+  // ---- 6 NÚMEROS PRINCIPAIS ----
+  function renderKpis(m){
+    const el = document.getElementById('gerKpis');
+    if(!el) return;
+    const k = [
+      { cor:'#001E50', lbl:'Mão de obra do dia', val:m.quadro, sub:`${m.presentes} presentes na linha · ${m.necessario} operações` },
+      { cor:'#EA580C', lbl:'Ausências',          val:m.aus,    sub:`${m.pctAus}% do quadro` },
+      { cor:'#DC2626', lbl:'Faltas',             val:m.faltas, sub:`${m.pctFaltas}% do quadro` },
+      { cor:'#7C3AED', lbl:'Férias',             val:m.ferias, sub:m.bh ? `+ ${m.bh} em banco de horas` : 'pessoas em férias hoje' },
+      { cor:'#0284C7', lbl:'Enfermaria',         val:m.enf,    sub:m.enf ? `${m.enf === 1 ? 'pessoa foi' : 'pessoas foram'} à enfermaria hoje` : 'ninguém na enfermaria' },
+      { cor:'#E8A800', lbl:'Monitores na linha', val:m.monCob, sub:`de ${m.monTotal} monitor${m.monTotal === 1 ? '' : 'es'} cobrindo ausências` },
+    ];
+    el.innerHTML = k.map(x => `
+      <div class="ger-kpi" style="--k:${x.cor}">
+        <div class="ger-kpi-lbl">${x.lbl}</div>
+        <div class="ger-kpi-val">${x.val}</div>
+        <div class="ger-kpi-sub">${x.sub}</div>
+      </div>`).join('');
+  }
+
+  // ---- EQUAÇÃO ----
+  function renderEq(m){
+    const el = document.getElementById('gerEq');
+    if(!el) return;
+    const cr = corRes(m.resultado);
+    const itens = [
+      `<div class="ger-eq-item"><b>${m.quadro}</b><span>Quadro</span></div>`,
+      `<div class="ger-eq-op">−</div>`,
+      `<div class="ger-eq-item"><b style="color:#EA580C">${m.aus}</b><span>Ausências</span></div>`,
+      `<div class="ger-eq-op">=</div>`,
+      `<div class="ger-eq-item"><b style="color:#059669">${m.presentes}</b><span>Presentes</span></div>`,
+      `<div class="ger-eq-op">+</div>`,
+      `<div class="ger-eq-item"><b style="color:#D97706">${m.monCob}</b><span>Monitores na linha</span></div>`
+    ];
+    if (m.empSaldo !== 0) {
+      itens.push(`<div class="ger-eq-op">${m.empSaldo > 0 ? '+' : '−'}</div>`,
+                 `<div class="ger-eq-item"><b style="color:#DB2777">${Math.abs(m.empSaldo)}</b><span>Emprestados (saldo)</span></div>`);
+    }
+    itens.push(
+      `<div class="ger-eq-op">−</div>`,
+      `<div class="ger-eq-item"><b style="color:#001E50">${m.necessario}</b><span>Necessário (operações)</span></div>`,
+      `<div class="ger-eq-op">=</div>`,
+      `<div class="ger-eq-item fim" style="--ec:${cr.c};--ec-bg:${cr.bg}"><b>${sg(m.resultado)}</b><span>Resultado</span></div>`
+    );
+    el.innerHTML = itens.join('');
+  }
+
+  // ---- GRÁFICOS DO DIA ----
+  function renderGraficosDia(m){
+    const comp = [
+      ['Férias', m.ferias, '#7C3AED'], ['Banco de horas', m.bh, '#0284C7'], ['Afastamento', m.afast, '#EA580C'],
+      ['Faltas', m.faltas, '#DC2626'], ['Enfermaria', m.enf, '#14B8A6'], ['Outros', m.outros, '#64748B'],
+      ['Atrasados', m.atrasado, '#D97706'], ['Saiu/voltará', m.saiu, '#4F46E5']
+    ].filter(x => x[1] > 0);
+    const vazio = comp.length === 0;
+    chart('pie', 'gerPie', {
+      type:'doughnut',
+      data:{ labels: vazio ? ['Sem ausências'] : comp.map(x => x[0]),
+             datasets:[{ data: vazio ? [1] : comp.map(x => x[1]), backgroundColor: vazio ? ['#E2E8F0'] : comp.map(x => x[2]), borderWidth:0 }] },
+      options:{ responsive:true, maintainAspectRatio:false, cutout:'62%',
+        plugins:{ legend:{ ...legenda, position:'right' }, tooltip:{ enabled:!vazio } } }
+    });
+    const nomes = m.setores.map(s => s.nome.length > 10 ? s.nome.slice(0, 10) + '…' : s.nome);
+    chart('setbar', 'gerSetBar', {
+      type:'bar',
+      data:{ labels:nomes, datasets:[
+        { label:'Presentes', data:m.setores.map(s => s.presentes), backgroundColor:'rgba(5,150,105,.75)', stack:'d', borderRadius:3 },
+        { label:'Monitores na linha', data:m.setores.map(s => s.monCob), backgroundColor:'rgba(217,119,6,.85)', stack:'d', borderRadius:3 },
+        { label:'Necessário', data:m.setores.map(s => s.necessario), backgroundColor:'rgba(0,30,80,.18)', borderColor:'#001E50', borderWidth:1.5, stack:'n', borderRadius:3 }
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false, interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:legenda }, scales:{ x:{ ...eixo, grid:{ display:false } }, y:{ ...eixo, beginAtZero:true } } }
+    });
+  }
+
+  // ---- TABELA POR SETOR ----
+  function renderTabela(m){
+    const el = document.getElementById('gerTabela');
+    if(!el) return;
+    const linhas = m.setores.map(s => {
+      const c = corRes(s.res);
+      return `<tr>
+        <td><span class="ger-dot" style="background:${c.c}"></span>${esc(s.nome)}</td>
+        <td>${s.quadro}</td><td style="color:#059669;font-weight:700">${s.presentes}</td><td>${s.necessario}</td>
+        <td style="color:#EA580C;font-weight:600">${s.aus}</td><td style="color:#DC2626">${s.faltas}</td><td style="color:#7C3AED">${s.ferias}</td>
+        <td style="color:#D97706">${s.monCob}</td>
+        <td><span class="ger-tag" style="background:${c.bg};color:${c.c}">${sg(s.res)}</span></td></tr>`;
+    }).join('');
+    const c = corRes(m.resultado);
+    el.innerHTML = linhas + `<tr class="total-tr">
+      <td style="font-weight:700">Total da linha</td><td style="font-weight:700">${m.quadro}</td><td style="color:#059669;font-weight:700">${m.presentes}</td><td style="font-weight:700">${m.necessario}</td>
+      <td style="color:#EA580C;font-weight:700">${m.aus}</td><td style="color:#DC2626;font-weight:700">${m.faltas}</td><td style="color:#7C3AED;font-weight:700">${m.ferias}</td>
+      <td style="color:#D97706;font-weight:700">${m.monCob}</td><td><span class="ger-tag" style="background:${c.bg};color:${c.c};font-weight:800">${sg(m.resultado)}</span></td></tr>`;
+  }
+
+  // ---- TENDÊNCIA ----
+  function diasPeriodo(fim, n){
+    const dias = []; let d = fim, guard = 0;
+    while (dias.length < n && guard < 120) {
+      if (d === fim || diaUtil(d)) dias.push(d);
+      d = addDays(d, -1); guard++;
+    }
+    return dias.reverse();
+  }
+
+  function renderTendencia(){
+    const dias = diasPeriodo(getDate(), GER.periodo);
+    const ms = dias.map(metricas);
+    const labels = dias.map(d => diaSem(d) + ' ' + ddmm(d));
+    const ok = m => m.live || m.temDados;
+    const v = (m, k) => ok(m) ? m[k] : null;
+    const validos = ms.filter(ok);
+    const n = validos.length || 1;
+    const mediaAus = Math.round(validos.reduce((a, m) => a + m.aus, 0) / n * 10) / 10;
+    const totFaltas = validos.reduce((a, m) => a + m.faltas, 0);
+    const mediaReal = Math.round(validos.reduce((a, m) => a + m.pctReal, 0) / n * 10) / 10;
+    const diasDef = validos.filter(m => m.resultado < 0).length;
+    const monDias = validos.reduce((a, m) => a + m.monCob, 0);
+    const kpisEl = document.getElementById('gerTrendKpis');
+    if(kpisEl) {
+      kpisEl.innerHTML = `
+        <div><b>${mediaAus}</b><span>ausências/dia (média)</span></div>
+        <div><b style="color:#DC2626">${totFaltas}</b><span>faltas no período</span></div>
+        <div><b>${mediaReal}%</b><span>absenteísmo real médio</span></div>
+        <div><b style="color:${diasDef ? '#DC2626' : '#059669'}">${diasDef}</b><span>dia${diasDef === 1 ? '' : 's'} em déficit</span></div>
+        <div><b style="color:#D97706">${monDias}</b><span>monitor-dias na linha</span></div>`;
+    }
+    const semReg = ms.length - validos.length;
+    const notaEl = document.getElementById('gerTrendNota');
+    if(notaEl) {
+      notaEl.textContent =
+        `Período: ${fmtDate(dias[0])} a ${fmtDate(dias[dias.length - 1])} (${ms.length} dias úteis). ` +
+        (semReg ? `${semReg} dia${semReg === 1 ? '' : 's'} sem registro no app aparece${semReg === 1 ? '' : 'm'} em branco. ` : '') +
+        'Domingos e sábados sem produção ficam de fora.';
+    }
+
+    chart('tmo', 'gerTrendMO', {
+      type:'line',
+      data:{ labels, datasets:[
+        { label:'Presentes', data:ms.map(m => v(m,'presentes')), borderColor:'#059669', backgroundColor:'rgba(5,150,105,.10)', fill:true, tension:0, borderWidth:2, pointRadius:3 },
+        { label:'Necessário', data:ms.map(m => v(m,'necessario')), borderColor:'#001E50', borderWidth:2, tension:0, pointRadius:0, fill:false },
+        { label:'Monitores na linha', data:ms.map(m => v(m,'monCob')), borderColor:'#D97706', borderDash:[5,4], borderWidth:2, tension:0, pointRadius:3, fill:false, yAxisID:'y2' }
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false, spanGaps:false, interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:legenda },
+        scales:{ x:{ ...eixo, grid:{ display:false }, ticks:{ ...eixo.ticks, maxRotation:45, font:{ size:10 } } },
+                 y:{ ...eixo, title:{ display:true, text:'pessoas', color:'#64748B', font:{ size:10 } } },
+                 y2:{ position:'right', beginAtZero:true, grid:{ display:false }, ticks:{ color:'#D97706', precision:0, font:{ size:10 } },
+                      title:{ display:true, text:'monitores', color:'#D97706', font:{ size:10 } } } } }
+    });
+    chart('taus', 'gerTrendAus', {
+      type:'bar',
+      data:{ labels, datasets:[
+        { label:'Faltas', data:ms.map(m => v(m,'faltas')), backgroundColor:'#DC2626', stack:'a' },
+        { label:'Férias', data:ms.map(m => v(m,'ferias')), backgroundColor:'#7C3AED', stack:'a' },
+        { label:'Outras ausências', data:ms.map(m => v(m,'outrasAus')), backgroundColor:'#CBD5E1', stack:'a' }
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false, interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:legenda },
+        scales:{ x:{ ...eixo, stacked:true, grid:{ display:false }, ticks:{ ...eixo.ticks, maxRotation:45, font:{ size:10 } } },
+                 y:{ ...eixo, stacked:true, beginAtZero:true, ticks:{ ...eixo.ticks, precision:0 } } } }
+    });
+    return { ms: validos, mediaAus, mediaReal };
+  }
+
+  // ---- PREVISÃO ----
+  function renderPrevisao(){
+    const lista = []; let d = addDays(getDate(), 1), guard = 0;
+    while (lista.length < 6 && guard < 30) { if (diaUtil(d)) lista.push(metricas(d)); d = addDays(d, 1); guard++; }
+    const el = document.getElementById('gerPrevisao');
+    if(!el) return lista;
+    el.innerHTML = lista.length ? lista.map(m => {
+      const r = m.resSemMon, c = corRes(r);
+      const sit = r < 0 ? `Precisa de ${-r} monitor${r === -1 ? '' : 'es'} ou empréstimo` : r === 0 ? 'No limite' : `Sobra ${r}`;
+      return `<tr>
+        <td>${diaSem(m.ds)} ${ddmm(m.ds)}</td><td style="color:#7C3AED">${m.ferias}</td><td style="color:#DC2626">${m.faltas}</td>
+        <td>${m.outrasAus}</td><td style="color:#059669;font-weight:700">${m.presentes}</td><td>${m.necessario}</td>
+        <td style="color:${c.c};font-weight:700">${sg(r)}</td>
+        <td><span class="ger-tag" style="background:${c.bg};color:${c.c}">${sit}</span></td></tr>`;
+    }).join('') : `<tr><td colspan="8" class="ger-empty">Nenhum dia útil nos próximos 30 dias.</td></tr>`;
+    return lista;
+  }
+
+  // ---- PONTOS DE ATENÇÃO ----
+  function renderAlertas(m, tend, prev){
+    const el = document.getElementById('gerAlertas');
+    if(!el) return;
+    const a = [];
+    const add = (ic, cor, txt) => a.push(`<li style="--ac:${cor}"><i>${ic}</i><span>${txt}</span></li>`);
+    if (m.quadro === 0) { el.innerHTML = `<li class="ger-empty">Cadastre o quadro dos setores para ver os pontos de atenção.</li>`; return; }
+
+    const criticos = m.setores.filter(s => s.res < 0).sort((x, y) => x.res - y.res);
+    if (criticos.length) add('🔴', '#DC2626', `<b>${criticos.length} setor${criticos.length === 1 ? '' : 'es'} em déficit:</b> ` + criticos.map(s => `${esc(s.nome)} (${sg(s.res)})`).join(', ') + '.');
+    const sobra = m.setores.filter(s => s.res > 0).sort((x, y) => y.res - x.res);
+    if (criticos.length && sobra.length) add('🔄', '#0284C7', `<b>Possível remanejamento:</b> ` + sobra.slice(0, 3).map(s => `${esc(s.nome)} tem sobra de ${s.res}`).join(', ') + '.');
+
+    if (m.monCob > 0) {
+      if (m.resSemMon < 0) add('👷', '#D97706', `<b>A linha depende dos monitores:</b> ${m.monCob} monitor${m.monCob === 1 ? '' : 'es'} operando. Sem ${m.monCob === 1 ? 'ele' : 'eles'}, o resultado seria ${sg(m.resSemMon)}.`);
+      else add('👷', '#D97706', `${m.monCob} monitor${m.monCob === 1 ? '' : 'es'} na linha cobrindo ausências (de ${m.monTotal} cadastrados).`);
+    }
+
+    const topFalta = [...m.setores].sort((x, y) => y.faltas - x.faltas)[0];
+    if (topFalta && topFalta.faltas > 0) add('❗', '#DC2626', `<b>Maior número de faltas hoje:</b> ${esc(topFalta.nome)}, com ${topFalta.faltas} (${m.faltas} no total da linha).`);
+
+    if (tend && tend.ms && tend.ms.length >= 3) {
+      const dif = Math.round((m.pctReal - tend.mediaReal) * 10) / 10;
+      if (dif >= 2) add('📈', '#DC2626', `Absenteísmo real de hoje (${m.pctReal}%) está <b>${dif} pontos acima</b> da média dos últimos ${GER.periodo} dias úteis (${tend.mediaReal}%).`);
+      else if (dif <= -2) add('📉', '#059669', `Absenteísmo real de hoje (${m.pctReal}%) está <b>${-dif} pontos abaixo</b> da média do período (${tend.mediaReal}%).`);
+    }
+
+    if (prev && Array.isArray(prev)) {
+      const prox = prev.find(p => p.resSemMon < 0);
+      if (prox) add('📅', '#7C3AED', `<b>Próximo dia com déficit previsto:</b> ${diaSem(prox.ds)} ${ddmm(prox.ds)} — faltarão ${-prox.resSemMon} pessoa${prox.resSemMon === -1 ? '' : 's'} antes de colocar monitores (${prox.ferias} em férias).`);
+      const picoFer = prev.reduce((b, p) => (!b || p.ferias > b.ferias) ? p : b, null);
+      if (picoFer && picoFer.ferias > m.ferias) add('🏖', '#7C3AED', `Férias aumentam para ${picoFer.ferias} em ${diaSem(picoFer.ds)} ${ddmm(picoFer.ds)} (hoje são ${m.ferias}).`);
+    }
+
+    if (!a.length) add('✅', '#059669', 'Nenhum ponto de atenção: todos os setores cobertos e sem déficit previsto nos próximos dias.');
+    el.innerHTML = a.join('');
+  }
+
+  // ---- RENDER PRINCIPAL ----
+  function renderGerencia(){
+    try {
+      const m = metricas(getDate());
+      GER.ultimo = m;
+      renderHero(m); renderKpis(m); renderEq(m); renderGraficosDia(m); renderTabela(m);
+      const tend = renderTendencia();
+      const prev = renderPrevisao();
+      renderAlertas(m, tend, prev);
+    } catch(e) { console.error('Gerência:', e); }
+  }
+  window.renderGerencia = renderGerencia;
+
+  // ---- AÇÕES ----
+  function enviarWA(){
+    const m = GER.ultimo || metricas(getDate());
+    const st = m.resultado < 0 ? '🔴 EM DÉFICIT' : m.resultado === 0 ? '🟡 NO LIMITE' : '🟢 COBERTA';
+    const crit = m.setores.filter(s => s.res < 0).map(s => `${s.nome} (${sg(s.res)})`);
+    let t = `*RESUMO DA LINHA — GERÊNCIA*\n📅 ${diaSem(m.ds)}, ${fmtDate(m.ds)}\n\n`;
+    t += `*Situação:* ${st} (${sg(m.resultado)})\n\n`;
+    t += `👥 Mão de obra do dia: *${m.quadro}*\n`;
+    t += `✅ Presentes: ${m.presentes} | Necessário: ${m.necessario}\n`;
+    t += `❌ Ausências: *${m.aus}* (${m.pctAus}%)\n`;
+    t += `   • Faltas: ${m.faltas}\n   • Férias: ${m.ferias}\n   • Enfermaria: ${m.enf}\n   • Outras: ${m.outrasAus - m.enf}\n`;
+    t += `👷 Monitores na linha: *${m.monCob}* de ${m.monTotal}\n`;
+    if (m.monCob > 0 && m.resSemMon < 0) t += `   (sem os monitores o resultado seria ${sg(m.resSemMon)})\n`;
+    t += crit.length ? `\n⚠️ Setores em déficit: ${crit.join(', ')}` : `\n✔️ Todos os setores cobertos`;
+    window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank');
+  }
+  function imprimir(){
+    document.body.classList.add('ger-print');
+    const tira = () => { document.body.classList.remove('ger-print'); window.removeEventListener('afterprint', tira); };
+    window.addEventListener('afterprint', tira);
+    setTimeout(() => window.print(), 80);
+    setTimeout(tira, 60000);
+  }
+  function telaCheia(){
+    const el = document.documentElement;
+    if (document.fullscreenElement) { document.exitFullscreen(); return; }
+    const req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (req) req.call(el);
+    else if (typeof _showToast === 'function') _showToast('Este navegador não permite tela cheia.', '#374151');
+  }
+
+  // ---- LIGAÇÕES ----
+  function _bindPeriodo() {
+    document.getElementById('gerPeriodo')?.addEventListener('click', e => {
+      const b = e.target.closest('button[data-p]'); if (!b) return;
+      GER.periodo = parseInt(b.dataset.p, 10);
+      document.querySelectorAll('#gerPeriodo button').forEach(x => x.classList.toggle('on', x === b));
+      renderGerencia();
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _bindPeriodo);
+  } else {
+    _bindPeriodo();
+  }
+
+  // Atualiza a aba se estiver ativa quando outros dados mudarem
+  function agendar(){
+    const pg = document.getElementById('tab-ger');
+    if (!pg || !pg.classList.contains('active')) return;
+    clearTimeout(GER.t); GER.t = setTimeout(renderGerencia, 60);
+  }
+  ['renderSetores', 'renderDashboard'].forEach(nome => {
+    const orig = window[nome];
+    if (typeof orig === 'function') window[nome] = function(){ const r = orig.apply(this, arguments); agendar(); return r; };
+  });
+})();
+</script>
+
+<script id="sup-script">
+/* ============================================================
+   ABA SUPERVISÃO — detalhamento completo por setor e tipo
+============================================================ */
+(function(){
+  const SUP = { periodo: 15, filtro: 'TODOS', inst: {}, t: null, ultimo: null };
+  const DIAS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const TIPOS = [
+    { k:'ferias',  lbl:'Férias',               cor:'#7C3AED', real:false, ag:'feria' },
+    { k:'bh',      lbl:'Banco de horas',       cor:'#0284C7', real:false, ag:'bh' },
+    { k:'afast',   lbl:'Afastamento médico',   cor:'#EA580C', real:true,  ag:'afastamento' },
+    { k:'falta',   lbl:'Faltas',               cor:'#DC2626', real:true,  ag:'falta' },
+    { k:'enfHoje', lbl:'Enfermaria',           cor:'#14B8A6', real:true,  ag:'enfermaria' },
+    { k:'atras',   lbl:'Atrasados',            cor:'#D97706', real:true },
+    { k:'saiu',    lbl:'Saiu / voltará',       cor:'#4F46E5', real:true },
+    { k:'outros',  lbl:'Outros',               cor:'#64748B', real:true,  ag:'outros' }
+  ];
+  const CURTO = { ferias:'Férias', bh:'BH', afast:'Afast.', falta:'Falta', enfHoje:'Enfer.', atras:'Atras.', saiu:'Saiu', outros:'Outros' };
+  const TIPO_AG = {}; TIPOS.forEach(t => { if (t.ag) TIPO_AG[t.ag] = t; });
+
+  function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function sg(n){ return (n > 0 ? '+' : '') + n; }
+  function pct(a, b){ return b > 0 ? Math.round((a / b) * 1000) / 10 : 0; }
+  function diaSem(ds){ return DIAS[new Date(ds + 'T00:00:00').getDay()]; }
+  function ddmm(ds){ const p = ds.split('-'); return p[2] + '/' + p[1]; }
+  function difDias(a, b){ return Math.round((new Date(b + 'T00:00:00') - new Date(a + 'T00:00:00')) / 86400000); }
+  function diaUtil(ds){ const d = new Date(ds + 'T00:00:00').getDay(); if (d === 0) return false; if (d === 6) return (typeof sabados !== 'undefined' && sabados[ds] === 'prod'); return true; }
+  function corRes(r){ return r < 0 ? { c:'#DC2626', bg:'rgba(220,38,38,.10)' } : r === 0 ? { c:'#D97706', bg:'rgba(217,119,6,.10)' } : { c:'#059669', bg:'rgba(5,150,105,.10)' }; }
+  function rgba(hex, a){ const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; }
+  function plural(n, s, p){ return n === 1 ? s : p; }
+
+  // ---- Métricas completas de um dia ----
+  function metricas(ds){
+    const live = ds === getDate();
+    let q = null, temDados = true, monDia = null;
+    if (live) q = quadros;
+    else {
+      try { const r = localStorage.getItem('vw_q_' + ds); if (r) q = JSON.parse(r); } catch(e){}
+      if (!q) { temDados = false; q = (typeof _ultimoQuadroSalvo === 'function' ? _ultimoQuadroSalvo(ds) : null) || quadros; }
+      try { const mn = localStorage.getItem('vw_m_' + ds); if (mn) monDia = JSON.parse(mn); } catch(e){}
+    }
+    const setores = SETORES.map(s => {
+      const r = { nome:s, lider:(typeof lideres !== 'undefined' && lideres[s]) || '', quadro:q[s]?.operadores || 0, nec:q[s]?.operacoes || 0,
+        ferias:ausF(s,ds), bh:ausB(s,ds), afast:ausA(s,ds), falta:ausFalt(s,ds),
+        enfHoje:ausEnf(s,ds) + (typeof enfVoltouQtd === 'function' ? enfVoltouQtd(s,ds) : 0),
+        atras:(typeof atrasadoQtd === 'function' ? atrasadoQtd(s,ds) : 0),
+        saiu:(typeof saiuVoltouQtd === 'function' ? saiuVoltouQtd(s,ds) : 0),
+        outros:ausOut(s,ds),
+        emp:(typeof empSaldoSetor === 'function' ? empSaldoSetor(s,ds).saldo : 0),
+        empEnv:(typeof empSaldoSetor === 'function' ? empSaldoSetor(s,ds).enviou : 0),
+        empRec:(typeof empSaldoSetor === 'function' ? empSaldoSetor(s,ds).recebeu : 0),
+        dentro:[], fora:[] };
+      if (live) {
+        (monitores[s] || []).forEach(mo => (mo.status === 'cobrindo' ? r.dentro : r.fora).push(mo));
+      } else {
+        const lista = (monDia && monDia[s]) || [];
+        r.dentro = lista.filter(mo => mo.status === 'cobrindo');
+        const nFora = Math.max(0, ((typeof monBase !== 'undefined' && monBase[s]) ? monBase[s].length : 0) - r.dentro.length);
+        r.fora = Array.from({ length:nFora }, () => ({ nome:'' }));
+      }
+      r.monDentro = r.dentro.length; r.monFora = r.fora.length;
+      r.aus = TIPOS.reduce((a, t) => a + r[t.k], 0);
+      r.real = TIPOS.filter(t => t.real).reduce((a, t) => a + r[t.k], 0);
+      r.pres = r.quadro - r.aus;
+      r.res = r.pres - r.nec + r.monDentro + r.emp;
+      r.resSemMon = r.res - r.monDentro;
+      r.pctReal = pct(r.real, r.quadro);
+      r.pctAus = pct(r.aus, r.quadro);
+      return r;
+    });
+    return { ds, live, temDados, setores };
+  }
+  function somar(lista){
+    const t = { nome:'Total', quadro:0, nec:0, emp:0, empEnv:0, empRec:0, monDentro:0, monFora:0, aus:0, real:0, pres:0, res:0, resSemMon:0 };
+    TIPOS.forEach(x => t[x.k] = 0);
+    lista.forEach(r => { Object.keys(t).forEach(k => { if (typeof r[k] === 'number') t[k] += r[k]; }); });
+    t.pctReal = pct(t.real, t.quadro); t.pctAus = pct(t.aus, t.quadro);
+    return t;
+  }
+  function doFiltro(m){ return SUP.filtro === 'TODOS' ? m.setores : m.setores.filter(s => s.nome === SUP.filtro); }
+
+  function chart(key, id, cfg){
+    if (SUP.inst[key]) { SUP.inst[key].destroy(); SUP.inst[key] = null; }
+    const c = document.getElementById(id);
+    if (!c || typeof Chart === 'undefined') return;
+    SUP.inst[key] = new Chart(c, cfg);
+  }
+  const eixo = { grid:{ color:'rgba(0,0,0,.06)' }, ticks:{ color:'#64748B', font:{ size:11 } } };
+  const legenda = { position:'bottom', labels:{ color:'#001E50', font:{ size:11 }, padding:10, boxWidth:10 } };
+  const nomeCurto = s => s.length > 10 ? s.slice(0, 10) + '…' : s;
+
+  // ---- TOPO + FILTRO ----
+  function renderTopo(m, tot){
+    if (SUP.filtro !== 'TODOS' && !SETORES.includes(SUP.filtro)) SUP.filtro = 'TODOS';
+    const escopo = SUP.filtro === 'TODOS' ? `${SETORES.length} setores` : SUP.filtro;
+    const titEl = document.getElementById('supTitulo');
+    if(titEl) titEl.textContent = SUP.filtro === 'TODOS' ? 'Supervisão — Linha Completa' : 'Supervisão — ' + SUP.filtro;
+    const lid = SUP.filtro !== 'TODOS' && (typeof lideres !== 'undefined' && lideres[SUP.filtro]) ? ` · líder ${lideres[SUP.filtro]}` : '';
+    const subEl = document.getElementById('supSub');
+    if(subEl) subEl.textContent = `${diaSem(m.ds)}, ${fmtDate(m.ds)} · ${escopo}${lid} · atualizado às ${new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' })}`;
+    const fb = n => `<span class="sup-fb ${n ? 'tem' : ''}" title="${n} ${plural(n, 'falta', 'faltas')} hoje">${n} ${plural(n, 'falta', 'faltas')}</span>`;
+    const mb = n => `<span class="sup-fb mon ${n ? 'tem' : ''}" title="${n} ${plural(n, 'monitor cobrindo falta', 'monitores cobrindo falta')}">👷 ${n} mon.</span>`;
+    const chips = (f, mo) => `<span class="sup-chips">${fb(f)}${mb(mo)}</span>`;
+    const totFaltas = m.setores.reduce((a, s) => a + s.falta, 0);
+    const totMon = m.setores.reduce((a, s) => a + s.monDentro, 0);
+    const bt = [`<button type="button" data-s="TODOS" class="${SUP.filtro === 'TODOS' ? 'on' : ''}"><span class="sup-fn">Todos</span>${chips(totFaltas, totMon)}</button>`]
+      .concat(m.setores.map(s => `<button type="button" data-s="${esc(s.nome)}" class="${SUP.filtro === s.nome ? 'on' : ''}"><span class="sup-fn"><span class="d" style="background:${corRes(s.res).c}"></span>${esc(s.nome)}</span>${chips(s.falta, s.monDentro)}</button>`));
+    const filtroEl = document.getElementById('supFiltro');
+    if(filtroEl) filtroEl.innerHTML = bt.join('');
+  }
+
+  // ---- PAINEL DE SITUAÇÃO ----
+  function renderHero(m, t){
+    const el = document.getElementById('supHero');
+    if(!el) return;
+    const alvo = SUP.filtro === 'TODOS' ? 'Linha' : SUP.filtro;
+    let cor, lamp, titulo, frase;
+    if (t.quadro === 0) {
+      cor = '#94A3B8'; lamp = ''; titulo = 'Quadro não cadastrado';
+      frase = 'Preencha operadores e operações em Setores para gerar o painel.';
+    } else if (t.res < 0) {
+      cor = '#DC2626'; lamp = 'r'; titulo = `${alvo} em déficit`;
+      frase = `Faltam ${-t.res} ${plural(-t.res, 'pessoa', 'pessoas')} para cobrir todas as operações.`;
+    } else if (t.res === 0) {
+      cor = '#D97706'; lamp = 'y'; titulo = `${alvo} no limite`;
+      frase = 'Todas as operações estão cobertas, sem nenhuma pessoa de reserva.';
+    } else {
+      cor = '#059669'; lamp = 'g'; titulo = SUP.filtro === 'TODOS' ? 'Linha coberta' : `${alvo} coberto`;
+      frase = `Todas as operações cobertas, com sobra de ${t.res} ${plural(t.res, 'pessoa', 'pessoas')}.`;
+    }
+    if (t.quadro && t.monDentro > 0) {
+      frase += ` ${t.monDentro} ${plural(t.monDentro, 'monitor está', 'monitores estão')} operando na linha para cobrir ausências`;
+      frase += (t.resSemMon < 0 && t.res >= 0) ? ` — sem ${t.monDentro === 1 ? 'ele' : 'eles'}, ${-t.resSemMon === 1 ? 'faltaria 1 pessoa' : 'faltariam ' + (-t.resSemMon) + ' pessoas'}.` : '.';
+    }
+    if (t.quadro && t.falta > 0) frase += ` ${t.falta} ${plural(t.falta, 'falta', 'faltas')} no dia.`;
+    if (isSab(m.ds) && (typeof sabStatus === 'function' ? sabStatus(m.ds) === 'nao' : false)) frase = 'Sábado sem produção — números apenas como referência. ' + frase;
+    const cobertura = t.nec ? Math.round((t.pres + t.monDentro + t.emp) / t.nec * 100) : 0;
+    const escopo = SUP.filtro === 'TODOS' ? `${SETORES.length} setores` : ((typeof lideres !== 'undefined' && lideres[SUP.filtro]) ? `líder ${lideres[SUP.filtro]}` : 'setor filtrado');
+    el.style.setProperty('--hc', cor);
+    el.innerHTML = `
+      <div class="ger-sem" aria-hidden="true">
+        <div class="ger-lamp ${lamp === 'r' ? 'on-r' : ''}"></div>
+        <div class="ger-lamp ${lamp === 'y' ? 'on-y' : ''}"></div>
+        <div class="ger-lamp ${lamp === 'g' ? 'on-g' : ''}"></div>
+      </div>
+      <div>
+        <div class="ger-status">${esc(titulo)}</div>
+        <div class="ger-frase">${frase}</div>
+        <div class="ger-meta">${diaSem(m.ds)}, ${fmtDate(m.ds)} · ${esc(escopo)} · atualizado às ${new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' })}</div>
+      </div>
+      <div class="ger-res">
+        <div class="ger-res-lbl">Resultado do dia</div>
+        <div class="ger-res-num">${t.quadro ? sg(t.res) : '—'}</div>
+        <div class="ger-res-sub">${t.quadro ? 'cobertura ' + cobertura + '% das operações' : ''}</div>
+      </div>`;
+  }
+
+  // ---- KPIs ----
+  function renderKpis(t){
+    const el = document.getElementById('supKpis');
+    if(!el) return;
+    const r = corRes(t.res);
+    const k = [
+      ['Quadro total', t.quadro, '#001E50', 'operadores cadastrados'],
+      ['Presentes', t.pres, '#059669', `${pct(t.pres, t.quadro)}% do quadro`],
+      ['Necessário', t.nec, '#001E50', 'operações a cobrir'],
+      ['Resultado', sg(t.res), r.c, t.monDentro ? `sem monitores: ${sg(t.resSemMon)}` : 'sem monitores cobrindo'],
+      ['Total de ausências', t.aus, '#EA580C', `${t.pctAus}% do quadro`],
+      ['Absenteísmo real', t.pctReal + '%', t.pctReal > 8 ? '#DC2626' : t.pctReal > 4 ? '#D97706' : '#059669', `${t.real} sem férias/BH`],
+      ['Monitores dentro', t.monDentro, '#D97706', 'na linha cobrindo faltas'],
+      ['Monitores fora', t.monFora, '#64748B', 'fora da linha']
+    ];
+    el.innerHTML = k.map(x => `
+      <div class="sup-kpi"><div class="sup-kpi-lbl">${x[0]}</div>
+      <div class="sup-kpi-val" style="color:${x[2]}">${x[1]}</div><div class="sup-kpi-sub">${x[3]}</div></div>`).join('');
+  }
+
+  // ---- TIPOS ----
+  function renderTipos(t){
+    const totEl = document.getElementById('supTiposTotal');
+    if(totEl) totEl.textContent = `${t.aus} ${plural(t.aus, 'ausência', 'ausências')} no total`;
+    const tiposEl = document.getElementById('supTipos');
+    if(!tiposEl) return;
+    tiposEl.innerHTML = TIPOS.map(x => {
+      const v = t[x.k], p = pct(v, t.aus);
+      return `<div class="sup-tipo ${v ? '' : 'zero'}" style="--t:${x.cor}">
+        <div class="sup-tipo-top"><span class="sup-tipo-val">${v}</span><span class="sup-tipo-pct">${pct(v, t.quadro)}% quadro</span></div>
+        <div class="sup-tipo-lbl">${x.lbl}</div>
+        <div class="sup-tipo-bar"><i style="width:${p}%"></i></div>
+        <div class="sup-tipo-tag">${p}% das ausências${x.real ? '' : ' · programada'}</div></div>`;
+    }).join('') + cartaoEmprestado(t);
+  }
+  function cartaoEmprestado(t){
+    const ds = getDate(), v = t.empEnv || 0, cor = '#DB2777';
+    const origem = SUP.filtro === 'TODOS' ? null : SUP.filtro;
+    const lista = (typeof emprestados !== 'undefined' && emprestados[ds] ? emprestados[ds] : []).filter(e => !origem || e.origem === origem);
+    const dest = {};
+    lista.forEach(e => { dest[e.destino] = (dest[e.destino] || 0) + (e.qtd || 0); });
+    const txt = Object.keys(dest).map(d => `→ ${esc(d)} (${dest[d]})`).join(', ');
+    return `<div class="sup-tipo ${v ? '' : 'zero'}" style="--t:${cor}">
+      <div class="sup-tipo-top"><span class="sup-tipo-val">${v}</span><span class="sup-tipo-pct">${pct(v, t.quadro)}% quadro</span></div>
+      <div class="sup-tipo-lbl">Emprestado p/ outro setor</div>
+      <div class="sup-tipo-bar"><i style="width:${t.quadro ? Math.min(100, v / t.quadro * 100) : 0}%"></i></div>
+      <div class="sup-tipo-tag">${txt || 'nenhum empréstimo hoje'}${origem && t.empRec ? ` · recebeu ${t.empRec} de outros setores` : ''}</div></div>`;
+  }
+
+  // ---- TABELA DETALHADA ----
+  function cel(v, cor){ return v ? `<span class="sup-cell" style="background:${rgba(cor, .12)};color:${cor}">${v}</span>` : `<span style="color:#CBD5E1">0</span>`; }
+  function renderTabela(m, tot){
+    const el = document.getElementById('supTabela');
+    if(!el) return;
+    const cab = `<thead><tr>
+      <th>Setor</th><th>Líder</th><th class="grp" style="--gc:#001E50">Quadro</th><th class="grp" style="--gc:#059669">Presentes</th><th class="grp" style="--gc:#001E50">Nec.</th>
+      ${TIPOS.map(x => `<th class="grp" style="--gc:${x.cor}">${CURTO[x.k]}</th>`).join('')}
+      <th>Total aus.</th><th>Abs. real</th><th class="grp" style="--gc:#D97706">Mon. dentro</th><th class="grp" style="--gc:#64748B">Mon. fora</th><th>Empr.</th><th>Resultado</th></tr></thead>`;
+    const linha = (s, total) => {
+      const c = corRes(s.res);
+      return `<tr class="${total ? 'total-tr' : (SUP.filtro === s.nome ? 'sel' : '')}">
+        <td>${total ? 'Total da linha' : `<span class="ger-dot" style="background:${c.c}"></span>${esc(s.nome)}`}</td>
+        <td style="font-size:11.5px;color:#64748B;white-space:nowrap">${total ? '' : esc(s.lider) || '—'}</td>
+        <td style="font-weight:700">${s.quadro}</td><td style="color:#059669;font-weight:700">${s.pres}</td><td>${s.nec}</td>
+        ${TIPOS.map(x => `<td>${cel(s[x.k], x.cor)}</td>`).join('')}
+        <td style="font-weight:700;color:#EA580C">${s.aus}</td>
+        <td style="color:${s.pctReal > 8 ? '#DC2626' : s.pctReal > 4 ? '#D97706' : '#059669'};font-weight:700">${s.pctReal}%</td>
+        <td>${cel(s.monDentro, '#D97706')}</td><td>${cel(s.monFora, '#64748B')}</td>
+        <td style="color:${s.emp > 0 ? '#059669' : s.emp < 0 ? '#DC2626' : '#94A3B8'};font-weight:700">${s.emp ? sg(s.emp) : '—'}</td>
+        <td><span class="ger-tag" style="background:${c.bg};color:${c.c}">${sg(s.res)}</span></td></tr>`;
+    };
+    el.innerHTML = cab + '<tbody>' + m.setores.map(s => linha(s, false)).join('') + linha(tot, true) + '</tbody>';
+  }
+
+  // ---- MONITORES ----
+  function renderMonitores(m, lista, tot){
+    const resEl = document.getElementById('supMonResumo');
+    if(resEl) resEl.textContent = `${tot.monDentro} dentro · ${tot.monFora} fora · ${tot.monDentro + tot.monFora} no total`;
+    const vazio = tot.monDentro + tot.monFora === 0;
+    chart('mpie', 'supMonPie', {
+      type:'doughnut',
+      data:{ labels: vazio ? ['Sem monitores cadastrados'] : ['Dentro da linha (cobrindo)', 'Fora da linha'],
+             datasets:[{ data: vazio ? [1] : [tot.monDentro, tot.monFora], backgroundColor: vazio ? ['#E2E8F0'] : ['#D97706', '#94A3B8'], borderWidth:0 }] },
+      options:{ responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{ legend:{ ...legenda, position:'right' }, tooltip:{ enabled:!vazio } } }
+    });
+    chart('mbar', 'supMonBar', {
+      type:'bar',
+      data:{ labels:m.setores.map(s => nomeCurto(s.nome)), datasets:[
+        { label:'Dentro', data:m.setores.map(s => s.monDentro), backgroundColor:'#D97706', stack:'m', borderRadius:3 },
+        { label:'Fora', data:m.setores.map(s => s.monFora), backgroundColor:'#CBD5E1', stack:'m', borderRadius:3 }
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:legenda },
+        scales:{ x:{ ...eixo, stacked:true, grid:{ display:false } }, y:{ ...eixo, stacked:true, beginAtZero:true, ticks:{ ...eixo.ticks, precision:0 } } } }
+    });
+    const nomeMon = mo => `<div class="sup-mon-n">${esc(mo.nome || 'Monitor')}${mo.obs ? `<small>${esc(mo.obs)}</small>` : ''}</div>`;
+    const gridEl = document.getElementById('supMonGrid');
+    if(gridEl) {
+      gridEl.innerHTML = lista.map(s => {
+        const c = corRes(s.res);
+        return `<div class="sup-mon">
+          <div class="sup-mon-h"><span><span class="ger-dot" style="background:${c.c}"></span>${esc(s.nome)}</span><span class="ger-tag" style="background:${c.bg};color:${c.c}">${sg(s.res)}</span></div>
+          <div class="sup-mon-b">
+            <div class="sup-mon-col"><h5 style="color:#D97706">● Dentro da linha (${s.monDentro})</h5>${s.dentro.length ? s.dentro.map(nomeMon).join('') : '<div class="sup-mon-v">Nenhum</div>'}</div>
+            <div class="sup-mon-col"><h5 style="color:#64748B">○ Fora da linha (${s.monFora})</h5>${s.fora.length ? s.fora.map(nomeMon).join('') : '<div class="sup-mon-v">Nenhum</div>'}</div>
+          </div></div>`;
+      }).join('') || '<div class="ger-empty">Nenhum setor.</div>';
+    }
+  }
+
+  // ---- MAPA DE CALOR ----
+  function renderHeat(m){
+    const el = document.getElementById('supHeat');
+    if(!el) return;
+    const max = Math.max(1, ...m.setores.flatMap(s => TIPOS.map(x => s[x.k])));
+    const cab = `<tr><th>Setor</th>${TIPOS.map(x => `<th style="color:${x.cor}">${CURTO[x.k]}</th>`).join('')}<th>Total</th></tr>`;
+    const lin = m.setores.map(s => `<tr${SUP.filtro === s.nome ? ' style="outline:2px solid #E8A800;outline-offset:1px"' : ''}><td>${esc(s.nome)}</td>${TIPOS.map(x => {
+      const v = s[x.k], a = v ? 0.15 + 0.75 * (v / max) : 0;
+      return `<td style="background:${v ? rgba(x.cor, a) : '#F1F5F9'};color:${a > .55 ? '#fff' : v ? x.cor : '#CBD5E1'}">${v}</td>`;
+    }).join('')}<td style="background:#EBF3FC;color:#001E50;font-weight:700">${s.aus}</td></tr>`).join('');
+    el.innerHTML = cab + lin;
+  }
+
+  // ---- GRÁFICOS POR SETOR ----
+  function renderGraficosSetor(m, tot){
+    chart('stack', 'supStack', {
+      type:'bar',
+      data:{ labels:m.setores.map(s => nomeCurto(s.nome)),
+        datasets:TIPOS.map(x => ({ label:x.lbl, data:m.setores.map(s => s[x.k]), backgroundColor:x.cor, stack:'a' })) },
+      options:{ responsive:true, maintainAspectRatio:false, interaction:{ mode:'index', intersect:false }, plugins:{ legend:legenda },
+        scales:{ x:{ ...eixo, stacked:true, grid:{ display:false } }, y:{ ...eixo, stacked:true, beginAtZero:true, ticks:{ ...eixo.ticks, precision:0 } } } }
+    });
+    const vals = m.setores.map(s => s.pctReal);
+    chart('abs', 'supAbsBar', {
+      type:'bar',
+      data:{ labels:m.setores.map(s => nomeCurto(s.nome)), datasets:[
+        { type:'bar', label:'Absenteísmo real %', data:vals, backgroundColor:vals.map(v => v > 8 ? '#DC2626' : v > 4 ? '#E8A800' : '#059669'), borderRadius:4 },
+        { type:'line', label:`Média da linha (${tot.pctReal}%)`, data:vals.map(() => tot.pctReal), borderColor:'#001E50', borderDash:[5,4], borderWidth:2, pointRadius:0, tension:0 }
+      ]},
+      options:{ indexAxis:'x', responsive:true, maintainAspectRatio:false, plugins:{ legend:legenda },
+        scales:{ x:{ ...eixo, grid:{ display:false } }, y:{ ...eixo, beginAtZero:true, ticks:{ ...eixo.ticks, callback:v => v + '%' } } } }
+    });
+  }
+
+  // ---- TENDÊNCIA + RANKING ----
+  function diasPeriodo(fim, n){
+    const d0 = []; let d = fim, g = 0;
+    while (d0.length < n && g < 120) { if (d === fim || diaUtil(d)) d0.push(d); d = addDays(d, -1); g++; }
+    return d0.reverse();
+  }
+  function renderTendencia(){
+    const dias = diasPeriodo(getDate(), SUP.periodo);
+    const ms = dias.map(metricas);
+    const ok = m => m.live || m.temDados;
+    const tots = ms.map(m => ok(m) ? somar(doFiltro(m)) : null);
+    const labels = dias.map(d => diaSem(d) + ' ' + ddmm(d));
+    const grupos = [
+      ['Faltas', '#DC2626', t => t.falta], ['Afastamento', '#EA580C', t => t.afast], ['Enfermaria', '#14B8A6', t => t.enfHoje],
+      ['Atrasados', '#D97706', t => t.atras], ['Saiu/voltará', '#4F46E5', t => t.saiu], ['Outros', '#64748B', t => t.outros],
+      ['Banco de horas', '#0284C7', t => t.bh], ['Férias', '#7C3AED', t => t.ferias]
+    ];
+    chart('tt', 'supTrendTipos', {
+      type:'bar',
+      data:{ labels, datasets:[
+        ...grupos.map(g => ({ type:'bar', label:g[0], data:tots.map(t => t ? g[2](t) : null), backgroundColor:g[1], stack:'a', order:2 })),
+        { type:'line', label:'Absenteísmo real %', data:tots.map(t => t ? t.pctReal : null), borderColor:'#001E50', borderWidth:2, pointRadius:2, tension:0, yAxisID:'y2', order:1 }
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false, interaction:{ mode:'index', intersect:false }, plugins:{ legend:legenda },
+        scales:{ x:{ ...eixo, stacked:true, grid:{ display:false }, ticks:{ ...eixo.ticks, maxRotation:45, font:{ size:10 } } },
+                 y:{ ...eixo, stacked:true, beginAtZero:true, ticks:{ ...eixo.ticks, precision:0 } },
+                 y2:{ position:'right', beginAtZero:true, grid:{ display:false }, ticks:{ color:'#001E50', font:{ size:10 }, callback:v => v + '%' } } } }
+    });
+    chart('tr', 'supTrendRes', {
+      type:'bar',
+      data:{ labels, datasets:[
+        { type:'line', label:'Resultado', data:tots.map(t => t ? t.res : null), borderColor:'#059669', backgroundColor:'rgba(5,150,105,.08)', fill:true, borderWidth:2, pointRadius:3, tension:0, order:1 },
+        { type:'line', label:'Resultado sem monitores', data:tots.map(t => t ? t.resSemMon : null), borderColor:'#DC2626', borderDash:[5,4], borderWidth:2, pointRadius:0, tension:0, order:1 },
+        { type:'bar', label:'Monitores dentro', data:tots.map(t => t ? t.monDentro : null), backgroundColor:'rgba(217,119,6,.55)', borderRadius:3, order:2 }
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false, interaction:{ mode:'index', intersect:false }, plugins:{ legend:legenda },
+        scales:{ x:{ ...eixo, grid:{ display:false }, ticks:{ ...eixo.ticks, maxRotation:45, font:{ size:10 } } }, y:{ ...eixo, ticks:{ ...eixo.ticks, precision:0 } } } }
+    });
+    const validos = ms.filter(ok);
+    const semReg = ms.length - validos.length;
+    const notaEl = document.getElementById('supTrendNota');
+    if(notaEl) {
+      notaEl.textContent =
+        `Período: ${fmtDate(dias[0])} a ${fmtDate(dias[dias.length - 1])} (${ms.length} dias úteis)${SUP.filtro !== 'TODOS' ? ' · setor ' + SUP.filtro : ''}. ` +
+        (semReg ? `${semReg} ${plural(semReg, 'dia sem registro aparece', 'dias sem registro aparecem')} em branco. ` : '') + 'Domingos e sábados sem produção ficam de fora.';
+    }
+
+    // Ranking por setor no período
+    const rk = SETORES.map(nome => {
+      const r = { nome, dias:0, real:0, falta:0, atras:0, enf:0, afast:0, diasAtras:0, somaPct:0, monDentro:0, diasDef:0 };
+      validos.forEach(m => {
+        const s = m.setores.find(x => x.nome === nome); if (!s) return;
+        r.dias++; r.real += s.real; r.falta += s.falta; r.atras += s.atras; r.enf += s.enfHoje; r.afast += s.afast;
+        if (s.atras > 0) r.diasAtras++; r.somaPct += s.pctReal; r.monDentro += s.monDentro; if (s.res < 0) r.diasDef++;
+      });
+      r.media = r.dias ? Math.round(r.somaPct / r.dias * 10) / 10 : 0;
+      return r;
+    }).sort((a, b) => b.real - a.real || b.falta - a.falta);
+    const rkEl = document.getElementById('supRanking');
+    if(rkEl) {
+      rkEl.innerHTML = `<thead><tr><th>#</th><th>Setor</th><th>Ausências reais</th><th>Faltas</th><th>Afast.</th><th>Enfermaria</th><th>Atrasos</th><th>Dias c/ atraso</th><th>Abs. real médio</th><th>Dias em déficit</th><th>Monitor-dias</th></tr></thead><tbody>` +
+        rk.map((r, i) => `<tr class="${SUP.filtro === r.nome ? 'sel' : ''}"><td style="font-weight:700;color:${i < 3 && r.real ? '#DC2626' : '#94A3B8'}">${i + 1}º</td><td>${esc(r.nome)}</td>
+          <td style="font-weight:700">${r.real}</td><td>${cel(r.falta, '#DC2626')}</td><td>${cel(r.afast, '#EA580C')}</td><td>${cel(r.enf, '#14B8A6')}</td>
+          <td>${cel(r.atras, '#D97706')}</td><td>${r.diasAtras}</td>
+          <td style="color:${r.media > 8 ? '#DC2626' : r.media > 4 ? '#D97706' : '#059669'};font-weight:700">${r.media}%</td>
+          <td>${cel(r.diasDef, '#DC2626')}</td><td>${cel(r.monDentro, '#D97706')}</td></tr>`).join('') + '</tbody>';
+    }
+    return { validos, rk };
+  }
+
+  // ---- AGENDA: EM ANDAMENTO E PRÓXIMAS ----
+  function renderAgendaSup(ds){
+    const setores = SUP.filtro === 'TODOS' ? SETORES : [SUP.filtro];
+    const ativos = [], prox = [];
+    const lim = addDays(ds, 7);
+    setores.forEach(s => (agenda[s] || []).forEach(e => {
+      if (e.inicio <= ds && e.fim >= ds) ativos.push({ s, e });
+      else if (e.inicio > ds && e.inicio <= lim) prox.push({ s, e });
+    }));
+    ativos.sort((a, b) => a.e.fim.localeCompare(b.e.fim));
+    prox.sort((a, b) => a.e.inicio.localeCompare(b.e.inicio));
+    const tag = e => { const t = TIPO_AG[e.tipo] || { lbl:e.tipo, cor:'#64748B' }; return `<span class="tp" style="background:${rgba(t.cor, .12)};color:${t.cor}">${t.lbl}</span>`; };
+    const andEl = document.getElementById('supAndamento');
+    if(andEl) {
+      andEl.innerHTML = ativos.length ? ativos.map(({ s, e }) => {
+        const volta = addDays(e.fim, 1), n = difDias(ds, e.fim);
+        const st = e.inicio === e.fim ? `<span class="st" style="color:#94A3B8">só hoje</span>` : n === 0 ? `<span class="st" style="color:#059669">volta amanhã</span>` : `<span class="st" style="color:#001E50">volta ${ddmm(volta)} <small style="color:#64748B;font-weight:500">(${n + 1} dias)</small></span>`;
+        return `<div class="sup-item">${tag(e)}<span style="font-weight:700">${esc(s)}</span><span class="per">${ddmm(e.inicio)} → ${ddmm(e.fim)}</span>${st}</div>`;
+      }).join('') : '<div class="ger-empty">Nenhuma ausência da agenda em andamento.</div>';
+    }
+    const proxEl = document.getElementById('supProximas');
+    if(proxEl) {
+      proxEl.innerHTML = prox.length ? prox.map(({ s, e }) => {
+        const n = difDias(ds, e.inicio);
+        return `<div class="sup-item">${tag(e)}<span style="font-weight:700">${esc(s)}</span><span class="per">${ddmm(e.inicio)} → ${ddmm(e.fim)}</span><span class="st" style="color:#7C3AED">em ${n} ${plural(n, 'dia', 'dias')}</span></div>`;
+      }).join('') : '<div class="ger-empty">Nada agendado para os próximos 7 dias.</div>';
+    }
+    return { ativos, prox };
+  }
+
+  // ---- PONTOS DE ATENÇÃO ----
+  function renderAlertas(m, lista, tot, tend, ag){
+    const el = document.getElementById('supAlertas');
+    if(!el) return;
+    const a = [];
+    const add = (ic, cor, txt) => a.push(`<li style="--ac:${cor}"><i>${ic}</i><span>${txt}</span></li>`);
+    const nomes = arr => arr.map(mo => esc(mo.nome)).filter(Boolean).join(', ');
+    lista.forEach(s => {
+      if (s.res < 0 && s.monFora > 0) add('🔴', '#DC2626', `<b>${esc(s.nome)}</b> está em déficit (${sg(s.res)}) e tem ${s.monFora} ${plural(s.monFora, 'monitor', 'monitores')} fora da linha${nomes(s.fora) ? ': ' + nomes(s.fora) : ''}.`);
+      else if (s.res < 0) add('🔴', '#DC2626', `<b>${esc(s.nome)}</b> está em déficit (${sg(s.res)}) sem monitor disponível no setor — precisa de empréstimo.`);
+      if (s.res > 0 && s.monDentro > 0) add('🔓', '#0284C7', `<b>${esc(s.nome)}</b> tem sobra de ${s.res} e ${s.monDentro} ${plural(s.monDentro, 'monitor', 'monitores')} na linha — dá para liberar ${Math.min(s.res, s.monDentro) === 1 ? 'um monitor' : Math.min(s.res, s.monDentro) + ' monitores'}.`);
+      if (s.enfHoje >= 2) add('🩺', '#14B8A6', `<b>${esc(s.nome)}</b> teve ${s.enfHoje} idas à enfermaria hoje. Vale verificar ergonomia ou condição do posto.`);
+    });
+    if (tend && tend.rk) {
+      tend.rk.filter(r => (SUP.filtro === 'TODOS' || r.nome === SUP.filtro) && r.diasAtras >= 3)
+        .forEach(r => add('⏰', '#D97706', `<b>${esc(r.nome)}</b> teve atrasos em ${r.diasAtras} dos ${r.dias} dias úteis do período (${r.atras} no total) — padrão que merece atenção.`));
+    }
+    if (SUP.filtro === 'TODOS' && tot.pctReal > 0) {
+      lista.filter(s => s.quadro && s.pctReal >= Math.max(5, tot.pctReal * 2))
+        .forEach(s => add('📈', '#DC2626', `<b>${esc(s.nome)}</b> está com absenteísmo real de ${s.pctReal}%, mais que o dobro da média da linha (${tot.pctReal}%).`));
+    }
+    if (ag && ag.ativos) {
+      ag.ativos.filter(x => x.e.tipo === 'afastamento' && difDias(x.e.inicio, x.e.fim) >= 14)
+        .forEach(x => add('🏥', '#EA580C', `Afastamento longo em <b>${esc(x.s)}</b>: de ${ddmm(x.e.inicio)} a ${ddmm(x.e.fim)}. Planejar cobertura fixa até o retorno.`));
+      const amanha = ag.ativos.filter(x => x.e.fim === m.ds && x.e.inicio !== x.e.fim);
+      if (amanha.length) add('↩', '#059669', `${amanha.length} ${plural(amanha.length, 'pessoa volta', 'pessoas voltam')} amanhã: ` + amanha.map(x => `${esc(x.s)} (${(TIPO_AG[x.e.tipo] || {}).lbl || x.e.tipo})`).join(', ') + '.');
+    }
+    if (ag && ag.prox) {
+      const novasFer = ag.prox.filter(x => x.e.tipo === 'feria');
+      if (novasFer.length) add('🏖', '#7C3AED', `${novasFer.length} ${plural(novasFer.length, 'nova saída', 'novas saídas')} de férias nos próximos 7 dias: ` + novasFer.map(x => `${esc(x.s)} em ${ddmm(x.e.inicio)}`).join(', ') + '.');
+    }
+    if (!a.length) add('✅', '#059669', 'Nenhum ponto de atenção para o filtro selecionado.');
+    el.innerHTML = a.join('');
+  }
+
+  // ---- RENDER PRINCIPAL ----
+  function renderSupervisao(){
+    try {
+      const m = metricas(getDate());
+      if (SUP.filtro !== 'TODOS' && !SETORES.includes(SUP.filtro)) SUP.filtro = 'TODOS';
+      const lista = doFiltro(m), tot = somar(lista), totLinha = somar(m.setores);
+      SUP.ultimo = { m, lista, tot };
+      renderTopo(m, tot); renderHero(m, tot); renderKpis(tot); renderTipos(tot); renderTabela(m, totLinha);
+      renderMonitores(m, lista, tot); renderHeat(m); renderGraficosSetor(m, totLinha);
+      const tend = renderTendencia();
+      const ag = renderAgendaSup(m.ds);
+      renderAlertas(m, lista, totLinha, tend, ag);
+    } catch(e) { console.error('Supervisão:', e); }
+  }
+  window.renderSupervisao = renderSupervisao;
+
+  // ---- AÇÕES ----
+  function enviarWA(){
+    const u = SUP.ultimo || (() => { const m = metricas(getDate()); const l = doFiltro(m); return { m, lista:l, tot:somar(l) }; })();
+    const { m, lista, tot } = u;
+    let t = `*RELATÓRIO DE SUPERVISÃO*\n📅 ${diaSem(m.ds)}, ${fmtDate(m.ds)}${SUP.filtro !== 'TODOS' ? ' — ' + SUP.filtro : ''}\n\n`;
+    t += `👥 Quadro: *${tot.quadro}* | Presentes: *${tot.pres}* | Necessário: ${tot.nec}\n`;
+    t += `📊 Resultado: *${sg(tot.res)}*${tot.monDentro ? ` (sem monitores: ${sg(tot.resSemMon)})` : ''}\n`;
+    t += `❌ Ausências: *${tot.aus}* | Absenteísmo real: ${tot.pctReal}%\n`;
+    TIPOS.forEach(x => { if (tot[x.k]) t += `   • ${x.lbl}: ${tot[x.k]}\n`; });
+    t += `👷 Monitores: ${tot.monDentro} dentro da linha | ${tot.monFora} fora\n`;
+    if (lista.length > 1) {
+      t += `\n*Por setor* (pres./quadro · aus. · resultado)\n`;
+      lista.forEach(s => {
+        const ic = s.res < 0 ? '🔴' : s.res === 0 ? '🟡' : '🟢';
+        const det = TIPOS.filter(x => s[x.k]).map(x => `${CURTO[x.k]} ${s[x.k]}`).join(', ');
+        t += `${ic} ${s.nome}: ${s.pres}/${s.quadro} · ${s.aus} aus.${det ? ' (' + det + ')' : ''} · ${sg(s.res)}${s.monDentro ? ` · ${s.monDentro} mon.` : ''}\n`;
+      });
+    }
+    window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank');
+  }
+  function imprimir(){
+    document.body.classList.add('sup-print');
+    const tira = () => { document.body.classList.remove('sup-print'); window.removeEventListener('afterprint', tira); };
+    window.addEventListener('afterprint', tira);
+    setTimeout(() => window.print(), 80);
+    setTimeout(tira, 60000);
+  }
+
+  // ---- LIGAÇÕES ----
+  function _bindSupervisao() {
+    document.getElementById('supBtnWA')?.addEventListener('click', enviarWA);
+    document.getElementById('supBtnPrint')?.addEventListener('click', imprimir);
+    document.getElementById('supBtnFull')?.addEventListener('click', () => {
+      const el = document.documentElement;
+      if (document.fullscreenElement) { document.exitFullscreen(); return; }
+      const req = el.requestFullscreen || el.webkitRequestFullscreen;
+      if (req) req.call(el);
+      else if (typeof _showToast === 'function') _showToast('Este navegador não permite tela cheia.', '#374151');
+    });
+    document.getElementById('supFiltro')?.addEventListener('click', e => {
+      const b = e.target.closest('button[data-s]'); if (!b) return;
+      SUP.filtro = b.dataset.s; renderSupervisao();
+    });
+    document.getElementById('supPeriodo')?.addEventListener('click', e => {
+      const b = e.target.closest('button[data-p]'); if (!b) return;
+      SUP.periodo = parseInt(b.dataset.p, 10);
+      document.querySelectorAll('#supPeriodo button').forEach(x => x.classList.toggle('on', x === b));
+      renderSupervisao();
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _bindSupervisao);
+  } else {
+    _bindSupervisao();
+  }
+
+  function agendar(){
+    const pg = document.getElementById('tab-sup');
+    if (!pg || !pg.classList.contains('active')) return;
+    clearTimeout(SUP.t); SUP.t = setTimeout(renderSupervisao, 60);
+  }
+  ['renderSetores', 'renderDashboard', 'renderMonitores'].forEach(nome => {
+    const orig = window[nome];
+    if (typeof orig === 'function') window[nome] = function(){ const r = orig.apply(this, arguments); agendar(); return r; };
+  });
+  setInterval(agendar, 60000);
+})();
+</script>
+
 </body>
 </html>
