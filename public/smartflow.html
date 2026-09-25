@@ -2593,6 +2593,7 @@ let _buscaFiltroPresencas = "";
 let _turnoSelecionadoId = "1";
 let _logsAuditoriaPresenca = [];
 
+let PAPEIS_SMARTFLOW = [];
 let quadros={}, agenda={}, monitores={}, monBase={}, sabados={}, emprestados={}, lideres={}, enfVoltou={}, atrasados={}, saiuVoltou={}, liberados={}, atestados={}, feriasDia={}, apoioCopa={}, customCards=[], customCounts={}, enfTotalFoi={}; // saiuVoltou, liberados, atestados, customCounts, enfTotalFoi: {'SETOR||YYYY-MM-DD': n}
 // monitores  = {setor:[{id,nome,status,obs}]} — status per day (loaded/saved per date)
 // monBase    = {setor:[{id,nome}]}             — permanent roster (names never wiped)
@@ -3302,20 +3303,6 @@ function renderCards(ds){
             <button onclick="setAtestado('${setor}','${ds}',(atestadoQtd('${setor}','${ds}')||0)+1)" class="qa-btn-round" style="color:#BE185D;border-color:rgba(219,39,119,.4)">+</button>
           </div>
         </div>
-        <div class="qa-card" style="background:rgba(217,119,6,0.06);border:1px solid rgba(217,119,6,0.25);border-radius:var(--r-sm)">
-          <div class="qa-info">
-            <span class="qa-badge" style="color:#D97706;background:#FEF3C7">COPA</span>
-            <div class="qa-text">
-              <span class="qa-title" style="color:#D97706">Apoio / Copa</span>
-              <span class="qa-desc">apoio operacional / copa</span>
-            </div>
-          </div>
-          <div class="qa-actions">
-            <button onclick="setApoioCopa('${setor}','${ds}',Math.max(0,(apoioCopaQtd('${setor}','${ds}')||0)-1))" class="qa-btn-round" style="color:#D97706;border-color:rgba(217,119,6,0.4)">−</button>
-            <span id="copa-${key}" class="qa-count" style="color:#D97706">${apoioCopaQtd(setor,ds)}</span>
-            <button onclick="setApoioCopa('${setor}','${ds}',(apoioCopaQtd('${setor}','${ds}')||0)+1)" class="qa-btn-round" style="color:#D97706;border-color:rgba(217,119,6,0.4)">+</button>
-          </div>
-        </div>
         ${(customCards||[]).map(cc=>`
         <div class="qa-card" style="background:${_hexToRgba(cc.cor,.06)};border:1px solid ${_hexToRgba(cc.cor,.25)};border-radius:var(--r-sm);position:relative">
           <div class="qa-info">
@@ -3365,7 +3352,7 @@ function renderCards(ds){
             <div class="mon-row ${MON_STATUS[m.status].rowClass}">
               <div class="mon-row-dot" style="background:${MON_STATUS[m.status].color}"></div>
               <span class="mon-row-name">${m.nome}</span>
-              <select class="mon-sel" onchange="chMonSt('${setor}','${m.id}',this.value)">${Object.entries(MON_STATUS).map(([k,v])=>`<option value="${k}"${m.status===k?' selected':''}>${v.label}</option>`).join('')}</select>
+              <select class="mon-sel" onchange="chMonSt('${setor}','${m.id}',this.value, this)">${Object.entries(MON_STATUS).map(([k,v])=>`<option value="${k}"${m.status===k?' selected':''}>${v.label}</option>`).join('')}</select>
               <input class="mon-obs" placeholder="obs..." value="${m.obs||''}" oninput="chMonObs('${setor}','${m.id}',this.value)">
               <button class="btn-x" onclick="delMon('${setor}','${m.id}')">×</button>
             </div>`).join('')}</div>`}
@@ -3698,7 +3685,25 @@ function delMon(setor,id){
   monBase[setor]=(monBase[setor]||[]).filter(m=>m.id!==id);
   salvarMon(); _debouncedRenderSetores(100); renderMonitores();
 }
-function chMonSt(setor,id,val){ const m=(monitores[setor]||[]).find(x=>x.id===id); if(m){ const stAnt = m.status; m.status=val; registrarAuditoria('Monitores', `Monitor ${m.nome} (${setor})`, stAnt, val); salvarMon(); _debouncedRenderSetores(200); renderMonitores();} }
+function chMonSt(setor,id,val,el){ 
+  const m=(monitores[setor]||[]).find(x=>x.id===id); 
+  if(m){ 
+    const stAnt = m.status; 
+    m.status=val; 
+    registrarAuditoria('Monitores', `Monitor ${m.nome} (${setor})`, stAnt, val); 
+    salvarMon(); 
+    if (el) {
+      const row = el.closest('.mon-row');
+      if (row) {
+        row.className = 'mon-row ' + (MON_STATUS[val].rowClass || '');
+        const dot = row.querySelector('.mon-row-dot');
+        if (dot) dot.style.background = MON_STATUS[val].color || '';
+      }
+    }
+    renderMonitores(); 
+    if(typeof _debouncedRenderSetores === 'function') _debouncedRenderSetores(2000); 
+  } 
+}
 function chMonObs(setor,id,val){ const m=(monitores[setor]||[]).find(x=>x.id===id); if(m){ m.obs=val; salvarMon(); } }
 
 function renderMonitores(){
