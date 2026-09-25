@@ -2747,8 +2747,9 @@ function setApoioCopa(setor, ds, val){
   apoioCopa[setor+'||'+ds] = v;
   localStorage.setItem('vw_apoio_copa', JSON.stringify(apoioCopa));
   registrarAuditoria('Setores do dia', `Apoio Operacional / Copa em ${setor}`, `${oldV}`, `${v}`);
+    var el = document.getElementById('copa-' + setor.replace(/\s/g,'_')); if(el) el.textContent = v;
   _autoSave();
-  if(typeof _debouncedRenderSetores === 'function') _debouncedRenderSetores();
+  if(typeof _debouncedRenderSetores === 'function') _debouncedRenderSetores(800);
   else if(typeof renderSetores === 'function') renderSetores();
 }
 
@@ -3301,6 +3302,20 @@ function renderCards(ds){
             <button onclick="setAtestado('${setor}','${ds}',(atestadoQtd('${setor}','${ds}')||0)+1)" class="qa-btn-round" style="color:#BE185D;border-color:rgba(219,39,119,.4)">+</button>
           </div>
         </div>
+        <div class="qa-card" style="background:rgba(217,119,6,0.06);border:1px solid rgba(217,119,6,0.25);border-radius:var(--r-sm)">
+          <div class="qa-info">
+            <span class="qa-badge" style="color:#D97706;background:#FEF3C7">COPA</span>
+            <div class="qa-text">
+              <span class="qa-title" style="color:#D97706">Apoio / Copa</span>
+              <span class="qa-desc">apoio operacional / copa</span>
+            </div>
+          </div>
+          <div class="qa-actions">
+            <button onclick="setApoioCopa('${setor}','${ds}',Math.max(0,(apoioCopaQtd('${setor}','${ds}')||0)-1))" class="qa-btn-round" style="color:#D97706;border-color:rgba(217,119,6,0.4)">−</button>
+            <span id="copa-${key}" class="qa-count" style="color:#D97706">${apoioCopaQtd(setor,ds)}</span>
+            <button onclick="setApoioCopa('${setor}','${ds}',(apoioCopaQtd('${setor}','${ds}')||0)+1)" class="qa-btn-round" style="color:#D97706;border-color:rgba(217,119,6,0.4)">+</button>
+          </div>
+        </div>
         ${(customCards||[]).map(cc=>`
         <div class="qa-card" style="background:${_hexToRgba(cc.cor,.06)};border:1px solid ${_hexToRgba(cc.cor,.25)};border-radius:var(--r-sm);position:relative">
           <div class="qa-info">
@@ -3401,8 +3416,9 @@ function _debouncedRenderSetores(delay){
 function upCampo(setor,campo,val){
   if(!quadros[setor]) quadros[setor]={operadores:0,operacoes:0};
   quadros[setor][campo]=parseInt(val)||0;
+    var el = document.getElementById('copa-' + setor.replace(/\s/g,'_')); if(el) el.textContent = v;
   _autoSave();
-  _debouncedRenderSetores();
+  _debouncedRenderSetores(800);
 }
 
 /* ============================================================
@@ -3430,8 +3446,9 @@ function setSaiuVoltou(setor, ds, val){
   saiuVoltou[setor+'||'+ds] = v;
   localStorage.setItem('vw_saiu_voltou',JSON.stringify(saiuVoltou));
   localStorage.setItem('vw_apoio_copa',JSON.stringify(apoioCopa));
+    var el = document.getElementById('saiu-' + setor.replace(/\s/g,'_')); if(el) el.textContent = v;
   _autoSave();
-  _debouncedRenderSetores();
+  _debouncedRenderSetores(800);
 }
 
 /* ============================================================
@@ -3444,8 +3461,9 @@ function setLiberado(setor, ds, val){
   else if (v < oldV) _changeOperatorStatus(setor, ['afastado'], 'presente', '', 'Liberação programada');
   liberados[setor+'||'+ds] = v;
   localStorage.setItem('vw_liberados',JSON.stringify(liberados));
+    var el = document.getElementById('lib-' + setor.replace(/\s/g,'_')); if(el) el.textContent = v;
   _autoSave();
-  _debouncedRenderSetores();
+  _debouncedRenderSetores(800);
 }
 
 /* ============================================================
@@ -3459,8 +3477,9 @@ function setAtestado(setor, ds, val){
   atestados[setor+'||'+ds] = v;
   localStorage.setItem('vw_atestados',JSON.stringify(atestados));
   localStorage.setItem('vw_ferias_dia',JSON.stringify(feriasDia));
+    var el = document.getElementById('atst-' + setor.replace(/\s/g,'_')); if(el) el.textContent = v;
   _autoSave();
-  _debouncedRenderSetores();
+  _debouncedRenderSetores(800);
 }
 
 /* ============================================================
@@ -3473,8 +3492,9 @@ function setFerias(setor, ds, val){
   else if (v < oldV) _changeOperatorStatus(setor, ['afastado'], 'presente', '', 'Férias');
   feriasDia[setor+'||'+ds] = v;
   localStorage.setItem('vw_ferias_dia', JSON.stringify(feriasDia));
+    var el = document.getElementById('fer-' + setor.replace(/\s/g,'_')); if(el) el.textContent = v;
   _autoSave();
-  _debouncedRenderSetores();
+  _debouncedRenderSetores(800);
 }
 
 /* ============================================================
@@ -3498,8 +3518,9 @@ function setCustomCount(cardId, setor, ds, val){
   }
   customCounts[cardId+'||'+setor+'||'+ds] = v;
   localStorage.setItem('vw_custom_counts',JSON.stringify(customCounts));
+    var el = document.getElementById('cc-' + setor.replace(/\s/g,'_')); if(el) el.textContent = v;
   _autoSave();
-  _debouncedRenderSetores();
+  _debouncedRenderSetores(800);
 }
 
 function abrirNovoCartao(){
@@ -3603,16 +3624,18 @@ function setEnfVoltou(setor, ds, val){
   else if (v < oldV) _changeOperatorStatus(setor, ['enfermaria'], 'presente', '', 'Foi para enfermaria');
 
   enfVoltou[setor+'||'+ds] = v;
+    var el = document.getElementById('enfv-' + setor.replace(/\s/g,'_')); if(el) el.textContent = v;
   _autoSave();
-  _debouncedRenderSetores(150);
+  _debouncedRenderSetores(800);
 }
 function incrementarFoiEnfermaria(setor, ds){
   _changeOperatorStatus(setor, ['presente'], 'enfermaria', 'Foi para enfermaria');
   enfVoltou[setor+'||'+ds] = (enfVoltouQtd(setor,ds)||0)+1;
   enfTotalFoi[setor+'||'+ds] = (enfTotalFoiQtd(setor,ds)||0)+1;
   localStorage.setItem('vw_enf_total_foi',JSON.stringify(enfTotalFoi));
+    var el = document.getElementById('enfv-' + setor.replace(/\s/g,'_')); if(el) el.textContent = (enfVoltouQtd(setor,ds)||0)+1;
   _autoSave();
-  _debouncedRenderSetores(150);
+  _debouncedRenderSetores(800);
 }
 
 /* ============================================================
