@@ -251,6 +251,25 @@ function Painel() {
     toast.success("Todos os status foram embaralhados aleatoriamente!");
   };
 
+  const zerarStatus = () => {
+    const limpos = dynamicOperators.map((op) => {
+      const { alteradoPor: _ap, alteradoAs: _aa, ...rest } = op;
+      return {
+        ...rest,
+        status: "presente" as OperatorStatus,
+        batida: null,
+      } satisfies OperadorComAuditoria;
+    });
+    substituirTodos(limpos);
+    toast.success("Status zerados (todos presentes, sem batidas).");
+  };
+
+  // Zera automaticamente ao abrir (mount) e a cada troca de turno, conforme solicitado
+  useEffect(() => {
+    zerarStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTurno?.id]);
+
   useEffect(() => { setSelectedEquipe(null); }, [selectedCelula]);
 
   const handleStatusUpdate = (id: string, newStatus: OperatorStatus, timestamp?: string) => {
@@ -374,10 +393,16 @@ function Painel() {
             </button>
 
             {/* Teste: Simular Crachas */}
-            <button onClick={simularCrachas}
-              className="flex items-center gap-1.5 rounded-lg border border-blue-400/40 bg-blue-400/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-blue-300 hover:bg-blue-400/20 transition-all">
-              Teste: Simular
-            </button>
+            <div className="flex gap-1 sm:gap-2">
+              <button onClick={simularCrachas}
+                className="flex items-center gap-1.5 rounded-lg border border-blue-400/40 bg-blue-400/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-blue-300 hover:bg-blue-400/20 transition-all">
+                Teste: Simular
+              </button>
+              <button onClick={zerarStatus}
+                className="flex items-center gap-1.5 rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-2 text-xs font-bold uppercase tracking-wider text-amber-300 hover:bg-amber-400/20 transition-all">
+                Zerar Status
+              </button>
+            </div>
 
             {/* Indicador de conexão Firebase */}
             <div className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
