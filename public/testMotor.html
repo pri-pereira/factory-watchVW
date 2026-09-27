@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Testes Motor Mão de Obra</title>
+  <style>
+    body { font-family: monospace; background: #1e1e1e; color: #fff; padding: 20px; }
+    .pass { color: #4ade80; }
+    .fail { color: #f87171; }
+    .group { margin-bottom: 20px; border-left: 2px solid #555; padding-left: 15px; }
+  </style>
+</head>
+<body>
+  <h1>Resultados dos Testes</h1>
+  <div id="out"></div>
+
+  <script src="/motorMaoDeObra.js"></script>
+  <script>
+    const log = (msg, isPass) => {
+      const div = document.createElement('div');
+      div.className = isPass ? 'pass' : 'fail';
+      div.innerText = (isPass ? '✔ ' : '❌ ') + msg;
+      document.getElementById('out').appendChild(div);
+    };
+
+    const group = (name) => {
+      const div = document.createElement('div');
+      div.className = 'group';
+      div.innerHTML = `<h3>${name}</h3>`;
+      document.getElementById('out').appendChild(div);
+    };
+
+    const assert = (cond, msg) => log(msg, cond);
+    const assertEqual = (a, b, msg) => assert(a === b, `${msg} (Esperado: ${b}, Obtido: ${a})`);
+
+    // Mocks
+    window.quadros = {};
+    window.agenda = {};
+    window.monitores = {};
+    window.emprestados = {};
+    window.enfTotalFoi = {};
+    window.enfVoltou = {};
+    window.feriasDia = {};
+    window.atestados = {};
+    window.liberados = {};
+    window.atrasados = {};
+    window.saiuVoltou = {};
+    window.apoioCopa = {};
+    window.customCounts = {};
+    window.customCards = [];
+    window.SETORES = ['T1'];
+
+    function resetMocks() {
+      window.quadros = { 'T1': { operadores: 10, operacoes: 8 } };
+      window.agenda = { 'T1': [] };
+      window.monitores = { 'T1': [] };
+      window.emprestados = { '2026-09-27': [] };
+      window.enfTotalFoi = {};
+      window.enfVoltou = {};
+      window.feriasDia = {};
+      window.atestados = {};
+      window.liberados = {};
+      window.atrasados = {};
+      window.saiuVoltou = {};
+      window.apoioCopa = {};
+      window.customCounts = {};
+      window.customCards = [];
+    }
+
+    const { calcularMaoDeObra } = window.motorMaoDeObra;
+
+    group("Teste 1 — Sem ausência");
+    resetMocks();
+    let r1 = calcularMaoDeObra('T1', '2026-09-27');
+    assertEqual(r1.presentes, 10, "Presentes = 10");
+    assertEqual(r1.resultado, 2, "Resultado = +2");
+
+    group("Teste 2 — Uma falta");
+    resetMocks();
+    window.agenda['T1'].push({ tipo: 'falta', inicio: '2026-09-27', fim: '2026-09-27' });
+    let r2 = calcularMaoDeObra('T1', '2026-09-27');
+    assertEqual(r2.presentes, 9, "Presentes = 9");
+    assertEqual(r2.resultado, 1, "Resultado = +1");
+
+    group("Teste 3 — Uma enfermaria");
+    resetMocks();
+    window.agenda['T1'].push({ tipo: 'enfermaria', inicio: '2026-09-27', fim: '2026-09-27' });
+    let r3 = calcularMaoDeObra('T1', '2026-09-27');
+    assertEqual(r3.presentes, 9, "Presentes = 9");
+    assertEqual(r3.resultado, 1, "Resultado = +1");
+    assertEqual(r3.ausencias.ENFERMARIA, 1, "Ausência de Enfermaria = 1");
+
+    group("Teste 4 — Retorno da enfermaria");
+    resetMocks();
+    // Cenário: Foi 1 vez, mas já voltou. Sem ninguém "agendado".
+    window.enfTotalFoi['T1||2026-09-27'] = 1;
+    window.enfVoltou['T1||2026-09-27'] = 1;
+    let r4 = calcularMaoDeObra('T1', '2026-09-27');
+    assertEqual(r4.ausencias.ENFERMARIA, 0, "Ausência atual = 0");
+    assertEqual(r4.presentes, 10, "Presentes restaurados = 10");
+
+    group("Teste 5 — Férias + falta + enfermaria");
+    resetMocks();
+    window.feriasDia['T1||2026-09-27'] = 1; // 1 férias via form rápido
+    window.agenda['T1'].push({ tipo: 'falta', inicio: '2026-09-27', fim: '2026-09-27' });
+    window.agenda['T1'].push({ tipo: 'enfermaria', inicio: '2026-09-27', fim: '2026-09-27' });
+    let r5 = calcularMaoDeObra('T1', '2026-09-27');
+    assertEqual(r5.ausenciasTotais, 3, "Ausências = 3");
+    assertEqual(r5.presentes, 7, "Presentes = 7");
+    assertEqual(r5.resultado, -1, "Resultado = -1");
+
+    group("Teste 6 — Monitor");
+    resetMocks();
+    window.feriasDia['T1||2026-09-27'] = 3; // saldo base: 10 - 3 = 7. Resultado base: 7 - 8 = -1.
+    window.monitores['T1'].push({ status: 'cobrindo' });
+    let r6 = calcularMaoDeObra('T1', '2026-09-27');
+    assertEqual(r6.resultadoSemMonitor, -1, "Resultado Sem Monitor = -1");
+    assertEqual(r6.resultado, 0, "Resultado = 0 (1 monitor cobrindo)");
+
+    group("Teste 7 — Empréstimo recebido");
+    resetMocks();
+    window.feriasDia['T1||2026-09-27'] = 3; // base: -1
+    window.emprestados['2026-09-27'].push({ origem: 'T2', destino: 'T1', qtd: 1 });
+    let r7 = calcularMaoDeObra('T1', '2026-09-27');
+    assertEqual(r7.emprestimos.saldo, 1, "Saldo de empréstimo = +1");
+    assertEqual(r7.resultado, 0, "Resultado = 0");
+
+    group("Teste 8 — Empréstimo enviado");
+    resetMocks();
+    window.feriasDia['T1||2026-09-27'] = 2; // presentes: 8, nec: 8, res: 0
+    window.emprestados['2026-09-27'].push({ origem: 'T1', destino: 'T2', qtd: 1 });
+    let r8 = calcularMaoDeObra('T1', '2026-09-27');
+    assertEqual(r8.emprestimos.saldo, -1, "Saldo de empréstimo = -1");
+    assertEqual(r8.resultado, -1, "Resultado = -1");
+
+    group("Invariantes");
+    resetMocks();
+    window.quadros['T1'].operadores = 5;
+    window.feriasDia['T1||2026-09-27'] = 2;
+    window.agenda['T1'].push({ tipo: 'falta', inicio: '2026-09-27', fim: '2026-09-27' }); // +1
+    let inv = calcularMaoDeObra('T1', '2026-09-27');
+    assert(inv.quadro >= 0, "Quadro >= 0");
+    assert(inv.necessario >= 0, "Necessário >= 0");
+    assert(inv.presentes >= 0, "Presentes >= 0");
+    assert(inv.ausenciasTotais >= 0, "Ausências >= 0");
+    assertEqual(inv.presentes + inv.ausenciasTotais, inv.quadro, "Presentes + Ausências = Quadro");
+    assertEqual(inv.resultado, inv.presentes - inv.necessario + inv.monitores.cobrindo + inv.emprestimos.saldo, "Resultado formula");
+  </script>
+</body>
+</html>

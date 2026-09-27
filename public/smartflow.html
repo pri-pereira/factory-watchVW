@@ -13,6 +13,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="/motorMaoDeObra.js"></script>
 <style>
 /* ============================================================
    VW SMARTFLOW - DESIGN SYSTEM PREMIUM (Senior Redesign)
@@ -2780,47 +2781,42 @@ function _customOutrosQtd(s, ds){
 }
 
 function countOnDate(s,tipo,ds){ return (agenda[s]||[]).filter(e=>e.tipo===tipo&&e.inicio<=ds&&e.fim>=ds).length; }
-function ausF(s,ds){ return countOnDate(s,'feria',ds) + feriasDiaQtd(s,ds) + _customFeriasQtd(s,ds); }
-function ausB(s,ds){ return countOnDate(s,'bh',ds); }
-function ausA(s,ds){ return countOnDate(s,'afastamento',ds); }
-function ausFalt(s,ds){ return countOnDate(s,'falta',ds) + getPainelFaltasAvulsas(s,ds); }
-function ausPend(s,ds){ return getPainelCount(s, ['pendente'], ds); }
-function ausEnf(s,ds){ return countOnDate(s,'enfermaria',ds) + enfVoltouQtd(s,ds); }
-function ausOut(s,ds){ return countOnDate(s,'outros',ds); }
-function ausLic(s,ds){ return LICENCA_TIPOS.reduce((tot,t)=>tot+countOnDate(s,t,ds),0); }
+function ausF(s,ds){ return window.motorMaoDeObra.calcularMaoDeObra(s,ds).ausencias.FERIAS; }
+function ausB(s,ds){ return window.motorMaoDeObra.calcularMaoDeObra(s,ds).ausencias.BH; }
+function ausA(s,ds){ return window.motorMaoDeObra.calcularMaoDeObra(s,ds).ausencias.AFASTAMENTO; }
+function ausFalt(s,ds){ return window.motorMaoDeObra.calcularMaoDeObra(s,ds).ausencias.FALTA; }
+function ausPend(s,ds){ return window.motorMaoDeObra.calcularMaoDeObra(s,ds).ausencias.PENDENTE; }
+function ausEnf(s,ds){ return window.motorMaoDeObra.calcularMaoDeObra(s,ds).ausencias.ENFERMARIA; }
+function ausOut(s,ds){ return window.motorMaoDeObra.calcularMaoDeObra(s,ds).ausencias.OUTROS; }
+function ausLic(s,ds){ return window.motorMaoDeObra.calcularMaoDeObra(s,ds).ausencias.LICENCA; }
 
 // Total consolidado de ausências do setor no dia (sem duplicações)
 function totalAus(s,ds){
-  return ausF(s,ds) + ausB(s,ds) + ausA(s,ds) + ausFalt(s,ds) + ausPend(s,ds) + ausEnf(s,ds) + ausOut(s,ds) + ausLic(s,ds)
-    + atestadoQtd(s,ds) + liberadoQtd(s,ds) + saiuVoltouQtd(s,ds) + atrasadoQtd(s,ds) + apoioCopaQtd(s,ds) + _customOutrosQtd(s,ds);
+  return window.motorMaoDeObra.calcularMaoDeObra(s,ds).ausenciasTotais;
 }
 
 // Absenteísmo / ausências reais sem Férias e sem BH (para semáforo)
 function ausRealQtd(s,ds){
-  return ausA(s,ds) + ausFalt(s,ds) + ausPend(s,ds) + ausEnf(s,ds) + ausOut(s,ds) + ausLic(s,ds)
-    + atestadoQtd(s,ds) + liberadoQtd(s,ds) + saiuVoltouQtd(s,ds) + atrasadoQtd(s,ds) + apoioCopaQtd(s,ds) + _customOutrosQtd(s,ds);
+  return window.motorMaoDeObra.calcularMaoDeObra(s,ds).ausenciasReais;
 }
 
-function monCob(s){ return (monitores[s]||[]).filter(m=>m.status==='cobrindo').length; }
-function monFora(s){ return (monitores[s]||[]).filter(m=>m.status==='fora').length; }
+function monCob(s){ return window.motorMaoDeObra.calcularMonitores(s, window.curDate || window.DATA_ATUAL || new Date().toISOString().split('T')[0]).cobrindo; }
+function monFora(s){ return window.motorMaoDeObra.calcularMonitores(s, window.curDate || window.DATA_ATUAL || new Date().toISOString().split('T')[0]).fora; }
 function totalMonCob(){ return SETORES.reduce((a,s)=>a+monCob(s),0); }
 function totalMonFora(){ return SETORES.reduce((a,s)=>a+monFora(s),0); }
-function totalMon(){ return SETORES.reduce((a,s)=>a+(monitores[s]||[]).length,0); }
+function totalMon(){ return SETORES.reduce((a,s)=>a+window.motorMaoDeObra.calcularMonitores(s, window.curDate || window.DATA_ATUAL || new Date().toISOString().split('T')[0]).total,0); }
 
-function saldo(s,ds){ return (quadros[s]?.operadores||0) - totalAus(s,ds); }
+function saldo(s,ds){ return window.motorMaoDeObra.calcularMaoDeObra(s,ds).presentes; }
 
 // Saldo líquido de empréstimos: recebeu - enviou
 function empSaldoSetor(s,ds){
-  const lista=emprestados[ds]||[];
-  const enviou=lista.filter(e=>e.origem===s).reduce((a,e)=>a+e.qtd,0);
-  const recebeu=lista.filter(e=>e.destino===s).reduce((a,e)=>a+e.qtd,0);
-  return {enviou,recebeu,saldo:recebeu-enviou};
+  const emp = window.motorMaoDeObra.calcularEmprestimos(s,ds);
+  return { enviou: emp.enviados, recebeu: emp.recebidos, saldo: emp.saldo };
 }
 
 // resultado = saldo - operações + monitores cobrindo + saldo empréstimos (sem duplicar descontos de cartões)
 function resultado(s,ds){
-  const emp=empSaldoSetor(s,ds);
-  return saldo(s,ds) - (quadros[s]?.operacoes||0) + monCob(s) + emp.saldo;
+  return window.motorMaoDeObra.calcularMaoDeObra(s,ds).resultado;
 }
 
 function initDados(){
@@ -7818,46 +7814,79 @@ function _obterUsuarioLogado() {
     return { c:'#059669', bg:'rgba(5,150,105,.08)', lamp:'g', txt:'Coberto' };
   }
 
-  // ---- Métricas de um dia ----
   function metricas(ds){
     const live = ds === getDate();
-    let q = null, temDados = true, monDia = null;
-    if (live) {
-      q = quadros;
-    } else {
-      try { const raw = localStorage.getItem('vw_q_' + ds); if (raw) q = JSON.parse(raw); } catch(e){}
-      if (!q) { temDados = false; q = (typeof _ultimoQuadroSalvo === 'function' ? _ultimoQuadroSalvo(ds) : null) || quadros; }
-      try { const mn = localStorage.getItem('vw_m_' + ds); if (mn) monDia = JSON.parse(mn); } catch(e){}
-    }
-    const m = { ds, live, temDados, quadro:0, necessario:0, ferias:0, bh:0, afast:0, faltas:0, enf:0,
-                outros:0, atrasado:0, saiu:0, monCob:0, empSaldo:0, setores:[] };
-    SETORES.forEach(s => {
-      const op = q[s]?.operadores || 0, ops = q[s]?.operacoes || 0;
-      const f = ausF(s,ds), b = ausB(s,ds), a = ausA(s,ds), fa = ausFalt(s,ds);
-      const en = ausEnf(s,ds) + (typeof enfVoltouQtd === 'function' ? enfVoltouQtd(s,ds) : 0);
-      const ou = ausOut(s,ds);
-      const at = (typeof atrasadoQtd === 'function' ? atrasadoQtd(s,ds) : 0);
-      const sa = (typeof saiuVoltouQtd === 'function' ? saiuVoltouQtd(s,ds) : 0);
-      const cob = live ? monCob(s) : ((monDia && monDia[s]) || []).filter(x => x.status === 'cobrindo').length;
-      const emp = (typeof empSaldoSetor === 'function' ? empSaldoSetor(s, ds).saldo : 0);
-      const aus = f + b + a + fa + en + ou + at + sa;
-      const pres = op - aus;
-      const res = pres - ops + cob + emp;
-      m.quadro += op; m.necessario += ops; m.ferias += f; m.bh += b; m.afast += a; m.faltas += fa;
-      m.enf += en; m.outros += ou; m.atrasado += at; m.saiu += sa; m.monCob += cob; m.empSaldo += emp;
-      m.setores.push({ nome:s, quadro:op, necessario:ops, presentes:pres, aus, faltas:fa, ferias:f, monCob:cob, emp, res, resSemMon:res - cob });
+    let temDados = true;
+    if (!live && !localStorage.getItem('vw_q_' + ds)) temDados = false;
+    const linha = window.motorMaoDeObra.calcularMaoDeObraLinha(ds);
+    const setores = (typeof SETORES !== 'undefined' ? SETORES : []).map(s => {
+      const mo = window.motorMaoDeObra.calcularMaoDeObra(s, ds);
+      return {
+        nome: s,
+        lider: (typeof lideres !== 'undefined' && lideres[s]) || '',
+        quadro: mo.quadro,
+        necessario: mo.necessario,
+        nec: mo.necessario,
+        ferias: mo.ausencias.FERIAS || 0,
+        bh: mo.ausencias.BH || 0,
+        afast: mo.ausencias.AFASTAMENTO || 0,
+        falta: (mo.ausencias.FALTA || 0) + (mo.ausencias.PENDENTE || 0),
+        faltas: (mo.ausencias.FALTA || 0) + (mo.ausencias.PENDENTE || 0),
+        enfHoje: mo.ausencias.ENFERMARIA || 0,
+        enf: mo.ausencias.ENFERMARIA || 0,
+        atrasado: mo.ausencias.ATRASADO || 0,
+        atras: mo.ausencias.ATRASADO || 0,
+        saiu: mo.ausencias.SAIU_VOLTA || 0,
+        outros: (mo.ausencias.OUTROS || 0) + (mo.ausencias.LICENCA || 0),
+        emp: mo.emprestimos.saldo,
+        empEnv: mo.emprestimos.enviados,
+        empRec: mo.emprestimos.recebidos,
+        dentro: Array.from({ length: mo.monitores.cobrindo }, () => ({ status: 'cobrindo' })),
+        fora: Array.from({ length: mo.monitores.fora }, () => ({ status: 'fora' })),
+        monDentro: mo.monitores.cobrindo,
+        monFora: mo.monitores.fora,
+        monCob: mo.monitores.cobrindo,
+        aus: mo.ausenciasTotais,
+        pres: mo.presentes,
+        presentes: mo.presentes,
+        resSemMon: mo.resultadoSemMonitor,
+        res: mo.resultado,
+        resultado: mo.resultado
+      };
     });
-    m.aus = m.ferias + m.bh + m.afast + m.faltas + m.enf + m.outros + m.atrasado + m.saiu;
-    m.outrasAus = m.aus - m.ferias - m.faltas;
-    m.ausReais = m.afast + m.faltas + m.enf + m.outros + m.atrasado + m.saiu;
-    m.presentes = m.quadro - m.aus;
-    m.disponivel = m.presentes + m.monCob + m.empSaldo;
-    m.resultado = m.disponivel - m.necessario;
-    m.resSemMon = m.resultado - m.monCob;
-    m.pctAus = pct(m.aus, m.quadro);
-    m.pctReal = pct(m.ausReais, m.quadro);
-    m.pctFaltas = pct(m.faltas, m.quadro);
-    m.monTotal = live ? totalMon() : SETORES.reduce((t,s) => t + ((typeof monBase !== 'undefined' && monBase[s]) ? monBase[s].length : 0), 0);
+    const m = {
+      ds, live, temDados,
+      quadro: linha.quadro,
+      necessario: linha.necessario,
+      ferias: linha.ausencias.FERIAS || 0,
+      bh: linha.ausencias.BH || 0,
+      afast: linha.ausencias.AFASTAMENTO || 0,
+      faltas: (linha.ausencias.FALTA || 0) + (linha.ausencias.PENDENTE || 0),
+      falta: (linha.ausencias.FALTA || 0) + (linha.ausencias.PENDENTE || 0),
+      enf: linha.ausencias.ENFERMARIA || 0,
+      enfHoje: linha.ausencias.ENFERMARIA || 0,
+      atrasado: linha.ausencias.ATRASADO || 0,
+      atras: linha.ausencias.ATRASADO || 0,
+      saiu: linha.ausencias.SAIU_VOLTA || 0,
+      outros: (linha.ausencias.OUTROS || 0) + (linha.ausencias.LICENCA || 0),
+      empSaldo: linha.emprestimos.saldo,
+      emp: linha.emprestimos.saldo,
+      monCob: linha.monitores.cobrindo,
+      aus: linha.ausenciasTotais,
+      outrasAus: Math.max(0, linha.ausenciasTotais - (linha.ausencias.FERIAS || 0) - ((linha.ausencias.FALTA || 0) + (linha.ausencias.PENDENTE || 0))),
+      ausReais: linha.ausenciasReais,
+      presentes: linha.presentes,
+      pres: linha.presentes,
+      disponivel: linha.presentes + linha.monitores.cobrindo + linha.emprestimos.saldo,
+      resultado: linha.resultado,
+      res: linha.resultado,
+      resSemMon: linha.resultadoSemMonitor,
+      pctAus: linha.percentualAusencia,
+      pctReal: linha.percentualReal,
+      pctFaltas: linha.quadro > 0 ? (((linha.ausencias.FALTA || 0) + (linha.ausencias.PENDENTE || 0)) / linha.quadro) * 100 : 0,
+      monTotal: linha.monitores.total,
+      setores
+    };
     return m;
   }
 
