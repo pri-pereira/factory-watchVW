@@ -5774,6 +5774,8 @@ function filtrarCfgView(tipo, btn) {
 }
 
 function showTab(id,el){
+  // Sincroniza contadores com operadores ANTES de renderizar qualquer aba
+  if(typeof _syncPainelToCounters === 'function') _syncPainelToCounters();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active'); el.classList.add('active');
@@ -5784,6 +5786,21 @@ function showTab(id,el){
   if(id==='tab-dashboard') renderDashboard();
   if(id==='tab-emprestados') renderEmprestados();
   if(id==='tab-setores-cfg') { renderSetoresCfg(); renderMonitores(); renderLideres(); }
+}
+
+
+// ============================================================
+//  SINCRONIA CENTRAL: Qualquer alteração de dados dispara
+//  re-renderização de TODAS as abas visíveis.
+// ============================================================
+window.addEventListener('smartflow-data-changed', function(){
+  if(typeof _syncPainelToCounters === 'function') _syncPainelToCounters();
+  if(typeof _debouncedRenderAllTabs === 'function') _debouncedRenderAllTabs(200);
+});
+
+// Função utilitária para disparar o evento de sincronia
+function _notificarMudancaDados(){
+  window.dispatchEvent(new CustomEvent('smartflow-data-changed'));
 }
 
 function fazerLogout(){
@@ -7999,11 +8016,33 @@ function _salvarESincronizarOperadores(){
 
   if(typeof _syncPainelToCounters === 'function'){
     _syncPainelToCounters();
+  }
+
+  // Re-renderiza TODAS as abas para manter sincronia completa
+  if(typeof _debouncedRenderAllTabs === 'function'){
+    _debouncedRenderAllTabs(150);
+  } else {
+    renderPresencasOperadores();
     if(typeof renderSetores === 'function') renderSetores();
     if(typeof renderDashboard === 'function') renderDashboard();
   }
+}
 
-  renderPresencasOperadores();
+// Renderiza todas as abas visiveis de uma vez, com debounce
+let _renderAllTabsTimer = null;
+function _debouncedRenderAllTabs(delay){
+  clearTimeout(_renderAllTabsTimer);
+  _renderAllTabsTimer = setTimeout(function(){
+    try {
+      if(typeof renderPresencasOperadores === 'function') renderPresencasOperadores();
+      if(typeof renderSetores === 'function') renderSetores();
+      if(typeof renderDashboard === 'function') renderDashboard();
+      if(document.getElementById('tab-ger') && document.getElementById('tab-ger').classList.contains('active') && typeof renderGerencia === 'function') renderGerencia();
+      if(document.getElementById('tab-sup') && document.getElementById('tab-sup').classList.contains('active') && typeof renderSupervisao === 'function') renderSupervisao();
+      if(document.getElementById('tab-emprestados') && document.getElementById('tab-emprestados').classList.contains('active') && typeof renderEmprestados === 'function') renderEmprestados();
+      if(document.getElementById('tab-agenda') && document.getElementById('tab-agenda').classList.contains('active') && typeof renderAgenda === 'function') renderAgenda();
+    } catch(e) { console.error('[sync] render all tabs error:', e); }
+  }, typeof delay === 'number' ? delay : 200);
 }
 
 // Simulação de teste aleatória
