@@ -1957,6 +1957,11 @@ button, select, input {
           Teste: Simular
         </button>
 
+        <button onclick="_zerarStatusSmartflow()" class="btn btn-sm" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:#D97706;font-weight:700" title="Limpar todos os status de crachá">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+          Zerar Status
+        </button>
+
         <div style="display:flex;gap:4px">
           <button onclick="_exportarCSVPresenca()" class="btn btn-sm" style="background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.3);color:#059669;font-weight:700" title="Baixar CSV de Presença">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -7791,6 +7796,7 @@ _atualizarRelogioETurno();
 function _trocarTurnoPresenca(id){
   _turnoSelecionadoId = id;
   _atualizarRelogioETurno();
+  if(typeof _zerarStatusSmartflow === "function") _zerarStatusSmartflow(); // Zera o status sempre que trocar de turno
   renderPresencasOperadores();
 }
 
@@ -7919,6 +7925,22 @@ function _alterarStatusOperadorSmartflow(id, novoStatus){
   });
 
   _salvarESincronizarOperadores();
+}
+
+function _zerarStatusSmartflow(){
+  if(!_ultimosOperadores) return;
+  _ultimosOperadores = _ultimosOperadores.map(op => {
+    return {
+      ...op,
+      status: 'presente',
+      batida: null,
+      alteradoPor: undefined,
+      alteradoAs: undefined
+    };
+  });
+  _registrarAuditoriaPresenca('Reset', 'Todos', 'Status zerado');
+  _salvarESincronizarOperadores();
+  if(typeof _showToast === 'function') _showToast('Status zerados (todos presentes, sem batidas).');
 }
 
 // Ação rápida: Alternar Enfermaria
