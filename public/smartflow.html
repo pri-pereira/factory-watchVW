@@ -1721,6 +1721,12 @@ button, select, input {
 }
 
 </style>
+<style id="smartflow-correcoes-css">
+html{scrollbar-gutter:stable;overflow-y:scroll}
+*{scroll-behavior:auto!important}
+canvas{contain:layout paint}
+.chart,.chart-container,.chart-card,.dash-chart,.grafico,.chart-box{contain:layout paint}
+</style>
 </head>
 <body>
 <div class="app-shell">
@@ -3446,7 +3452,7 @@ function setLiberado(setor, ds, val){
   const v = Math.max(0, parseInt(val)||0);
   const oldV = liberadoQtd(setor,ds)||0;
   if(v > oldV) _changeOperatorStatus(setor, ['presente', 'ausente', 'pendente'], 'afastado', 'Liberação programada');
-  else if (v < oldV) _changeOperatorStatus(setor, ['afastado'], 'presente', '', 'Liberação programada');
+  else if (v < oldV) _sfAlterarStatusPorObservacao(setor, 'Liberação programada', 'presente', '');
   liberados[setor+'||'+ds] = v;
   localStorage.setItem('vw_liberados',JSON.stringify(liberados));
     var el = document.getElementById('lib-' + setor.replace(/\s/g,'_')); if(el) el.textContent = v;
@@ -3461,7 +3467,7 @@ function setAtestado(setor, ds, val){
   const v = Math.max(0, parseInt(val)||0);
   const oldV = atestadoQtd(setor,ds)||0;
   if(v > oldV) _changeOperatorStatus(setor, ['presente', 'pendente', 'ausente'], 'afastado', 'Atestado');
-  else if (v < oldV) _changeOperatorStatus(setor, ['afastado'], 'presente', '', 'Atestado');
+  else if (v < oldV) _sfAlterarStatusPorObservacao(setor, 'Atestado', 'presente', '');
   atestados[setor+'||'+ds] = v;
   localStorage.setItem('vw_atestados',JSON.stringify(atestados));
   localStorage.setItem('vw_ferias_dia',JSON.stringify(feriasDia));
@@ -3477,7 +3483,7 @@ function setFerias(setor, ds, val){
   const v = Math.max(0, parseInt(val)||0);
   const oldV = feriasDiaQtd(setor, ds)||0;
   if (v > oldV) _changeOperatorStatus(setor, ['presente', 'pendente'], 'afastado', 'Férias');
-  else if (v < oldV) _changeOperatorStatus(setor, ['afastado'], 'presente', '', 'Férias');
+  else if (v < oldV) _sfAlterarStatusPorObservacao(setor, 'Férias', 'presente', '');
   feriasDia[setor+'||'+ds] = v;
   localStorage.setItem('vw_ferias_dia', JSON.stringify(feriasDia));
     var el = document.getElementById('fer-' + setor.replace(/\s/g,'_')); if(el) el.textContent = v;
@@ -3569,6 +3575,22 @@ function excluirCartaoPersonalizado(id){
 /* ============================================================
    SINCRONIZAR BOTÕES COM OPERADORES
 ============================================================ */
+function _sfAlterarStatusPorObservacao(setor, obsAlvo, novoStatus, novaObs){
+  try {
+    const cel = typeof _setorParaCelula === 'function' ? _setorParaCelula(setor) : setor.split(' ')[0];
+    const lista = (typeof _ultimosOperadores !== 'undefined' ? _ultimosOperadores : []).filter(o => {
+        return typeof _extrairCelulaDoOpId === 'function' ? _extrairCelulaDoOpId(o.id) === cel : true;
+    });
+    const op = lista.find(o => o.status === 'afastado' && String(o.observacao||'').toLowerCase() === String(obsAlvo).toLowerCase());
+    if (op) {
+      if(typeof _alterarStatusOperadorSmartflow === 'function') _alterarStatusOperadorSmartflow(op.id, novoStatus);
+      op.observacao = novaObs || '';
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
 function _changeOperatorStatus(setor, oldStatuses, newStatus, obsText, matchObs) {
   try {
     let ops = (typeof _ultimosOperadores !== 'undefined' && Array.isArray(_ultimosOperadores) && _ultimosOperadores.length > 0)
@@ -5316,18 +5338,22 @@ function addEmprestado(){
   const origem=document.getElementById('empOrigem').value;
   const destino=document.getElementById('empDestino').value;
   const nome=document.getElementById('empNome').value.trim();
-  const qtd=parseInt(document.getElementById('empQtd').value)||1;
+  const qtd=Math.max(0, parseInt(document.getElementById('empQtd').value)||0);
   const periodo=document.getElementById('empPeriodo').value;
   if(origem===destino){ _showEmpMsg('Origem e destino não podem ser o mesmo setor.','var(--danger)'); return; }
+  if(qtd<1){ _showEmpMsg('Informe uma quantidade maior que zero.','var(--danger)'); return; }
   const ds=getDate();
+  const calcOrigem = window.motorMaoDeObra ? window.motorMaoDeObra.calcularMaoDeObra(origem, ds) : {disponivel: 999};
+  const disponibilidade = Math.max(0, calcOrigem.disponivel);
+  if(qtd>disponibilidade){ _showEmpMsg(`Quantidade indisponível em ${origem}. Disponível agora: ${disponibilidade}.`,'var(--danger)'); return; }
   if(!emprestados[ds]) emprestados[ds]=[];
   emprestados[ds].push({id:uid(),origem,destino,nome,qtd,periodo});
   document.getElementById('empNome').value='';
   document.getElementById('empQtd').value='1';
-  salvarEmp();
+  if(typeof salvarEmp === 'function') salvarEmp();
   _showEmpMsg(`${qtd} operador${qtd>1?'es':''} de ${origem} → ${destino} registrado${qtd>1?'s':''}.`,'var(--ok)');
-  renderEmprestados();
-  renderSetores(); // atualiza cards e semáforos imediatamente
+  if(typeof renderEmprestados === 'function') renderEmprestados();
+  if(typeof renderSetores === 'function') renderSetores();
 }
 
 function delEmprestado(ds,id){
